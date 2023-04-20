@@ -1,13 +1,13 @@
 import React, {useState,useEffect, Image}from 'react';
 import { Colors } from 'react-native/Libraries/NewAppScreen';
-import { SafeAreaView, Text, useColorScheme, View, TouchableOpacity} from 'react-native';
+import { SafeAreaView, Text, useColorScheme, View, TouchableOpacity, Switch} from 'react-native';
 import Slider from '@react-native-community/slider';
 
 function App() {
 	const isDarkMode = useColorScheme() === 'dark';
 	const backgroundStyle = {
-		//backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
-		backgroundColor: 'white',
+		backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
+		//backgroundColor: 'white',
 		borderRadius: 10,
 		shadowColor: '#000',
 		shadowOpacity: 0.2,
@@ -15,6 +15,10 @@ function App() {
 		padding: 20, 
 		margin: 15,
 	};
+
+
+	const toggleSwitch = () => {setAdvanceInfo(advanceInfo => !advanceInfo)
+								};
 
 	const [waterLevel, setWaterValue] = useState(50); // Initial value of the waterLevel 
 	const [lightLevel, setLightValue] = useState(50);// Initial value of the LightLevel 
@@ -66,13 +70,21 @@ function App() {
 
 			<View>
 				<TouchableOpacity //A wrapper for making views respond properly to touches.
-        			style={{ paddingVertical: 10 }}
-        			onPress={() => setAdvanceInfo(!advanceInfo)}> 
-        			<Text style={{ color: 'blue', fontSize: 20, }}>Advanced info (Click of more info)</Text>
+        			style={{ paddingVertical: 10, paddingLeft:20 }}> 
+
+        			<Text style={{ color: 'blue', fontSize: 20,  }}>Advanced info 
+						<Switch 
+        					trackColor={{false: '#767577', true: '#81b0ff'}}
+       						thumbColor={advanceInfo ? '#f5dd4b' : '#f4f3f4'}
+        					ios_backgroundColor="#3e3e3e"
+        					onValueChange={toggleSwitch}
+        					value={advanceInfo}
+      					/>
+					</Text>
       			</TouchableOpacity>
 			
 				{advanceInfo && ( // When thouched advanceInfo value becomes true and this becomes true
-        			<Text style={{ marginTop: 5 }}>
+        			<Text style={{ marginTop: 5, paddingLeft:20 }}>
 						Raw sensor values. 
 						The water Level value is {waterLevel}.
 						The light Level value is {lightLevel}.
