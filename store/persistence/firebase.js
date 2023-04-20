@@ -5,9 +5,10 @@ import {
 } from "../slices/garden";
 
 export const enablePersistence = (store) => {
+    console.log("entered firebase")
     let prevState = store.getState();
     const dispatch = store.dispatch;
-    fromFirebaseSub();
+    //fromFirebaseSub();
 
     store.subscribe(() => {
         const state = store.getState();

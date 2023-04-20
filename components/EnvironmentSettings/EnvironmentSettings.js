@@ -10,10 +10,12 @@ export const EnvironmentSettings = () => {
     const moisture = useSelector(state => state.garden.moisture);
 
     const changeLight = newLight => {
+        console.log(newLight)
         dispatch(setLight(newLight))
     }
 
     const changeMoisture = newMoisture => {
+        console.log("test");
         dispatch(setMoisture(newMoisture))
     }
 

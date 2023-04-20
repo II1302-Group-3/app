@@ -1,8 +1,8 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-    light: 0,
-    moisture: 0
+    light: 50,
+    moisture: 50
 }
 
 export const garden = createSlice({
