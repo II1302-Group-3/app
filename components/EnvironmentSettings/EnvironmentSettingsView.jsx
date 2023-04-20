@@ -52,8 +52,8 @@ export const EnvironmentSettingsView = ({
 			</View>
 
 			<View style={backgroundStyle}>
-				<Text style={{fontSize: 24, fontWeight: 'bold', color: textColor }}>Moisture level</Text>
-				<View style={{flexDirection: 'row', justifyContent: 'space-between', marginHorizontal: 25 }}>
+				<Text style={{fontSize: 24, fontWeight: 'bold', color: textColor, marginBottom: 20}}>Moisture Level</Text>
+				<View style={{flexDirection: 'row', justifyContent: 'space-between', marginHorizontal: 25}}>
     				<Text style={{fontSize: 18, color: textColor }} >{advancedInfo ? "50" : "Low"}</Text>
 					<Text style={{fontSize: 18, color: textColor }} >{advancedInfo ? "100" : "Medium"}</Text>
 					<Text style={{fontSize: 18, color: textColor }} >{advancedInfo ? "150" : "High"}</Text>
@@ -73,7 +73,7 @@ export const EnvironmentSettingsView = ({
 			</View>
 
 			<View style={backgroundStyle}>
-				<Text style={{fontSize: 24, fontWeight: 'bold', color: textColor}} >Light Level</Text>
+				<Text style={{fontSize: 24, fontWeight: 'bold', color: textColor, marginBottom: 20}} >Light Level</Text>
 				<View style={{flexDirection: 'row', justifyContent: 'space-between', marginHorizontal: 25}}>
     				<Text style={{fontSize: 18, color: textColor}} >{advancedInfo ? "50" : "Low"}</Text>
 					<Text style={{fontSize: 18, color: textColor}} >{advancedInfo ? "100" : "Medium"}</Text>
