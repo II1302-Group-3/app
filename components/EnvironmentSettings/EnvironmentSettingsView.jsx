@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import { Image, Text, useColorScheme, View, Switch} from 'react-native';
+import { Image, Text, useColorScheme, View, Switch, StatusBar } from 'react-native';
 import Slider from '@react-native-community/slider';
 
 export const EnvironmentSettingsView = ({
@@ -31,6 +31,10 @@ export const EnvironmentSettingsView = ({
 
     return(
         <View>
+			<StatusBar
+				backgroundColor="transparent"
+				barStyle={isDarkMode ? "light-content" : "dark-content"}
+			/>
 			<View style={{flexDirection: "row", paddingVertical: 20, paddingHorizontal: 20 }}>
 				<Image style={{flex: 1, resizeMode: "contain", flexGrow: 0, flexBasis: 90 }} source={require("../../assets/GreenGarden.png")}/>
 				<Text 
