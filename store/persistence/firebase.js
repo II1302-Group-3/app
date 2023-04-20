@@ -4,18 +4,26 @@ import {
     setMoisture,
     setLedTestOn
 } from "../slices/garden";
+import { Alert } from 'react-native';
 
 export const enablePersistence = (store) => {
-    console.log("entered firebase")
+    console.log("Entered firebase");
+
     let prevState = store.getState();
     const dispatch = store.dispatch;
-    //fromFirebaseSub();
 
-    store.subscribe(() => {
-        const state = store.getState();
-        toFirebase(state);
-        prevState = store.getState();
-    })
+    readFromFirebase()
+        .then(() => {
+            console.log("Subscribing to send values to Firebase");
+
+            // Only subscribe once we have read values from Firebase
+            store.subscribe(() => {
+                const state = store.getState();
+                toFirebase(state);
+                prevState = store.getState();
+            })
+        })
+        .catch(error => Alert.alert("Failed to read from Firebase", "Error: " + error))
 
     function getRefs() {
         const garden = 'garden/placeholder/';
@@ -65,29 +73,29 @@ export const enablePersistence = (store) => {
         }
     }
 
-    function fromFirebaseSub() {
+    function readFromFirebase() {
         const {
             lightRef,
             moistureRef,
             ledTestRef
         } = getRefs();
 
-        database()
-            .ref(lightRef)
-            .on('value', snapshot => {
-                dispatch(setLight(snapshot.val()))
-            });
+        promises = [
+            database()
+                .ref(lightRef)
+                .once("value")
+                .then(snapshot => dispatch(setLight(snapshot.val()))),
+            database()
+                .ref(moistureRef)
+                .once("value")
+                .then(snapshot => dispatch(setMoisture(snapshot.val()))),
+            database()
+                .ref(ledTestRef)
+                .once("value")
+                .then(snapshot => dispatch(setLedTestOn(snapshot.val() == 1)))
+        ];
 
-        database()
-            .ref(moistureRef)
-            .on('value', snapshot => {
-                dispatch(setMoisture(snapshot.val()))
-            })
-
-        database()
-            .ref(ledTestRef)
-            .on('value', snapshot => {
-                dispatch(setLedTestOn(snapshot.val()))
-            })
+        // We have to update prevState here or the app doesn't understand if values are different from the initial ones
+        return Promise.all(promises).then(() => prevState = store.getState());
     }
 }

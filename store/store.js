@@ -9,7 +9,6 @@ const store = configureStore({
     }
 })
 
-
 enablePersistence(store);
 
 export default store;

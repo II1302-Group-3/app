@@ -44,6 +44,7 @@ export const EnvironmentSettingsView = ({
   					minimumValue={50} // min value of the slider 
   					maximumValue={150} // Max value of the slider 
  			    	onValueChange={(value) => setMoisture(value)} // We give waterLevel the value when it changes 
+					value={moisture}
 					step={50} // step on the slider
 					thumbImage={WaterDropIcon}
 				/>	
@@ -62,6 +63,7 @@ export const EnvironmentSettingsView = ({
   					maximumValue={150}
 					step={50}
  			    	onValueChange={(value) => setLight(value)}
+					value={light}
 				 	thumbImage={bulbIcon}
 				/>
 			</View>
@@ -97,7 +99,6 @@ export const EnvironmentSettingsView = ({
 					</Text>
       			)}
 			</View>
-
 		</View>
     )
 }

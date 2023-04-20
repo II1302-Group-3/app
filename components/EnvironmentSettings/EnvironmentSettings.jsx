@@ -5,6 +5,7 @@ import { EnvironmentSettingsView } from './EnvironmentSettingsView';
 
 export const EnvironmentSettings = () => {
     const dispatch = useDispatch();
+    
     const light = useSelector(state => state.garden.light);
     const moisture = useSelector(state => state.garden.moisture);
     const ledTestOn = useSelector(state => state.garden.ledTestOn);
