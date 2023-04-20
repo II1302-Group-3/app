@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import { Text, useColorScheme, View, Switch} from 'react-native';
+import { Image, Text, useColorScheme, View, Switch} from 'react-native';
 import Slider from '@react-native-community/slider';
 
 export const EnvironmentSettingsView = ({
@@ -31,6 +31,22 @@ export const EnvironmentSettingsView = ({
 
     return(
         <View>
+			<View style={{flexDirection: "row", paddingVertical: 20, paddingHorizontal: 20 }}>
+				<Image style={{flex: 1, resizeMode: "contain", flexGrow: 0, flexBasis: 90 }} source={require("../../assets/GreenGarden.png")}/>
+				<Text 
+					style={{flex: 1, 
+					fontSize: 32, 
+					fontWeight: 'bold', 
+					color: textColor, 
+					textAlign: "center", 
+					alignSelf: "flex-end", 
+					flexGrow: 1, 
+					verticalAlign: "middle", 
+					height: "100%" }}>
+					Green Garden
+				</Text>
+			</View>
+
 			<View style={backgroundStyle}>
 				<Text style={{fontSize: 24, fontWeight: 'bold', color: textColor }}>Moisture level</Text>
 				<View style={{flexDirection: 'row', justifyContent: 'space-between', marginHorizontal: 25 }}>
@@ -68,7 +84,7 @@ export const EnvironmentSettingsView = ({
 				/>
 			</View>
 
-			<View style={{ paddingVertical: 10, paddingHorizontal: 20 }}>
+			<View style={{ paddingVertical: 20, paddingHorizontal: 20 }}>
 				<View style={{ flexDirection: "row" }}>
 					<Text style={{ flex: 1, alignSelf: "flex-start", fontSize: 20, color: textColor }}>
 						Advanced info 
