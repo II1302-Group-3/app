@@ -54,9 +54,9 @@ export const EnvironmentSettingsView = ({
 			<View style={backgroundStyle}>
 				<Text style={{fontSize: 24, fontWeight: 'bold', color: textColor }}>Moisture level</Text>
 				<View style={{flexDirection: 'row', justifyContent: 'space-between', marginHorizontal: 25 }}>
-    				<Text style={{fontSize: 18, color: textColor }} >Low</Text>
-					<Text style={{fontSize: 18, color: textColor }} >Medium</Text>
-					<Text style={{fontSize: 18, color: textColor }} >High</Text>
+    				<Text style={{fontSize: 18, color: textColor }} >{advancedInfo ? "50" : "Low"}</Text>
+					<Text style={{fontSize: 18, color: textColor }} >{advancedInfo ? "100" : "Medium"}</Text>
+					<Text style={{fontSize: 18, color: textColor }} >{advancedInfo ? "150" : "High"}</Text>
 				</View>
 
 				<Slider
@@ -73,9 +73,9 @@ export const EnvironmentSettingsView = ({
 			<View style={backgroundStyle}>
 				<Text style={{fontSize: 24, fontWeight: 'bold', color: textColor}} >Light Level</Text>
 				<View style={{flexDirection: 'row', justifyContent: 'space-between', marginHorizontal: 25}}>
-    				<Text style={{fontSize: 18, color: textColor}} >Low</Text>
-					<Text style={{fontSize: 18, color: textColor}} >Medium</Text>
-					<Text style={{fontSize: 18, color: textColor}} >High</Text>
+    				<Text style={{fontSize: 18, color: textColor}} >{advancedInfo ? "50" : "Low"}</Text>
+					<Text style={{fontSize: 18, color: textColor}} >{advancedInfo ? "100" : "Medium"}</Text>
+					<Text style={{fontSize: 18, color: textColor}} >{advancedInfo ? "150" : "High"}</Text>
 				</View>
 				<Slider
   					style={{width: 285, height: 60, marginHorizontal: 20}}
@@ -110,14 +110,6 @@ export const EnvironmentSettingsView = ({
 						value={ledTestOn}
 					/>
 				</View>
-			
-				{advancedInfo && ( // When touched advancedInfo value becomes true and this becomes true
-        			<Text style={{ marginTop: 10, color: textColor }}>
-						Raw sensor values. 
-						The water Level value is {moisture}.
-						The light Level value is {light}.
-					</Text>
-      			)}
 			</View>
 		</View>
     )
