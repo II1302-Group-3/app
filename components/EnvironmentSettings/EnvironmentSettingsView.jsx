@@ -59,15 +59,17 @@ export const EnvironmentSettingsView = ({
 					<Text style={{fontSize: 18, color: textColor }} >{advancedInfo ? "150" : "High"}</Text>
 				</View>
 
-				<Slider
-  					style={{width: 285, height: 60, marginHorizontal: 20}}
-  					minimumValue={50} // min value of the slider 
-  					maximumValue={150} // Max value of the slider 
- 			    	onValueChange={(value) => setMoisture(value)} // We give waterLevel the value when it changes 
-					value={moisture}
-					step={50} // step on the slider
-					thumbImage={WaterDropIcon}
-				/>	
+				<View style={{paddingHorizontal: 25}}>
+					<Slider
+						style={{width: "100%", height: 60}}
+						minimumValue={50} // min value of the slider 
+						maximumValue={150} // Max value of the slider 
+						onValueChange={(value) => setMoisture(value)} // We give waterLevel the value when it changes 
+						value={moisture}
+						step={50} // step on the slider
+						thumbImage={WaterDropIcon}
+					/>
+				</View>
 			</View>
 
 			<View style={backgroundStyle}>
@@ -77,15 +79,17 @@ export const EnvironmentSettingsView = ({
 					<Text style={{fontSize: 18, color: textColor}} >{advancedInfo ? "100" : "Medium"}</Text>
 					<Text style={{fontSize: 18, color: textColor}} >{advancedInfo ? "150" : "High"}</Text>
 				</View>
-				<Slider
-  					style={{width: 285, height: 60, marginHorizontal: 20}}
-  					minimumValue={50}
-  					maximumValue={150}
-					step={50}
- 			    	onValueChange={(value) => setLight(value)}
-					value={light}
-				 	thumbImage={bulbIcon}
-				/>
+				<View style={{paddingHorizontal: 25}}>
+					<Slider
+						style={{width: "100%", height: 60}}
+						minimumValue={50}
+						maximumValue={150}
+						step={50}
+						onValueChange={(value) => setLight(value)}
+						value={light}
+						thumbImage={bulbIcon}
+					/>
+				</View>
 			</View>
 
 			<View style={{ paddingVertical: 20, paddingHorizontal: 20 }}>
