@@ -16,8 +16,8 @@ function App() {
 		margin: 15,
 	};
 
-	const [waterLevel, setWaterValue] = useState(0.5); // Initial value of the waterLevel 
-	const [lightLevel, setLightValue] = useState(0.5);// Initial value of the LightLevel 
+	const [waterLevel, setWaterValue] = useState(50); // Initial value of the waterLevel 
+	const [lightLevel, setLightValue] = useState(50);// Initial value of the LightLevel 
 	const bulbIcon = require('./assets/BulpIcon.png'); // Link to bulbIcon for the slider
 	const WaterDropIcon = require('./assets/WaterDropIcon.png'); // Link to WaterDropIcon for the slider
 	const [advanceInfo, setAdvanceInfo] = useState(false);
@@ -28,9 +28,7 @@ function App() {
 		<View>
 			
 			<View style={backgroundStyle}>
-				<Text style={{fontSize: 24, fontWeight: 'bold'}}>Water Level</Text>
-				<Text> Water Level: {waterLevel} </Text>
-	
+				<Text style={{fontSize: 24, fontWeight: 'bold'}}>Moisture level</Text>
 				<View style={{flexDirection: 'row', justifyContent: 'space-between', marginHorizontal: 25}}>
     				<Text style={{fontSize: 18}} >Low</Text>
 					<Text style={{fontSize: 18}} >Medium</Text>
@@ -39,10 +37,10 @@ function App() {
 
 				<Slider
   					style={{width: 285, height: 60, marginHorizontal: 20}}
-  					minimumValue={0.5} // min value of the slider 
-  					maximumValue={1.5} // Max value of the slider 
+  					minimumValue={50} // min value of the slider 
+  					maximumValue={150} // Max value of the slider 
  			    	onValueChange={(value) => setWaterValue(value)} // We give waterLevel the value when it changes 
-					step={0.5} // step on the slider
+					step={50} // step on the slider
 					thumbImage={WaterDropIcon}
 				/>	
 			</View>
@@ -50,8 +48,6 @@ function App() {
 
 			<View style={backgroundStyle}>
 				<Text style={{fontSize: 24, fontWeight: 'bold'}} >Light Level</Text>
-				<Text> Light Level: {lightLevel} </Text>
-
 				<View style={{flexDirection: 'row', justifyContent: 'space-between', marginHorizontal: 25}}>
     				<Text style={{fontSize: 18}} >Low</Text>
 					<Text style={{fontSize: 18}} >Medium</Text>
@@ -59,10 +55,10 @@ function App() {
 				</View>
 				<Slider
   					style={{width: 285, height: 60, marginHorizontal: 20}}
-  					minimumValue={0.5}
-  					maximumValue={1.5}
-					step={0.5}
- 			    	onValueChange={(lightLevel) => setLightValue(lightLevel)}
+  					minimumValue={50}
+  					maximumValue={150}
+					step={50}
+ 			    	onValueChange={(value) => setLightValue(value)}
 				 	thumbImage={bulbIcon}
 				/>
 			</View>
@@ -72,7 +68,7 @@ function App() {
 				<TouchableOpacity //A wrapper for making views respond properly to touches.
         			style={{ paddingVertical: 10 }}
         			onPress={() => setAdvanceInfo(!advanceInfo)}> 
-        			<Text style={{ color: 'blue', fontSize: 20, }}>Advance info (Click of more info)</Text>
+        			<Text style={{ color: 'blue', fontSize: 20, }}>Advanced info (Click of more info)</Text>
       			</TouchableOpacity>
 			
 				{advanceInfo && ( // When thouched advanceInfo value becomes true and this becomes true
