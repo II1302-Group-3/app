@@ -13,9 +13,8 @@ export const enablePersistence = (store) => {
     store.subscribe(() => {
         const state = store.getState();
         toFirebase(state);
+        prevState = store.getState();
     })
-
-    prevState = store.getState();
 
     function getRefs() {
         const garden = 'garden/placeholder/';
@@ -38,8 +37,9 @@ export const enablePersistence = (store) => {
         const prevLight = prevState.garden.light;
 
         const moisture = state.garden.moisture;
-        const prevMoisture = prevState.garden 
+        const prevMoisture = prevState.garden.moisture;
 
+        console.log("light: " + light + ", prevLight: " + prevLight)
         if(light !== prevLight) {
             database()
                 .ref(lightRef)
