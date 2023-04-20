@@ -69,7 +69,5 @@ export const enablePersistence = (store) => {
             .on('value', snapshot => {
                 dispatch(setMoisture(snapshot.val()))
             })
-        
-        
     }
 }
