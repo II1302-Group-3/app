@@ -5,9 +5,9 @@ import Slider from '@react-native-community/slider';
 
 function App() {
 	const isDarkMode = useColorScheme() === 'dark';
+
 	const backgroundStyle = {
-		backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
-		//backgroundColor: 'white',
+		backgroundColor: isDarkMode ? "#212121" : "white",
 		borderRadius: 10,
 		shadowColor: '#000',
 		shadowOpacity: 0.2,
@@ -16,6 +16,7 @@ function App() {
 		margin: 15,
 	};
 
+	const textColor = isDarkMode ? "#fafafa" : "#050505";
 
 	const toggleSwitch = () => {setAdvanceInfo(advanceInfo => !advanceInfo)
 								};
@@ -26,17 +27,16 @@ function App() {
 	const WaterDropIcon = require('./assets/WaterDropIcon.png'); // Link to WaterDropIcon for the slider
 	const [advanceInfo, setAdvanceInfo] = useState(false);
 
-
 	return (
 		
 		<View>
 			
 			<View style={backgroundStyle}>
-				<Text style={{fontSize: 24, fontWeight: 'bold'}}>Moisture level</Text>
+				<Text style={{fontSize: 24, fontWeight: 'bold', color: textColor}}>Moisture level</Text>
 				<View style={{flexDirection: 'row', justifyContent: 'space-between', marginHorizontal: 25}}>
-    				<Text style={{fontSize: 18}} >Low</Text>
-					<Text style={{fontSize: 18}} >Medium</Text>
-					<Text style={{fontSize: 18}} >High</Text>
+    				<Text style={{fontSize: 18, color: textColor}} >Low</Text>
+					<Text style={{fontSize: 18, color: textColor}} >Medium</Text>
+					<Text style={{fontSize: 18, color: textColor}} >High</Text>
 				</View>
 
 				<Slider
@@ -51,11 +51,11 @@ function App() {
 
 
 			<View style={backgroundStyle}>
-				<Text style={{fontSize: 24, fontWeight: 'bold'}} >Light Level</Text>
+				<Text style={{fontSize: 24, fontWeight: 'bold', color: textColor}} >Light Level</Text>
 				<View style={{flexDirection: 'row', justifyContent: 'space-between', marginHorizontal: 25}}>
-    				<Text style={{fontSize: 18}} >Low</Text>
-					<Text style={{fontSize: 18}} >Medium</Text>
-					<Text style={{fontSize: 18}} >High</Text>
+    				<Text style={{fontSize: 18, color: textColor}} >Low</Text>
+					<Text style={{fontSize: 18, color: textColor}} >Medium</Text>
+					<Text style={{fontSize: 18, color: textColor}} >High</Text>
 				</View>
 				<Slider
   					style={{width: 285, height: 60, marginHorizontal: 20}}
@@ -69,22 +69,19 @@ function App() {
 
 
 			<View>
-				<TouchableOpacity //A wrapper for making views respond properly to touches.
+				<View //A wrapper for making views respond properly to touches.
         			style={{ paddingVertical: 10, paddingLeft:20 }}> 
 
-        			<Text style={{ color: 'blue', fontSize: 20,  }}>Advanced info 
+        			<Text style={{ fontSize: 20, color: textColor  }}>Advanced info 
 						<Switch 
-        					trackColor={{false: '#767577', true: '#81b0ff'}}
-       						thumbColor={advanceInfo ? '#f5dd4b' : '#f4f3f4'}
-        					ios_backgroundColor="#3e3e3e"
         					onValueChange={toggleSwitch}
         					value={advanceInfo}
       					/>
 					</Text>
-      			</TouchableOpacity>
+      			</View>
 			
 				{advanceInfo && ( // When thouched advanceInfo value becomes true and this becomes true
-        			<Text style={{ marginTop: 5, paddingLeft:20 }}>
+        			<Text style={{ marginTop: 5, paddingLeft:20, color: textColor }}>
 						Raw sensor values. 
 						The water Level value is {waterLevel}.
 						The light Level value is {lightLevel}.
