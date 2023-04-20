@@ -1,7 +1,8 @@
 import database from '@react-native-firebase/database';
 import {
     setLight,
-    setMoisture
+    setMoisture,
+    setLedTestOn
 } from "../slices/garden";
 
 export const enablePersistence = (store) => {
@@ -20,17 +21,20 @@ export const enablePersistence = (store) => {
         const garden = 'garden/placeholder/';
         const lightRef = garden + 'target_light_level';
         const moistureRef = garden + 'target_moisture';
+        const ledTestRef = garden + 'test_led_on';
 
         return {
             lightRef,
-            moistureRef
+            moistureRef,
+            ledTestRef
         }
     }
 
     function toFirebase(state) {
         const {
             lightRef,
-            moistureRef
+            moistureRef,
+            ledTestRef
         } = getRefs();
 
         const light = state.garden.light;
@@ -39,7 +43,9 @@ export const enablePersistence = (store) => {
         const moisture = state.garden.moisture;
         const prevMoisture = prevState.garden.moisture;
 
-        console.log("light: " + light + ", prevLight: " + prevLight)
+        const ledTestOn = state.garden.ledTestOn;
+        const prevLedTestOn = prevState.garden.ledTestOn;
+ 
         if(light !== prevLight) {
             database()
                 .ref(lightRef)
@@ -51,12 +57,19 @@ export const enablePersistence = (store) => {
                 .ref(moistureRef)
                 .set(moisture)
         }
+
+        if(ledTestOn !== prevLedTestOn) {
+            database()
+                .ref(ledTestRef)
+                .set(ledTestOn ? 1 : 0)
+        }
     }
 
     function fromFirebaseSub() {
         const {
             lightRef,
-            moistureRef
+            moistureRef,
+            ledTestRef
         } = getRefs();
 
         database()
@@ -64,11 +77,17 @@ export const enablePersistence = (store) => {
             .on('value', snapshot => {
                 dispatch(setLight(snapshot.val()))
             });
-        
+
         database()
             .ref(moistureRef)
             .on('value', snapshot => {
                 dispatch(setMoisture(snapshot.val()))
+            })
+
+        database()
+            .ref(ledTestRef)
+            .on('value', snapshot => {
+                dispatch(setLedTestOn(snapshot.val()))
             })
     }
 }

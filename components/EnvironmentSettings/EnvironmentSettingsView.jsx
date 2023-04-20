@@ -1,13 +1,14 @@
-import React, {useState,useEffect, Image}from 'react';
-import { Colors } from 'react-native/Libraries/NewAppScreen';
-import { SafeAreaView, Text, useColorScheme, View, TouchableOpacity, Switch} from 'react-native';
+import React, {useState} from 'react';
+import { Text, useColorScheme, View, Switch} from 'react-native';
 import Slider from '@react-native-community/slider';
 
 export const EnvironmentSettingsView = ({
     setLight,
     setMoisture,
+	setLedTestOn,
     light,
-    moisture
+    moisture,
+	ledTestOn
 }) => {
     const isDarkMode = useColorScheme() === 'dark';
 
@@ -23,24 +24,19 @@ export const EnvironmentSettingsView = ({
 
 	const textColor = isDarkMode ? "#fafafa" : "#050505";
 
-	const toggleSwitch = () => {setAdvanceInfo(advanceInfo => !advanceInfo)
-								};
+	const [advancedInfo, setAdvancedInfo] = useState(false);
 
-	const [waterLevel, setWaterValue] = useState(50); // Initial value of the waterLevel 
-	const [lightLevel, setLightValue] = useState(50);// Initial value of the LightLevel 
 	const bulbIcon = require('../../assets/BulpIcon.png'); // Link to bulbIcon for the slider
 	const WaterDropIcon = require('../../assets/WaterDropIcon.png'); // Link to WaterDropIcon for the slider
-	const [advanceInfo, setAdvanceInfo] = useState(false);
 
     return(
         <View>
-			
 			<View style={backgroundStyle}>
-				<Text style={{fontSize: 24, fontWeight: 'bold', color: textColor}}>Moisture level</Text>
-				<View style={{flexDirection: 'row', justifyContent: 'space-between', marginHorizontal: 25}}>
-    				<Text style={{fontSize: 18, color: textColor}} >Low</Text>
-					<Text style={{fontSize: 18, color: textColor}} >Medium</Text>
-					<Text style={{fontSize: 18, color: textColor}} >High</Text>
+				<Text style={{fontSize: 24, fontWeight: 'bold', color: textColor }}>Moisture level</Text>
+				<View style={{flexDirection: 'row', justifyContent: 'space-between', marginHorizontal: 25 }}>
+    				<Text style={{fontSize: 18, color: textColor }} >Low</Text>
+					<Text style={{fontSize: 18, color: textColor }} >Medium</Text>
+					<Text style={{fontSize: 18, color: textColor }} >High</Text>
 				</View>
 
 				<Slider
@@ -52,7 +48,6 @@ export const EnvironmentSettingsView = ({
 					thumbImage={WaterDropIcon}
 				/>	
 			</View>
-
 
 			<View style={backgroundStyle}>
 				<Text style={{fontSize: 24, fontWeight: 'bold', color: textColor}} >Light Level</Text>
@@ -71,25 +66,35 @@ export const EnvironmentSettingsView = ({
 				/>
 			</View>
 
-
-			<View>
-				<View //A wrapper for making views respond properly to touches.
-        			style={{ paddingVertical: 10, paddingLeft:20 }}> 
-
-        			<Text style={{ fontSize: 20, color: textColor  }}>Advanced info 
-						<Switch 
-        					onValueChange={toggleSwitch}
-        					value={advanceInfo}
-      					/>
+			<View style={{ paddingVertical: 10, paddingHorizontal: 20 }}>
+				<View style={{ flexDirection: "row" }}>
+					<Text style={{ flex: 1, alignSelf: "flex-start", fontSize: 20, color: textColor }}>
+						Advanced info 
 					</Text>
-      			</View>
+					<Switch 
+						style={{ flex: 1, alignSelf: "flex-end" }}
+						onValueChange={() => setAdvancedInfo(!advancedInfo)}
+						value={advancedInfo}
+					/>
+				</View>
+
+				<View style={{ marginTop: 10, flexDirection: "row" }}>
+					<Text style={{ flex: 1, alignSelf: "flex-start", fontSize: 20, color: textColor }}>
+						LED test 
+					</Text>
+					<Switch 
+						style={{ flex: 1, alignSelf: "flex-end" }}
+						onValueChange={() => setLedTestOn(!ledTestOn)}
+						value={ledTestOn}
+					/>
+				</View>
 			
-				{advanceInfo && ( // When thouched advanceInfo value becomes true and this becomes true
-        			<Text style={{ marginTop: 5, paddingLeft:20, color: textColor }}>
+				{advancedInfo && ( // When touched advancedInfo value becomes true and this becomes true
+        			<Text style={{ marginTop: 10, color: textColor }}>
 						Raw sensor values. 
 						The water Level value is {moisture}.
 						The light Level value is {light}.
-				</Text>
+					</Text>
       			)}
 			</View>
 
