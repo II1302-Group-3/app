@@ -33,22 +33,22 @@ export const EnvironmentSettingsSliderView = ({
 
     return(
         <View style={backgroundStyle}>
-				<Text style={{fontSize: 24, fontWeight: 'bold', color: textColor, marginBottom: 20}}>{title}</Text>
-				<View style={{flexDirection: 'row', justifyContent: 'space-between', marginHorizontal: 25}}>
-    				{ renderLevels() } 
-				</View>
+            <Text style={{fontSize: 24, fontWeight: 'bold', color: textColor, marginBottom: 20}}>{title}</Text>
+            <View style={{flexDirection: 'row', justifyContent: 'space-between', marginHorizontal: 25}}>
+                { renderLevels() } 
+            </View>
 
-				<View style={{paddingHorizontal: 25}}>
-					<Slider
-						style={{width: "100%", height: 60}}
-						minimumValue={50} // min value of the slider 
-						maximumValue={150} // Max value of the slider 
-						onValueChange={(value) => onSlide(value)} // We give waterLevel the value when it changes 
-						value={nutrition}
-						step={step} // step on the slider
-						thumbImage={sliderIcon}
-					/>
-				</View>
-			</View>
+            <View style={{paddingHorizontal: 25}}>
+                <Slider
+                    style={{width: "100%", height: 60}}
+                    minimumValue={50} // min value of the slider 
+                    maximumValue={150} // Max value of the slider 
+                    onValueChange={(value) => onSlide(value)} // We give waterLevel the value when it changes 
+                    value={nutrition}
+                    step={step} // step on the slider
+                    thumbImage={sliderIcon}
+                />
+            </View>
+        </View>
     )
 }
