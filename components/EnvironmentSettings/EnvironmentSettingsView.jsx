@@ -45,7 +45,6 @@ export const EnvironmentSettingsView = ({
 				onSlide={ setLight } 
 				advancedInfo={ advancedInfo }
 				textColor={ textColor }/>
-			{/* <LightSlider advancedInfo={ advancedInfo } textColor={ textColor } /> */}
 
 			<View style={{ paddingVertical: 20, paddingHorizontal: 20 }}>
 				<EnvironmentSettingsSwitch 
