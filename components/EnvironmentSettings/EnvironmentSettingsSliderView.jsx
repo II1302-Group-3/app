@@ -22,20 +22,13 @@ export const EnvironmentSettingsSliderView = ({
 		margin: 15,
 	};
 
-    const step = 50;
-
-    function renderLevels() {
-        const levels = ["Low", "Medium", "High"];
-        let i = 1;
-
-        return levels.map(level => <Text style={{fontSize: 18, color: textColor }} >{advancedInfo ? step * i++ : level}</Text>)
-    }
-
     return(
         <View style={backgroundStyle}>
             <Text style={{fontSize: 24, fontWeight: 'bold', color: textColor, marginBottom: 20}}>{title}</Text>
             <View style={{flexDirection: 'row', justifyContent: 'space-between', marginHorizontal: 25}}>
-                { renderLevels() } 
+                <Text style={{fontSize: 18, color: textColor }} >{advancedInfo ? "50" : "Low"}</Text>
+                <Text style={{fontSize: 18, color: textColor }} >{advancedInfo ? "100" : "Medium"}</Text>
+                <Text style={{fontSize: 18, color: textColor }} >{advancedInfo ? "150" : "High"}</Text>
             </View>
 
             <View style={{paddingHorizontal: 25}}>
@@ -45,7 +38,7 @@ export const EnvironmentSettingsSliderView = ({
                     maximumValue={150} // Max value of the slider 
                     onValueChange={(value) => onSlide(value)} // We give waterLevel the value when it changes 
                     value={nutrition}
-                    step={step} // step on the slider
+                    step={50} // step on the slider
                     thumbImage={sliderIcon}
                 />
             </View>

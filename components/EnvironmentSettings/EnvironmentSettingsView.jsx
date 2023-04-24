@@ -1,17 +1,28 @@
 import React from 'react';
 import { useColorScheme, View, StatusBar } from 'react-native';
 import { Header } from './Header';
-import { MoistureSlider } from './EnvironmentSettingsSlider/MoistureSlider';
-import { LightSlider } from './EnvironmentSettingsSlider/LightSlider';
-import { AdvancedInfoSwitch } from './EnvironmentSettingsSwitch/AdvancedInfoSwitch';
-import { LEDTestSwitch } from './EnvironmentSettingsSwitch/LEDTestSwitch';
-
+import { EnvironmentSettingsSliderView } from './EnvironmentSettingsSliderView';
+import { EnvironmentSettingsSwitch } from './EnvironmentSettingsSwitchView';
 export const EnvironmentSettingsView = ({
+	setLight,
+	setMoisture,
+	setLedTestOn,
 	setAdvancedInfo,
-	advancedInfo
+	advancedInfo,
+	light,
+	moisture,
+	ledTestOn
 }) => {
     const isDarkMode = useColorScheme() === 'dark';
 	const textColor = isDarkMode ? "#fafafa" : "#050505";
+
+	const moistureTitle = 'Moisture Level';
+	const lightTitle = 'Light Level';
+	const advancedInfoTitle = 'Advanced info';
+	const ledTestTitle = 'LED test';
+
+	const waterDropIcon = require('../../assets/WaterDropIcon.png'); // Link to waterDropIcon for the slider
+	const bulbIcon = require('../../assets/BulpIcon.png'); // Link to bulbIcon for the slider
 
     return(
         <View>
@@ -20,17 +31,35 @@ export const EnvironmentSettingsView = ({
 				barStyle={isDarkMode ? "light-content" : "dark-content"}
 			/>
 			<Header textColor={ textColor } />
-			<MoistureSlider advancedInfo={ advancedInfo } textColor={ textColor } />
-			<LightSlider advancedInfo={ advancedInfo } textColor={ textColor } />
+			<EnvironmentSettingsSliderView 
+				title={ moistureTitle } 
+				sliderIcon={ waterDropIcon } 
+				nutrition={ moisture }
+				onSlide={ setMoisture } 
+				advancedInfo={ advancedInfo }
+				textColor={ textColor }/>
+			<EnvironmentSettingsSliderView 
+				title={ lightTitle } 
+				sliderIcon={ bulbIcon } 
+				nutrition={ light }
+				onSlide={ setLight } 
+				advancedInfo={ advancedInfo }
+				textColor={ textColor }/>
+			{/* <LightSlider advancedInfo={ advancedInfo } textColor={ textColor } /> */}
 
 			<View style={{ paddingVertical: 20, paddingHorizontal: 20 }}>
-				<AdvancedInfoSwitch 
-					advancedInfo={ advancedInfo } 
-					setAdvancedInfo={ setAdvancedInfo } 
-					textColor={ textColor} />
+				<EnvironmentSettingsSwitch 
+					title={ advancedInfoTitle }
+					onToggle={ setAdvancedInfo }
+					active={ advancedInfo }
+					textColor={ textColor } />
 
 				<View style={{ marginTop: 10 }}>
-					<LEDTestSwitch textColor={ textColor } />
+					<EnvironmentSettingsSwitch 
+						title={ ledTestTitle }
+						onToggle={ setLedTestOn }
+						active={ ledTestOn }
+						textColor={ textColor } />
 				</View>
 			</View>
 		</View>
