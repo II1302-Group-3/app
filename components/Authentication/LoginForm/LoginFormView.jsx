@@ -8,6 +8,7 @@ export const LoginFormView = ({
     password,
     setEmail,
     setPassword,
+    login,
     navigation
 }) => {
     return(
@@ -25,7 +26,7 @@ export const LoginFormView = ({
                 mode={'outlined'}
                 onChangeText={text => setPassword(text)}
             />
-            <Button mode="contained" style={{marginVertical: 25}} onPress={() => navigation.navigate('EnvironmentSettings')}>
+            <Button mode="contained" style={{marginVertical: 25}} onPress={() => login(email, password)}>
                 Log In
             </Button>
             <Button mode="text" onPress={() => navigation.navigate('Signup')}>

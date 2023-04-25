@@ -1,8 +1,12 @@
 import React, { useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
+import { signIn } from '../../../store/slices/firebaseAuth';
 import { LoginFormView } from './LoginFormView';
 
 export const LoginForm = ({ navigation }) => {
+    const dispatch = useDispatch();
+
+    const login = (email, password) => dispatch(signIn({userEmail: email, userPassword: password}))
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     
@@ -10,8 +14,9 @@ export const LoginForm = ({ navigation }) => {
         <LoginFormView 
             username={ email }
             password={ password }
-            setUsername={ setEmail }
+            setEmail={ setEmail }
             setPassword={ setPassword }
+            login={ login }
             navigation={ navigation }
         />
     )

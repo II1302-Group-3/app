@@ -1,8 +1,12 @@
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { createAccount } from '../../../store/slices/firebaseAuth';
 import { RegistrationFormView } from './RegistrationFormView';
 
 export const RegistrationForm = ({ navigation }) => {
+    const dispatch = useDispatch();
+
+    const uid = useSelector(state => state.firebaseAuth.userUID);
     const [displayName, setDisplayName] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
