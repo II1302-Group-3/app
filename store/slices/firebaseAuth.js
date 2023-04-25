@@ -15,7 +15,7 @@ export const firebaseAuth = createSlice({
         // Sign in with an existing user with Firebase
         signIn: (state, {payload}) => {
             auth().
-                signInWithEmailAndPassword('dummy@gmail.com', 'password123')
+                signInWithEmailAndPassword('test@gmail.com', 'test123')
                 .then((userAuth) => {
                     state.userEmail = payload.userEmail;
                     state.userUID = userAuth.user.uid;

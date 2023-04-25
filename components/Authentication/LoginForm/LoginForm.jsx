@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { signIn } from '../../../store/slices/firebaseAuth';
-import { LoginFormView } from './LoginFormView';
+import { LoginFormView } from './LoginFromView';
 
 export const LoginForm = ({ navigation }) => {
     const dispatch = useDispatch();
