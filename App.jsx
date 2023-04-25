@@ -17,8 +17,9 @@ function App() {
 			<PaperProvider>
 				<NavigationContainer>
 					<Stack.Navigator initialRouteName="Login">
-						<Stack.Screen name="Signup" component={ RegistrationForm } />
 						<Stack.Screen name="Login" component={ LoginForm } />
+						<Stack.Screen name="Signup" component={ RegistrationForm } />
+						<Stack.Screen name="EnvironmentSettings" component={ EnvironmentSettings } />
 					</Stack.Navigator>
 				</NavigationContainer>
 			</PaperProvider>

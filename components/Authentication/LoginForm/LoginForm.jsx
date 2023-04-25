@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { LoginFormView } from './LoginFormView';
 
-export const LoginForm = () => {
+export const LoginForm = ({ navigation }) => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     
@@ -12,6 +12,7 @@ export const LoginForm = () => {
             password={ password }
             setUsername={ setEmail }
             setPassword={ setPassword }
+            navigation={ navigation }
         />
     )
 }

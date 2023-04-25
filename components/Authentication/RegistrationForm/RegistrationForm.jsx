@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { RegistrationFormView } from './RegistrationFormView';
 
-export const RegistrationForm = () => {
+export const RegistrationForm = ({ navigation }) => {
     const [displayName, setDisplayName] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
@@ -18,6 +18,7 @@ export const RegistrationForm = () => {
             setEmail={ setEmail }
             setPassword={ setPassword }
             setConfirmPassword={ setConfirmPassword }
+            navigation={ navigation }
         />
     )
 }

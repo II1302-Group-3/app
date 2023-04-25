@@ -1,6 +1,5 @@
 import React from 'react';
 import { useColorScheme, View, StatusBar } from 'react-native';
-import { Header } from './Header';
 import { EnvironmentSettingsSliderView } from './EnvironmentSettingsSliderView';
 import { EnvironmentSettingsSwitch } from './EnvironmentSettingsSwitchView';
 export const EnvironmentSettingsView = ({
@@ -30,7 +29,6 @@ export const EnvironmentSettingsView = ({
 				backgroundColor="transparent"
 				barStyle={isDarkMode ? "light-content" : "dark-content"}
 			/>
-			<Header textColor={ textColor } />
 			<EnvironmentSettingsSliderView 
 				title={ moistureTitle } 
 				sliderIcon={ waterDropIcon } 

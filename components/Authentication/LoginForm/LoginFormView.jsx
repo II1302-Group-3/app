@@ -7,7 +7,8 @@ export const LoginFormView = ({
     email,
     password,
     setEmail,
-    setPassword
+    setPassword,
+    navigation
 }) => {
     return(
         <View style={{paddingHorizontal: 25}}>
@@ -24,10 +25,10 @@ export const LoginFormView = ({
                 mode={'outlined'}
                 onChangeText={text => setPassword(text)}
             />
-            <Button mode="contained" style={{marginVertical: 25}}>
+            <Button mode="contained" style={{marginVertical: 25}} onPress={() => navigation.navigate('EnvironmentSettings')}>
                 Log In
             </Button>
-            <Button mode="text">
+            <Button mode="text" onPress={() => navigation.navigate('Signup')}>
                 Don't have an account? Sign up
             </Button>
 
