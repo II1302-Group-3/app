@@ -1,9 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import {
-    createUserWithEmailAndPassword,
-    getAuth,
-    signInWithEmailAndPassword,
-} from "@react-native-firebase/auth";
+import auth from "@react-native-firebase/auth";
 
 
 const initialState = {
@@ -18,7 +14,8 @@ export const firebaseAuth = createSlice({
     reducers: {
         // Sign in with an existing user with Firebase
         signIn: (state, {payload}) => {
-                signInWithEmailAndPassword(getAuth(), payload.userEmail, payload.userPassword)
+            auth().
+                signInWithEmailAndPassword('dummy@gmail.com', 'password123')
                 .then((userAuth) => {
                     state.userEmail = payload.userEmail;
                     state.userUID = userAuth.user.uid;
@@ -32,7 +29,8 @@ export const firebaseAuth = createSlice({
                 console.log("Password don't match")
             }
             else{
-                createUserWithEmailAndPassword(getAuth(), payload.userEmail, payload.userPassword)
+                auth().
+                createUserWithEmailAndPassword(payload.userEmail, payload.userPassword)
                 .then((userAuth) => {
                     state.userName = payload.userName;
                     state.userEmail = payload.userEmail;
@@ -47,3 +45,4 @@ export const firebaseAuth = createSlice({
 
 
 export const { signIn, createAccount} = firebaseAuth.actions;
+

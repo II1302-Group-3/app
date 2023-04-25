@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "406914966653",
+    "firebase_url": "https://greengarden-iot-default-rtdb.europe-west1.firebasedatabase.app",
+    "project_id": "greengarden-iot",
+    "storage_bucket": "greengarden-iot.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:406914966653:android:36ca0be08561f84f753d14",
+        "android_client_info": {
+          "package_name": "com.greengarden"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "406914966653-h838m8re4pc2236k01iv8siull4g9v6c.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA95KEj3YaVQP_GLdQrVpQGB22GK4dcmi8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "406914966653-h838m8re4pc2236k01iv8siull4g9v6c.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "406914966653-f9bb7p0gtcs6oofe5iqaaib6hlcqo0vf.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "org.reactjs.native.example.GreenGarden"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
