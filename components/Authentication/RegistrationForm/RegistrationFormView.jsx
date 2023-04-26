@@ -12,6 +12,7 @@ export const RegistrationFormView = ({
     setEmail,
     setPassword,
     setConfirmPassword,
+    signUp,
     navigation
 }) => {
     return(
@@ -44,7 +45,7 @@ export const RegistrationFormView = ({
                 secureTextEntry={true}
             />
             <View style={{marginVertical: 25}}>
-                <Button mode="contained">
+                <Button mode="contained" onPress={() => signUp(displayName, email, password, confirmPassword)}>
                     Sign Up
                 </Button>
                 <Button style={{marginVertical: 10}} mode="contained-tonal" onPress={() => navigation.goBack()}>
