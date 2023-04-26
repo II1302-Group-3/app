@@ -1,7 +1,5 @@
 import React from 'react';
-import { View } from 'react-native';
-import { TextInput, Button } from 'react-native-paper';
-import { Header } from '../../Header';
+import { Button } from 'react-native-paper';
 
 export const HomeView = ({signOut}) => {
     return(

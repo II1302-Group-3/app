@@ -1,4 +1,4 @@
-import { createSlice, createAsyncThunk, createSelector } from "@reduxjs/toolkit";
+import { createSlice, createSelector } from "@reduxjs/toolkit";
 import auth from "@react-native-firebase/auth";
 
 const initialState = {
@@ -40,4 +40,4 @@ export const logout = () => (dispatch, _) => {
 }
 
 const selectUserUID = state => state.firebaseAuth.userUID;
-export const selectedIsLoggedIn = createSelector(selectUserUID, uid => !!uid);
+export const selectIsLoggedIn = createSelector(selectUserUID, uid => !!uid);
