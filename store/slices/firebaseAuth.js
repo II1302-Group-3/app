@@ -1,48 +1,43 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, createSelector } from "@reduxjs/toolkit";
 import auth from "@react-native-firebase/auth";
-
 
 const initialState = {
     userUID: null,
     userEmail: null,
-    userName: null, 
+    userName: null,
 }
 
 export const firebaseAuth = createSlice({
     name: 'firebaseAuth',
     initialState, 
     reducers: {
-        // Sign in with an existing user with Firebase
-        signIn: (state, {payload}) => {
-            auth().
-                signInWithEmailAndPassword('test@gmail.com', 'test123')
-                .then((userAuth) => {
-                    state.userEmail = payload.userEmail;
-                    state.userUID = userAuth.user.uid;
-                }).catch((error) => {
-                    console.log("An error has occered", error); 
-                })
-        },
-        //Create account in firebase
         createAccount: (state, { payload }) => {
-            if (payload.userPassword != payload.confirmPassword ) {
-                console.log("Password don't match")
-            }
-            else{
-                auth().
-                createUserWithEmailAndPassword(payload.userEmail, payload.userPassword)
-                .then((userAuth) => {
-                    state.userName = payload.userName;
-                    state.userEmail = payload.userEmail;
-                    state.userUID = userAuth.user.uid;
-                }).catch((error) => {
-                    console.log("An error has occered", error); 
-                })
-            }
+            auth().createUserWithEmailAndPassword(payload.userEmail, payload.userPassword);
+            state.displayName = payload.displayName;
         },
+        setUser: (state, { payload }) => {
+            state.userUID = payload.uid;
+            state.userEmail = payload.email;
+        },
+    },
+    extraReducers: {
+        RESET: () => initialState
     }
 })
 
+export const { createAccount, setUser } = firebaseAuth.actions;
 
-export const { signIn, createAccount} = firebaseAuth.actions;
+export const signIn = ({userEmail, userPassword}) => auth().signInWithEmailAndPassword(userEmail, userPassword); 
 
+export const listenToAuthChanges = () => (dispatch, _) => 
+    auth().onAuthStateChanged(user => {
+        if(user) dispatch(setUser({uid: user.uid, email: user.email}))
+    })
+
+export const logout = () => (dispatch, _) => {
+    dispatch( {type: "RESET"} );
+    auth().signOut();
+}
+
+const selectUserUID = state => state.firebaseAuth.userUID;
+export const selectIsLoggedIn = createSelector(selectUserUID, uid => !!uid);

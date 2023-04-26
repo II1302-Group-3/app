@@ -1,6 +1,7 @@
 import React from 'react';
 import { View } from 'react-native';
 import { TextInput, Button } from 'react-native-paper';
+import { Header } from '../../Header';
 
 export const LoginFormView = ({
     email,
@@ -12,6 +13,7 @@ export const LoginFormView = ({
 }) => {
     return(
         <View style={{paddingHorizontal: 25}}>
+            <Header />
             <TextInput
                 label="Email"
                 value={email}
