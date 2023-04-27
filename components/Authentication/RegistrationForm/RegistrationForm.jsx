@@ -1,18 +1,44 @@
-import React, { useState } from 'react';
-import { useDispatch } from 'react-redux';
-import { createAccount } from '../../../store/slices/firebaseAuth';
+import React, { useState, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { createAccount, resetError } from '../../../store/slices/firebaseAuth';
 import { RegistrationFormView } from './RegistrationFormView';
 
 export const RegistrationForm = ({ navigation }) => {
     const dispatch = useDispatch();
+    const error = useSelector(state => state.firebaseAuth.signupError);
+
+    useEffect(() => {
+        if(error) validate()
+
+        function validate() {
+            switch(error) {
+                case 'auth/invalid-email': 
+                    alert('The provided email is incorrectly formatted.');
+                    break;
+                case 'auth/email-already-in-use':
+                    alert('The provided email is already in use by an existing user.');
+                    break;
+                case 'auth/weak-password': 
+                    alert('Password must be longer than six characters.');
+                    break;
+                case 'Passwords do not match.':
+                    alert(error);
+                    break;
+                default: alert('Something went wrong. Error: ' + error);
+            }
+            dispatch(resetError())
+        }
+    }, [error])
 
     const signUp = (displayName, email, password, confirmPassword) => {
-        dispatch(createAccount({
-            displayName,
-            userEmail: email,
-            userPassword: password,
-            confirmPassword
-        }))
+        if(displayName && email && password && confirmPassword) {
+            dispatch(createAccount({
+                displayName,
+                userEmail: email,
+                userPassword: password,
+                confirmPassword
+            }))
+        }
     }
     const [displayName, setDisplayName] = useState("");
     const [email, setEmail] = useState("");

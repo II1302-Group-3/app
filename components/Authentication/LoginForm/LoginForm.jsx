@@ -1,14 +1,38 @@
-import React, { useState } from 'react';
-import { useDispatch } from 'react-redux';
-import { signIn } from '../../../store/slices/firebaseAuth';
+import React, { useState, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { signIn, resetError } from '../../../store/slices/firebaseAuth';
 import { LoginFormView } from './LoginFormView';
 
 export const LoginForm = ({ navigation }) => {
     const dispatch = useDispatch();
+    const error = useSelector(state => state.firebaseAuth.signinError);
 
-    const login = (email, password) => signIn({userEmail: email, userPassword: password})
+    useEffect(() => {
+        if(error) validate()
+
+        function validate() {
+            switch(error) {
+                case 'auth/internal-error': 
+                    alert('Password required.');
+                    break;
+                case 'auth/user-not-found': 
+                    alert('User does not exist.')
+                    break;
+                case 'auth/wrong-password': 
+                    alert('The provided password is incorrect.');
+                    break;
+                default: alert('Something went wrong. Error code: ' + error)
+            }
+            dispatch(resetError());
+        }
+    }, [error]);
+
+    const login = (email, password) => {
+        if(email && password) dispatch(signIn({userEmail: email, userPassword: password}));
+    };
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    
     
     return(
         <LoginFormView 
