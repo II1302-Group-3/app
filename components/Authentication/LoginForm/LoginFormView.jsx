@@ -25,6 +25,7 @@ export const LoginFormView = ({
                 value={password}
                 mode={'outlined'}
                 onChangeText={text => setPassword(text)}
+                secureTextEntry={true}
             />
             <Button mode="contained" style={{marginVertical: 25}} onPress={() => login(email, password)}>
                 Log In

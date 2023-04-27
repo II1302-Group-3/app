@@ -64,3 +64,4 @@ yarn-error.log
 
 # Custom
 /android/app/google-services.json
+GoogleService-Info.plist
