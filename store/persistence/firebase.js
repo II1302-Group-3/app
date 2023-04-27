@@ -12,7 +12,7 @@ export const enablePersistence = (store) => {
     let prevState = store.getState();
     const dispatch = store.dispatch;
 
-    readFromFirebase()
+    readFromFirebase(prevState)
         .then(() => {
             console.log("Subscribing to send values to Firebase");
 
@@ -25,16 +25,21 @@ export const enablePersistence = (store) => {
         })
         .catch(error => Alert.alert("Failed to read from Firebase", "Error: " + error))
 
-    function getRefs() {
+    function getRefs(state) {
         const garden = 'garden/placeholder/';
         const lightRef = garden + 'target_light_level';
         const moistureRef = garden + 'target_moisture';
         const ledTestRef = garden + 'test_led_on';
 
+        const uid = state.firebaseAuth.userUID
+        const user = `users/${uid}/`
+        const displayNameRef = user + 'displayName';
+
         return {
             lightRef,
             moistureRef,
-            ledTestRef
+            ledTestRef,
+            displayNameRef
         }
     }
 
@@ -42,8 +47,9 @@ export const enablePersistence = (store) => {
         const {
             lightRef,
             moistureRef,
-            ledTestRef
-        } = getRefs();
+            ledTestRef,
+            displayNameRef
+        } = getRefs(state);
 
         const light = state.garden.light;
         const prevLight = prevState.garden.light;
@@ -53,6 +59,9 @@ export const enablePersistence = (store) => {
 
         const ledTestOn = state.garden.ledTestOn;
         const prevLedTestOn = prevState.garden.ledTestOn;
+
+        const displayName = state.firebaseAuth.displayName;
+        const prevDisplayName = prevState.firebaseAuth.displayName;
  
         if(light !== prevLight) {
             database()
@@ -71,14 +80,20 @@ export const enablePersistence = (store) => {
                 .ref(ledTestRef)
                 .set(ledTestOn ? 1 : 0)
         }
+
+        if(!!state.firebaseAuth.userUID && displayName !== prevDisplayName) {
+            database()
+                .ref(displayNameRef)
+                .set(displayName)
+        }
     }
 
-    function readFromFirebase() {
+    function readFromFirebase(state) {
         const {
             lightRef,
             moistureRef,
             ledTestRef
-        } = getRefs();
+        } = getRefs(state);
 
         promises = [
             database()
