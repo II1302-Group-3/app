@@ -1,5 +1,6 @@
 import { createSlice, createAsyncThunk, createSelector } from "@reduxjs/toolkit";
 import auth from "@react-native-firebase/auth";
+import database from "@react-native-firebase/database"
 
 const initialState = {
     signinError: null,
@@ -38,12 +39,13 @@ export const firebaseAuth = createSlice({
     name: 'firebaseAuth',
     initialState, 
     reducers: {
-        setDisplayName: (state, { meta, payload }) => {
+        setDisplayName: (state, { payload }) => {
             state.displayName = payload;
         },
         setUser: (state, { payload }) => {
             state.userUID = payload.uid;
             state.userEmail = payload.email;
+            state.displayName = payload.displayName
         },
         reset: () => initialState,
         resetError: state => {
@@ -52,10 +54,7 @@ export const firebaseAuth = createSlice({
         }
     },
     extraReducers: builder => {
-        const addError = error => {
-            if(error?.code) return error.code;
-            return error?.message ? error.message : error;
-        }
+        const addError = error => error?.code ? error.code : error.message;
 
         builder.addCase(createAccount.fulfilled, (state, { payload }) => {
             state.displayName = payload;
@@ -71,9 +70,13 @@ export const firebaseAuth = createSlice({
 
 export const { setDisplayName, setUser, reset, resetError } = firebaseAuth.actions;
 
-export const listenToAuthChanges = () => (dispatch, getState) => 
-    auth().onAuthStateChanged(user => {
-        if(user) dispatch(setUser({uid: user.uid, email: user.email}))
+export const listenToAuthChanges = () => (dispatch, _) => 
+    auth().onAuthStateChanged(async(user) => {
+        if(user) {
+            let displayName;
+            await database().ref('users/' + user.uid + '/displayName').once("value").then(snapshot => displayName = snapshot.val())
+            dispatch(setUser({uid: user.uid, email: user.email, displayName}))
+        }
     })
 
 export const logout = () => (dispatch, _) => {

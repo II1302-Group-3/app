@@ -17,12 +17,12 @@ const waterDropIcon = require('../../assets/WaterDropIcon.png'); // Link to wate
 const bulbIcon = require('../../assets/BulpIcon.png'); // Link to bulbIcon for the slider
 
 
-export const HomeView = ({signOut, gardenDetails, addNewGarden}) => {
+export const HomeView = ({signOut, displayName, addNewGarden, navigation}) => {
     return(
         <View style={{}}>
-            <Text style={{fontSize: 24, fontWeight: 'bold', margin: 15}} >Hello 'User'</Text>
+            <Text style={{fontSize: 24, fontWeight: 'bold', margin: 15}} >Hello {displayName}</Text>
             
-            <TouchableHighlight onPress={() => gardenDetails()}>
+            <TouchableHighlight onPress={() => navigation.navigate('EnvironmentSettings')}>
             <View style={{  backgroundColor: "white",
                             borderRadius: 10,
                             shadowColor: '#000',

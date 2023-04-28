@@ -26,7 +26,7 @@ export const enablePersistence = (store) => {
         .catch(error => Alert.alert("Failed to read from Firebase", "Error: " + error))
 
     function getRefs(state) {
-        const garden = 'garden/placeholder/';
+        const garden = 'garden/251951091481/';
         const lightRef = garden + 'target_light_level';
         const moistureRef = garden + 'target_moisture';
         const ledTestRef = garden + 'test_led_on';
