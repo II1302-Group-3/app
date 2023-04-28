@@ -62,26 +62,26 @@ export const enablePersistence = (store) => {
 
         const displayName = state.firebaseAuth.displayName;
         const prevDisplayName = prevState.firebaseAuth.displayName;
- 
-        if(light !== prevLight) {
+
+        if (light !== prevLight) {
             database()
                 .ref(lightRef)
                 .set(light)
         }
 
-        if(moisture !== prevMoisture) {
+        if (moisture !== prevMoisture) {
             database()
                 .ref(moistureRef)
                 .set(moisture)
         }
 
-        if(ledTestOn !== prevLedTestOn) {
+        if (ledTestOn !== prevLedTestOn) {
             database()
                 .ref(ledTestRef)
                 .set(ledTestOn ? 1 : 0)
         }
 
-        if(!!state.firebaseAuth.userUID && displayName !== prevDisplayName) {
+        if (!!state.firebaseAuth.userUID && displayName !== prevDisplayName) {
             database()
                 .ref(displayNameRef)
                 .set(displayName)

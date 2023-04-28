@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>406914966653-f9bb7p0gtcs6oofe5iqaaib6hlcqo0vf.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.406914966653-f9bb7p0gtcs6oofe5iqaaib6hlcqo0vf</string>
+	<key>API_KEY</key>
+	<string>AIzaSyB2Y_f7bvYM5WqvES6t8NKzOkMYBAPH3Fs</string>
+	<key>GCM_SENDER_ID</key>
+	<string>406914966653</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>org.reactjs.native.example.GreenGarden</string>
+	<key>PROJECT_ID</key>
+	<string>greengarden-iot</string>
+	<key>STORAGE_BUCKET</key>
+	<string>greengarden-iot.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:406914966653:ios:5f1777b19a51f22f753d14</string>
+	<key>DATABASE_URL</key>
+	<string>https://greengarden-iot-default-rtdb.europe-west1.firebasedatabase.app</string>
+</dict>
+</plist>
