@@ -4,12 +4,13 @@ import { Camera, useCameraDevices } from "react-native-vision-camera";
 import { DeniedQrScannerView, QrScannerView, UndeterminedQrScannerView } from "./QrScannerViews";
 import { Linking } from "react-native";
 import { setScannedSerial } from "../../store/slices/garden";
+import { useScanBarcodes, BarcodeFormat } from "vision-camera-code-scanner";
 
 export const QrScanner = ({navigation}) => {
 	const dispatch = useDispatch();
 
 	const returnWithCode = code => {
-		dispatch(setScannedSerial(code.trim()));
+		dispatch(setScannedSerial(code));
 		navigation.goBack();
 	}
 
@@ -24,18 +25,33 @@ export const QrScanner = ({navigation}) => {
 				setCameraPermission(result);
 			}).catch(() => {});
 		}, 250);
-
-		setTimeout(() => {
-			returnWithCode("000000000000");
-		}, 3000);
 	}, []);
+
+	const [frameProcessor, barcodes] = useScanBarcodes([BarcodeFormat.QR_CODE], {
+		checkInverted: true,
+	});
+
+	useEffect(() => {
+		barcodes.every(barcode => {
+			// Selects barcode.rawValue if it exists
+			const serial = barcode.rawValue?.trim() ?? "";
+
+			if(serial.length == 12 && [...serial].every(c => c >= '0' && c <= '9')) {
+				returnWithCode(serial);
+				return false;
+			}
+
+			// continue
+			return true;
+		});
+	}, [barcodes])
 
 	if(cameraPermission === "") {
 		return <UndeterminedQrScannerView/>;
 	}
 
 	if(cameraPermission === "authorized") {
-		return device ? <QrScannerView camera={device} returnWithCode={returnWithCode}/> : <UndeterminedQrScannerView/>;
+		return device ? <QrScannerView camera={device} frameProcessor={frameProcessor}/> : <UndeterminedQrScannerView/>;
 	}
 
 	return <DeniedQrScannerView openSettings={Linking.openSettings}/>;

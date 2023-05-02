@@ -19,10 +19,18 @@ export const DeniedQrScannerView = ({openSettings}) => {
 }
 
 // Used when the user allows camera access
-export const QrScannerView = ({camera, returnWithCode}) => {
+export const QrScannerView = ({camera, frameProcessor}) => {
 	return (
 		<View style={{backgroundColor: "white"}}>
-			<Camera style={{width: "100%", height: "100%"}} device={camera} isActive={true}></Camera>
+			<Camera 
+				style={{width: "100%", height: "100%"}} 
+
+				device={camera} 
+				isActive={true} 
+
+				frameProcessor={frameProcessor} 
+				frameProcessorFps={10}
+			/>
 		</View>
 	);
 }
