@@ -17,6 +17,7 @@ import {
 	DarkTheme as NavigationDarkTheme,
 	DefaultTheme as NavigationDefaultTheme
   } from '@react-navigation/native';
+import { QrScanner } from './components/AddGarden/QrScanner';
 
 function App() {
 	const Stack = createNativeStackNavigator();
@@ -34,7 +35,8 @@ function App() {
 						<>
 						<Stack.Screen name="Home" component={ Home } />
 						<Stack.Screen name="EnvironmentSettings" component={ EnvironmentSettings } />
-						<Stack.Screen name="ClaimGarden" options={{ title: "Add Garden" }} component={ AddGarden } />
+						<Stack.Screen name="AddGarden" options={{ title: "Add Garden" }} component={ AddGarden } />
+						<Stack.Screen name="QrScanner" options={{ title: "Scan for QR code" }} component={ QrScanner } />
 						</>
 					) : (
 						<>

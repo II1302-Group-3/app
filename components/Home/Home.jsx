@@ -11,7 +11,7 @@ export const Home = ({ navigation }) => {
     const displayName = useSelector(state => state.firebaseAuth.displayName);
 
     const signOut = () => dispatch(logout());
-    const addNewGarden = () => navigation.navigate("ClaimGarden");
+    const addNewGarden = () => navigation.navigate("AddGarden");
 
     return(
         displayNameRef,
