@@ -12,8 +12,8 @@ export const UndeterminedQrScannerView = () => {
 export const DeniedQrScannerView = ({openSettings}) => {
 	return (
 		<View style={{backgroundColor: "black", height: "100%", flexDirection: "column", justifyContent: "center" }}>
-			<Text style={{textAlign: "center"}}>The app has no access to the camera</Text>
-			<Button mode="text" onPress={openSettings}>Open Settings app</Button>
+			<Text style={{color: "white", textAlign: "center"}}>The app has no access to the camera</Text>
+			<Button mode="text" onPress={openSettings} dark={true}>Open Settings app</Button>
 		</View>
 	);
 }

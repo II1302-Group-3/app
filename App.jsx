@@ -27,6 +27,13 @@ function App() {
 	const paperTheme = isDarkMode ? PaperDarkTheme : PaperDefaultTheme;
 	const navigationTheme = isDarkMode ? NavigationDarkTheme : NavigationDefaultTheme;
 
+	const qrOptions = { 
+		title: "Scan for QR code", 
+		headerTransparent: true, 
+		headerStyle: {backgroundColor: "#000000aa"}, 
+		headerTintColor: "white" 
+	};
+
 	return (
 		<PaperProvider theme={paperTheme}>
 			<NavigationContainer theme={navigationTheme}>
@@ -36,7 +43,7 @@ function App() {
 						<Stack.Screen name="Home" component={ Home } />
 						<Stack.Screen name="EnvironmentSettings" component={ EnvironmentSettings } />
 						<Stack.Screen name="AddGarden" options={{ title: "Add Garden" }} component={ AddGarden } />
-						<Stack.Screen name="QrScanner" options={{ title: "Scan for QR code" }} component={ QrScanner } />
+						<Stack.Screen name="QrScanner" options={qrOptions} component={ QrScanner } />
 						</>
 					) : (
 						<>
