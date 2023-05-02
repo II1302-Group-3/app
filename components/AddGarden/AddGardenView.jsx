@@ -9,8 +9,8 @@ export const AddGardenView = ({name, setName, serial, setSerial, isValidName, is
 				<View>
 					<TextInput label="Name your garden" mode="outlined" error={!isValidName} value={name} onChangeText={setName}></TextInput>
 					<TextInput label="Serial number" mode="outlined" error={!isValidSerial} value={serial} onChangeText={setSerial}></TextInput>
-					<Button mode="contained" style={{marginVertical: 25}}>Claim</Button>
-					<Button mode="text" icon={require("../../assets/qrexample.png")}>Scan a QR code</Button>
+					<Button mode="contained" style={{marginVertical: 25}} onPress={() => {}}>Claim</Button>
+					<Button mode="text" icon={require("../../assets/qrexample.png")} onPress={() => {}}>Scan a QR code</Button>
 				</View>
 			</View>
 			<View style={{flexGrow: 0}}>
