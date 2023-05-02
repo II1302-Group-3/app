@@ -1,7 +1,7 @@
 import React from 'react';
 import { useColorScheme } from 'react-native';
 import { useSelector } from 'react-redux';
-import { 
+import {
 	MD3DarkTheme as PaperDarkTheme,
 	DefaultTheme as PaperDefaultTheme,
 	Provider as PaperProvider } from 'react-native-paper';
@@ -12,6 +12,7 @@ import { Home } from './components/Home/Home';
 import { EnvironmentSettings } from './components/EnvironmentSettings/EnvironmentSettings';
 import { LoginForm } from './components/Authentication/LoginForm/LoginForm';
 import { RegistrationForm } from './components/Authentication/RegistrationForm/RegistrationForm';
+import { AddGarden } from './components/AddGarden/AddGarden';
 import {
 	DarkTheme as NavigationDarkTheme,
 	DefaultTheme as NavigationDefaultTheme
@@ -21,10 +22,10 @@ function App() {
 	const Stack = createNativeStackNavigator();
 	const isLoggedIn = useSelector(selectIsLoggedIn)
 	const isDarkMode = useColorScheme() === 'dark';
-	
+
 	const paperTheme = isDarkMode ? PaperDarkTheme : PaperDefaultTheme;
 	const navigationTheme = isDarkMode ? NavigationDarkTheme : NavigationDefaultTheme;
-	
+
 	return (
 		<PaperProvider theme={paperTheme}>
 			<NavigationContainer theme={navigationTheme}>
@@ -33,6 +34,7 @@ function App() {
 						<>
 						<Stack.Screen name="Home" component={ Home } />
 						<Stack.Screen name="EnvironmentSettings" component={ EnvironmentSettings } />
+						<Stack.Screen name="ClaimGarden" options={{ title: "Add Garden" }} component={ AddGarden } />
 						</>
 					) : (
 						<>
