@@ -19,7 +19,8 @@ export const createAccount = createAsyncThunk('firebaseAuth/createAccount', asyn
     if(userPassword !== confirmPassword) throw new Error("Passwords do not match.")
 
     try {
-        await auth().createUserWithEmailAndPassword(userEmail, userPassword)
+        const credentials = await auth().createUserWithEmailAndPassword(userEmail, userPassword);
+        await database().ref('users/' + credentials.user.uid + '/displayName').set(displayName)
     } catch(error) {
         throw error;
     }
@@ -75,7 +76,7 @@ export const listenToAuthChanges = () => (dispatch, _) =>
         if(user) {
             let displayName;
             await database().ref('users/' + user.uid + '/displayName').once("value").then(snapshot => displayName = snapshot.val())
-            dispatch(setUser({uid: user.uid, email: user.email, displayName}))
+            dispatch(setUser({uid: user.uid, email: user.email, displayName: displayName ?? "[unknown display name]"}))
         }
     })
 
