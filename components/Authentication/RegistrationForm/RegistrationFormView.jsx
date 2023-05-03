@@ -27,12 +27,14 @@ export const RegistrationFormView = ({
                     value={displayName}
                     mode={'outlined'}
                     onChangeText={text => setDisplayName(text)}
+                    autoComplete="name"
                 />
                 <TextInput
                     label="Email"
                     value={email}
                     mode={'outlined'}
                     onChangeText={text => setEmail(text)}
+                    autoComplete="email"
                 />
                 <TextInput
                     label="Password"
@@ -40,6 +42,7 @@ export const RegistrationFormView = ({
                     mode={'outlined'}
                     onChangeText={text => setPassword(text)}
                     secureTextEntry={true}
+                    autoComplete="new-password"
                 />
                 <TextInput
                     label="Confirm Password"
@@ -47,12 +50,13 @@ export const RegistrationFormView = ({
                     mode={'outlined'}
                     onChangeText={text => setConfirmPassword(text)}
                     secureTextEntry={true}
+                    autoComplete="new-password"
                 />
-                <View style={{marginVertical: 25}}>
-                    <Button mode="contained" onPress={() => signUp(displayName, email, password, confirmPassword)}>
+                <View style={{marginTop: 25}}>
+                    <Button mode="contained" style={{marginBottom: 10}} onPress={() => signUp(displayName, email, password, confirmPassword)}>
                         Sign Up
                     </Button>
-                    <Button style={{marginVertical: 10}} mode="contained-tonal" onPress={() => navigation.goBack()}>
+                    <Button mode="contained-tonal" onPress={() => navigation.goBack()}>
                         Go Back
                     </Button>
                 </View>
