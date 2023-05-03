@@ -31,7 +31,7 @@ function App() {
 					{isLoggedIn ? (
 						<>
 						<Stack.Screen name="Home" component={ Home } />
-						<Stack.Screen name="EnvironmentSettings" component={ EnvironmentSettings } />
+						<Stack.Screen name="EnvironmentSettings" options={{title: "Garden 'One'"}} component={ EnvironmentSettings } />
 						</>
 					) : (
 						<>
