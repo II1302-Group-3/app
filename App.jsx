@@ -1,10 +1,7 @@
 import React from 'react';
-import { useColorScheme } from 'react-native';
+import { useColorScheme, StatusBar } from 'react-native';
 import { useSelector } from 'react-redux';
-import { 
-	MD3DarkTheme as PaperDarkTheme,
-	DefaultTheme as PaperDefaultTheme,
-	Provider as PaperProvider } from 'react-native-paper';
+import { Provider as PaperProvider } from 'react-native-paper';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { selectIsLoggedIn } from './store/slices/firebaseAuth';
@@ -16,17 +13,19 @@ import {
 	DarkTheme as NavigationDarkTheme,
 	DefaultTheme as NavigationDefaultTheme
   } from '@react-navigation/native';
+import { lightGreenTheme, darkGreenTheme } from './theme';
 
 function App() {
 	const Stack = createNativeStackNavigator();
 	const isLoggedIn = useSelector(selectIsLoggedIn)
 	const isDarkMode = useColorScheme() === 'dark';
-	
-	const paperTheme = isDarkMode ? PaperDarkTheme : PaperDefaultTheme;
+
+	const paperTheme = isDarkMode ? darkGreenTheme : lightGreenTheme;
 	const navigationTheme = isDarkMode ? NavigationDarkTheme : NavigationDefaultTheme;
 	
 	return (
 		<PaperProvider theme={paperTheme}>
+			<StatusBar backgroundColor={navigationTheme.colors.card} barStyle={isDarkMode ? "light-content" : "dark-content"} />
 			<NavigationContainer theme={navigationTheme}>
 				<Stack.Navigator initialRouteName="Home">
 					{isLoggedIn ? (
