@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { AddGardenView } from "./AddGardenView";
-import { setScannedSerial } from "../../store/slices/garden";
+import { resetScannedSerial } from "../../store/slices/qrScanner";
 
-export const AddGarden = ({navigation, route}) => {
+export const AddGarden = ({navigation}) => {
 	const dispatch = useDispatch();
 
 	const [name, setName] = useState("");
@@ -15,12 +15,13 @@ export const AddGarden = ({navigation, route}) => {
 	const setSerialAndTrim = serial => setSerial(serial.trim());
 	const openQrScanner = () => navigation.navigate("QrScanner");
 
-	const scannedSerial = useSelector(state => state.garden.scannedSerial);
+	const scannedSerial = useSelector(state => state.qrScanner.scannedSerial);
 
+	// Watch for any changes made by QrScanner
 	useEffect(() => {
-		if(scannedSerial !== "") {
+		if(scannedSerial) {
 			setSerial(scannedSerial);
-			dispatch(setScannedSerial(""));
+			dispatch(resetScannedSerial());
 		}
 	}, [scannedSerial]);
 

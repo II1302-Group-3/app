@@ -3,7 +3,7 @@ import { useDispatch } from "react-redux";
 import { Camera, useCameraDevices } from "react-native-vision-camera";
 import { DeniedQrScannerView, QrScannerView, UndeterminedQrScannerView } from "./QrScannerViews";
 import { Linking } from "react-native";
-import { setScannedSerial } from "../../store/slices/garden";
+import { setScannedSerial } from "../../store/slices/qrScanner";
 import { useScanBarcodes, BarcodeFormat } from "vision-camera-code-scanner";
 
 export const QrScanner = ({navigation}) => {

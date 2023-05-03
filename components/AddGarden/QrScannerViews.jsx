@@ -29,7 +29,7 @@ export const QrScannerView = ({camera, frameProcessor}) => {
 				isActive={true} 
 
 				frameProcessor={frameProcessor} 
-				frameProcessorFps={10}
+				frameProcessorFps={5}
 			/>
 		</View>
 	);
