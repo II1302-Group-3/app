@@ -1,10 +1,7 @@
 import React from 'react';
-import { useColorScheme } from 'react-native';
+import { useColorScheme, StatusBar } from 'react-native';
 import { useSelector } from 'react-redux';
-import {
-	MD3DarkTheme as PaperDarkTheme,
-	DefaultTheme as PaperDefaultTheme,
-	Provider as PaperProvider } from 'react-native-paper';
+import { Provider as PaperProvider } from 'react-native-paper';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { selectIsLoggedIn } from './store/slices/firebaseAuth';
@@ -18,30 +15,32 @@ import {
 	DefaultTheme as NavigationDefaultTheme
   } from '@react-navigation/native';
 import { QrScanner } from './components/AddGarden/QrScanner';
+import { lightGreenTheme, darkGreenTheme } from './theme';
 
 function App() {
 	const Stack = createNativeStackNavigator();
 	const isLoggedIn = useSelector(selectIsLoggedIn)
 	const isDarkMode = useColorScheme() === 'dark';
 
-	const paperTheme = isDarkMode ? PaperDarkTheme : PaperDefaultTheme;
+	const paperTheme = isDarkMode ? darkGreenTheme : lightGreenTheme;
 	const navigationTheme = isDarkMode ? NavigationDarkTheme : NavigationDefaultTheme;
 
-	const qrOptions = { 
-		title: "Scan for QR code", 
-		headerTransparent: true, 
-		headerStyle: {backgroundColor: "#000000aa"}, 
-		headerTintColor: "white" 
+	const qrOptions = {
+		title: "Scan for QR code",
+		headerTransparent: true,
+		headerStyle: {backgroundColor: "#000000aa"},
+		headerTintColor: "white"
 	};
 
 	return (
 		<PaperProvider theme={paperTheme}>
+			<StatusBar backgroundColor={navigationTheme.colors.card} barStyle={isDarkMode ? "light-content" : "dark-content"} />
 			<NavigationContainer theme={navigationTheme}>
 				<Stack.Navigator initialRouteName="Home">
 					{isLoggedIn ? (
 						<>
 						<Stack.Screen name="Home" component={ Home } />
-						<Stack.Screen name="EnvironmentSettings" component={ EnvironmentSettings } />
+						<Stack.Screen name="EnvironmentSettings" options={{title: "Garden 'One'"}} component={ EnvironmentSettings } />
 						<Stack.Screen name="AddGarden" options={{ title: "Add Garden" }} component={ AddGarden } />
 						<Stack.Screen name="QrScanner" options={qrOptions} component={ QrScanner } />
 						</>

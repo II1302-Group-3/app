@@ -20,11 +20,12 @@ export const createAccount = createAsyncThunk('firebaseAuth/createAccount', asyn
     if(userPassword !== confirmPassword) throw new Error("Passwords do not match.")
 
     try {
-        await auth().createUserWithEmailAndPassword(userEmail, userPassword)
+        const credentials = await auth().createUserWithEmailAndPassword(userEmail, userPassword);
+        await database().ref('users/' + credentials.user.uid + '/displayName').set(displayName)
     } catch(error) {
         throw error;
     }
-    
+
     return displayName;
 })
 
@@ -38,13 +39,13 @@ export const signIn = createAsyncThunk('firebaseAuth/signIn', async({ userEmail,
 
 export const firebaseAuth = createSlice({
     name: 'firebaseAuth',
-    initialState, 
+    initialState,
     reducers: {
         setDisplayName: (state, { payload }) => {
             state.displayName = payload;
         },
         setfirebaseReady: (state, { payload}) =>{
-            state.firebaseReady = payload; 
+            state.firebaseReady = payload;
         },
         setUser: (state, { payload }) => {
             state.userUID = payload.uid;
@@ -74,12 +75,12 @@ export const firebaseAuth = createSlice({
 
 export const { setfirebaseReady, setDisplayName, setUser, reset, resetError } = firebaseAuth.actions;
 
-export const listenToAuthChanges = () => (dispatch, _) => 
+export const listenToAuthChanges = () => (dispatch, _) =>
     auth().onAuthStateChanged(async(user) => {
         if(user) {
             let displayName;
             await database().ref('users/' + user.uid + '/displayName').once("value").then(snapshot => displayName = snapshot.val())
-            dispatch(setUser({uid: user.uid, email: user.email, displayName}))
+            dispatch(setUser({uid: user.uid, email: user.email, displayName: displayName ?? "[unknown display name]"}))
             dispatch(setfirebaseReady(true))
         }
     })

@@ -3,7 +3,7 @@ import { Image, Text, View } from 'react-native';
 
 export const Header = ({ textColor }) => {
     return(
-        <View style={{flexDirection: "row", paddingVertical: 20, paddingHorizontal: 20 }}>
+        <View style={{flexDirection: "row", paddingBottom: 30, paddingHorizontal: 20 }}>
             <Image style={{flex: 1, resizeMode: "contain", flexGrow: 0, flexBasis: 90 }} source={require("../assets/GreenGarden.png")}/>
             <Text 
                 style={{flex: 1, 
