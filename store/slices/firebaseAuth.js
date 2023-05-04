@@ -8,6 +8,7 @@ const initialState = {
     userUID: null,
     userEmail: null,
     displayName: null,
+    firebaseReady: false,
 }
 
 export const createAccount = createAsyncThunk('firebaseAuth/createAccount', async({
@@ -24,7 +25,7 @@ export const createAccount = createAsyncThunk('firebaseAuth/createAccount', asyn
     } catch(error) {
         throw error;
     }
-    
+
     return displayName;
 })
 
@@ -38,10 +39,13 @@ export const signIn = createAsyncThunk('firebaseAuth/signIn', async({ userEmail,
 
 export const firebaseAuth = createSlice({
     name: 'firebaseAuth',
-    initialState, 
+    initialState,
     reducers: {
         setDisplayName: (state, { payload }) => {
             state.displayName = payload;
+        },
+        setfirebaseReady: (state, { payload}) =>{
+            state.firebaseReady = payload;
         },
         setUser: (state, { payload }) => {
             state.userUID = payload.uid;
@@ -69,14 +73,15 @@ export const firebaseAuth = createSlice({
     }
 })
 
-export const { setDisplayName, setUser, reset, resetError } = firebaseAuth.actions;
+export const { setfirebaseReady, setDisplayName, setUser, reset, resetError } = firebaseAuth.actions;
 
-export const listenToAuthChanges = () => (dispatch, _) => 
+export const listenToAuthChanges = () => (dispatch, _) =>
     auth().onAuthStateChanged(async(user) => {
         if(user) {
             let displayName;
             await database().ref('users/' + user.uid + '/displayName').once("value").then(snapshot => displayName = snapshot.val())
             dispatch(setUser({uid: user.uid, email: user.email, displayName: displayName ?? "[unknown display name]"}))
+            dispatch(setfirebaseReady(true))
         }
     })
 
