@@ -11,29 +11,30 @@ export const AddGarden = ({navigation}) => {
 	const [serial, setSerial] = useState("");
 	const [name, setName] = useState("");
 
-	const isValidSerial = serial.length == 12 && [...serial].every(c => c >= '0' && c <= '9');
-	const isValidName = name.trim().length > 0 && name.length < 100;
-
 	const setSerialAndTrim = serial => setSerial(serial.trim());
 
-	const idToken = useSelector(state => state.firebaseAuth.user.token);
+	const isValidSerial = serial.length == 12 && [...serial].every(c => c >= '0' && c <= '9');
+	const isValidName = name.trim().length > 0 && name.length < 100;
+	const canClaim = isValidSerial && isValidName;
+
+	const userToken = useSelector(state => state.firebaseAuth.user.token);
+	const [isClaiming, setIsClaiming] = useState(false);
+	
 	const claimGarden = () => {
-		if(isValidName && isValidSerial) {
-			addGarden(idToken, serial, name, dispatch)
+		if(canClaim) {
+			setIsClaiming(true);
+
+			addGarden(userToken, serial, name, dispatch)
 				.catch(error => Alert.alert("Failed to add garden", error.message))
-				.finally(() => navigation.navigate("Home"));
+				.finally(() => {
+					setIsClaiming(false);
+					navigation.navigate("Home");
+				});
 		}
 	}
-	const rmGarden = () => {
-		if(isValidName && isValidSerial) {
-			removeGarden(idToken, serial, dispatch)
-				.catch(error => Alert.alert("Failed to add garden", error.message))
-				.finally(() => navigation.navigate("Home"));
-		}
-	}
-	const openQrScanner = () => navigation.navigate("QrScanner");
 
 	const scannedSerial = useSelector(state => state.qrScanner.scannedSerial);
+	const openQrScanner = () => navigation.navigate("QrScanner");
 
 	// Watch for any changes made by QrScanner
 	useEffect(() => {
@@ -53,8 +54,9 @@ export const AddGarden = ({navigation}) => {
 			isValidName={isValidName}
 			isValidSerial={isValidSerial}
 
+			canPressButton={canClaim && !isClaiming}
+
 			claimGarden={claimGarden}
-			removeGarden={rmGarden}
 			openQrScanner={openQrScanner}
 		/>
 	);

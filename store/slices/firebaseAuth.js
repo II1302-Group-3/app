@@ -100,6 +100,7 @@ export const firebaseAuth = createSlice({
         setUser: (state, { payload }) => { state.user = payload },
         setDisplayName: (state, { payload }) => { state.user.displayName = payload },
         setUserSyncing: (state, { payload }) => { state.user.syncing = payload },
+        setUserToken: (state, { payload }) => { state.user.token = payload },
         addGarden: (state, { payload }) => {
             state.user.claimedGardens = [...state.user.claimedGardens, payload.serial];
             state.user.claimedGardenNames[payload.serial] = payload.nickname;
@@ -141,9 +142,9 @@ export const logout = () => (dispatch, _) => {
 }
 
 // This is used by addGarden and removeGarden to refresh the ID token, which contains the user's collection of gardens
-export const refreshToken = () => (dispatch, getState) => {
+export const refreshToken = () => (dispatch, state) => {
     auth().currentUser.getIdToken(true)
-        .then(token => dispatch(firebaseAuth.actions.setUser({...getState().user, token})))
+        .then(token => dispatch(firebaseAuth.actions.setUserToken(token)))
         .catch(error => Alert.alert("Failed to refresh ID token", error.message));
 }
 

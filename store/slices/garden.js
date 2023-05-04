@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import "./firebaseAuth";
+import * as firebaseAuth from "./firebaseAuth";
 
 const initialActiveState = {
     syncing: true,
@@ -27,9 +27,9 @@ export const garden = createSlice({
 
 export const { selectGarden, resetGarden, setGardenSyncing, setNickname, setMoisture, setLight } = garden.actions;
 
-export async function addGarden(user, gardenSerial, gardenNickname, dispatch) {
+export async function addGarden(userToken, gardenSerial, gardenNickname, dispatch) {
     const params = new URLSearchParams({
-        token: user.token,
+        token: userToken,
         serial: gardenSerial,
         nickname: gardenNickname
     });
@@ -59,9 +59,9 @@ export async function addGarden(user, gardenSerial, gardenNickname, dispatch) {
     }
 }
 
-export async function removeGarden(user, gardenSerial, dispatch) {
+export async function removeGarden(userToken, gardenSerial, dispatch) {
     const params = new URLSearchParams({
-        token: user.token,
+        token: userToken,
         serial: gardenSerial
     });
 
