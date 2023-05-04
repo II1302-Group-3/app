@@ -1,20 +1,25 @@
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { createAccount } from '../../../store/slices/firebaseAuth';
 import { HomeView } from './HomeView';
 import { logout } from '../../store/slices/firebaseAuth';
 import { displayNameRef } from '../../store/persistence/firebase';
+import { selectGarden } from '../../store/slices/garden';
 
 export const Home = ({ navigation }) => {
     const dispatch = useDispatch();
 
     const displayName = useSelector(state => state.firebaseAuth.user.displayName);
+    const gardens = useSelector(state => state.firebaseAuth.user.claimedGardens);
 
     const signOut = () => dispatch(logout());
+    const openGarden = serial => {
+        selectGarden(serial);
+        navigation.navigate("EnvironmentSettings");
+    }
     const addNewGarden = () => navigation.navigate("AddGarden");
 
     return(
         displayNameRef,
-        <HomeView signOut={signOut} addNewGarden={addNewGarden} displayName={displayName} navigation={navigation} />
+        <HomeView signOut={signOut} gardens={gardens} addNewGarden={addNewGarden} openGarden={openGarden} displayName={displayName} navigation={navigation} />
     )
 }

@@ -18,7 +18,6 @@ export const EnvironmentSettingsView = ({
 	const moistureTitle = 'Moisture Level';
 	const lightTitle = 'Light Level';
 	const advancedInfoTitle = 'Advanced info';
-	const ledTestTitle = 'LED test';
 
 	const headerHeight = useHeaderHeight();
 
