@@ -116,18 +116,11 @@ export const enablePersistence = (store) => {
                 .set(ledTestOn ? 1 : 0)
         }
 
-        if (!!state.firebaseAuth.userUID && displayName !== prevDisplayName) {
-            database()
-                .ref(displayNameRef)
-                .set(displayName)
-                console.log("wel"+ displayName);
-        }
-       
         /**
          * For saving new templates in firebase. For each new template, we will genarate a new key using push() function.
          * This function will save that key under the user so we know who creaated the tempate. 
          */
-        if (/*templateName !==templateName*/false) {
+        if (/*templateName !== prevTemplateName*/ false) {
             const newChildRef = database().ref(templateRef).push(); 
             const templateKey = newChildRef.key; 
             console.log(templateKey);

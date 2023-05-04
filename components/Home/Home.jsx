@@ -12,9 +12,10 @@ export const Home = ({ navigation }) => {
 
     const signOut = () => dispatch(logout());
     const addNewGarden = () => navigation.navigate("AddGarden");
+    const addNewTemplate = () => navigation.navigate("AddTemplate")
 
     return(
         displayNameRef,
-        <HomeView signOut={signOut} addNewGarden={addNewGarden} displayName={displayName} navigation={navigation} />
+        <HomeView signOut={signOut} addNewGarden={addNewGarden} displayName={displayName} navigation={navigation} addNewTemplate={addNewTemplate}/>
     )
 }
