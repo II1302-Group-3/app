@@ -47,23 +47,28 @@ export async function addGarden(userIdToken, gardenSerial, gardenNickname, dispa
 
     const result = await (await fetch("https://europe-west1-greengarden-iot.cloudfunctions.net/addGarden?" + params)).text();
 
-    if(result === "success") {
+    try {
+        if(result === "success") {
+            dispatch(pushGarden(gardenSerial));
+            dispatch(addGardenMapping({serial: gardenSerial, nickname: gardenNickname}));
+        }
+        else {
+            const errorCodeToMessage = {
+                "missing_parameter": "Missing parameter in request",
+                "invalid_token": "Firebase ID token is invalid",
+                "invalid_serial": "Invalid serial number specified",
+                "garden_nickname_conflict": "You already have another garden with that name",
+                "garden_offline": "This garden is not connected to Wi-Fi",
+                "garden_already_claimed": "This garden is already claimed by another user",
+                "too_many_gardens": "You have claimed too many gardens already"
+            };
+
+            throw new Error(errorCodeToMessage[result] ?? `Unknown error: ${result}`);
+        }
+    }
+    finally {
         const newToken = await auth().currentUser.getIdToken(true);
         dispatch(updateToken(newToken));
-        dispatch(pushGarden(gardenSerial));
-        dispatch(addGardenMapping({serial: gardenSerial, nickname: gardenNickname}));
-    }
-    else {
-        const errorCodeToMessage = {
-            "missing_parameter": "Missing parameter in request",
-            "invalid_token": "Firebase ID token is invalid",
-            "invalid_serial": "Invalid serial number specified",
-            "garden_offline": "This garden is not connected to Wi-Fi",
-            "garden_already_claimed": "This garden is already claimed by another user",
-            "too_many_gardens": "You have claimed too many gardens already"
-        };
-
-        throw new Error(errorCodeToMessage[result] ?? `Unknown error: ${result}`);
     }
 }
 
@@ -75,19 +80,23 @@ export async function removeGarden(userIdToken, gardenSerial, dispatch) {
 
     const result = await (await fetch("https://europe-west1-greengarden-iot.cloudfunctions.net/removeGarden?" + params)).text();
 
-    if(result === "success") {
+    try {
+        if(result === "success") {
+            dispatch(popGarden(gardenSerial));
+        }
+        else {
+            const errorCodeToMessage = {
+                "missing_parameter": "Missing parameter in request",
+                "invalid_token": "Firebase ID token is invalid",
+                "invalid_serial": "Invalid serial number specified",
+                "garden_not_claimed": "This garden has never been claimed or is claimed by another user",
+            };
+
+            throw new Error(errorCodeToMessage[result] ?? `Unknown error: ${result}`);
+        }
+    }
+    finally {
         const newToken = await auth().currentUser.getIdToken(true);
         dispatch(updateToken(newToken));
-        dispatch(popGarden(gardenSerial));
-    }
-    else {
-        const errorCodeToMessage = {
-            "missing_parameter": "Missing parameter in request",
-            "invalid_token": "Firebase ID token is invalid",
-            "invalid_serial": "Invalid serial number specified",
-            "garden_not_claimed": "This garden has never been claimed or is claimed by another user",
-        };
-
-        throw new Error(errorCodeToMessage[result] ?? `Unknown error: ${result}`);
     }
 }
