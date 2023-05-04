@@ -15,6 +15,17 @@ export const Statistics = () => {
     const waterData = useSelector(state => state.garden.statistics.water);
     const error = useSelector(state => state.garden.statistics.error);
 
+    const setNextMonth = () => {
+        if(month !== 'December') setMonth(MONTHS[MONTHS.indexOf(month) + 1]);
+    }
+    const setPrevMonth = () => {
+        if(month !== 'January') setMonth(MONTHS[MONTHS.indexOf(month) - 1]);
+    }
+    console.log(MONTHS)
+    console.log(MONTHS.indexOf(month))
+    console.log(new Date().getMonth())
+    console.log(MONTHS[0])
+
     const nutritients = ['light', 'water']
 
     // useEffect(() => {
@@ -29,7 +40,7 @@ export const Statistics = () => {
     }, [error])
 
     return (
-        <StatisticsView month={month} xAxis={xAxis} />
+        <StatisticsView month={month} xAxis={xAxis} setNextMonth={setNextMonth} setPrevMonth={setPrevMonth} />
     )
 }
 
