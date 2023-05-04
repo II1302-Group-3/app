@@ -16,6 +16,8 @@ export const createAccount = createAsyncThunk('firebaseAuth/createAccount', asyn
     userPassword,
     confirmPassword
 }) => {
+    console.log("displayName2: "+displayName);
+
     if(userPassword !== confirmPassword) throw new Error("Passwords do not match.")
 
     try {
@@ -46,6 +48,7 @@ export const firebaseAuth = createSlice({
             state.userUID = payload.uid;
             state.userEmail = payload.email;
             state.displayName = payload.displayName
+            console.log(state);
         },
         reset: () => initialState,
         resetError: state => {

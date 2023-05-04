@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { setLedTestOn, setLight, setMoisture } from '../../store/slices/garden';
+import { setLedTestOn, setLight, setMoisture } from '../../../store/slices/garden';
 import { EnvironmentSettingsView } from './EnvironmentSettingsView';
 
-export const EnvironmentSettings = () => {
+export const EnvironmentSettings = ({ navigation }) => {
     const dispatch = useDispatch();
     
     const light = useSelector(state => state.garden.light);
@@ -24,6 +24,7 @@ export const EnvironmentSettings = () => {
             advancedInfo={ advancedInfo }
             light={ light } 
             moisture={ moisture }
-            ledTestOn={ ledTestOn } />
+            ledTestOn={ ledTestOn }
+            navigation={ navigation } />
     )
 }

@@ -82,6 +82,8 @@ export const enablePersistence = (store) => {
         }
 
         if (!!state.firebaseAuth.userUID && displayName !== prevDisplayName) {
+            console.log("displayNameRef: "+displayNameRef)
+            console.log("displayName: "+displayName)
             database()
                 .ref(displayNameRef)
                 .set(displayName)

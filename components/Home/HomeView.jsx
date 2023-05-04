@@ -1,6 +1,7 @@
 import React from 'react';
 import { Button } from 'react-native-paper';
-import { useColorScheme, View, Text, StatusBar, Image,TouchableHighlight } from 'react-native';
+import { useColorScheme, View, Text, StyleSheet, Image,TouchableHighlight } from 'react-native';
+import { useColors } from '../../style';
 
 
 const backgroundStyle = {
@@ -13,16 +14,17 @@ const backgroundStyle = {
     margin: 15,
 };
 
-const waterDropIcon = require('../../assets/WaterDropIcon.png'); // Link to waterDropIcon for the slider
-const bulbIcon = require('../../assets/BulpIcon.png'); // Link to bulbIcon for the slider
-
 
 export const HomeView = ({signOut, displayName, addNewGarden, navigation}) => {
+    const styles = StyleSheet.create({
+        color: useColors()
+    })
+
     return(
         <View style={{}}>
             <Text style={{fontSize: 24, fontWeight: 'bold', margin: 15}} >Hello {displayName}</Text>
             
-            <TouchableHighlight onPress={() => navigation.navigate('EnvironmentSettings')}>
+            <TouchableHighlight activeOpacity={0.1} underlayColor={styles.color.lightGray} onPress={() => navigation.navigate('Garden')}>
             <View style={{  backgroundColor: "white",
                             borderRadius: 10,
                             shadowColor: '#000',

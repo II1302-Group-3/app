@@ -1,7 +1,9 @@
 import React from 'react';
 import { useColorScheme, View, StatusBar } from 'react-native';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { EnvironmentSettingsSliderView } from './EnvironmentSettingsSliderView';
 import { EnvironmentSettingsSwitch } from './EnvironmentSettingsSwitchView';
+import { BottomBarView } from '../BottomBarView';
 export const EnvironmentSettingsView = ({
 	setLight,
 	setMoisture,
@@ -10,18 +12,21 @@ export const EnvironmentSettingsView = ({
 	advancedInfo,
 	light,
 	moisture,
-	ledTestOn
+	ledTestOn,
+	navigation
 }) => {
     const isDarkMode = useColorScheme() === 'dark';
 	const textColor = isDarkMode ? "#fafafa" : "#050505";
+
+	const Tab = createBottomTabNavigator();
 
 	const moistureTitle = 'Moisture Level';
 	const lightTitle = 'Light Level';
 	const advancedInfoTitle = 'Advanced info';
 	const ledTestTitle = 'LED test';
 
-	const waterDropIcon = require('../../assets/WaterDropIcon.png'); // Link to waterDropIcon for the slider
-	const bulbIcon = require('../../assets/BulpIcon.png'); // Link to bulbIcon for the slider
+	const waterDropIcon = require('../../../assets/WaterDropIcon.png'); // Link to waterDropIcon for the slider
+	const bulbIcon = require('../../../assets/BulpIcon.png'); // Link to bulbIcon for the slider
 
     return(
         <View>
@@ -59,6 +64,8 @@ export const EnvironmentSettingsView = ({
 						textColor={ textColor } />
 				</View>
 			</View>
+			
+			{/* <BottomBarView navigation={ navigation } /> */}
 		</View>
     )
 }

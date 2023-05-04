@@ -1,5 +1,6 @@
 import React from 'react';
 import { View, Text, useColorScheme } from 'react-native';
+import { useCardStyle } from '../../../style';
 import Slider from '@react-native-community/slider';
 
 export const EnvironmentSettingsSliderView = ({
@@ -11,19 +12,10 @@ export const EnvironmentSettingsSliderView = ({
     textColor
 }) => {
     const isDarkMode = useColorScheme() === 'dark';
-
-    const backgroundStyle = {
-		backgroundColor: isDarkMode ? "#212121" : "white",
-		borderRadius: 10,
-		shadowColor: '#000',
-		shadowOpacity: 0.2,
-		elevation: 10, // Height of the shadow
-		padding: 20, 
-		margin: 15,
-	};
+    const backgroundStyle = useCardStyle(isDarkMode);
 
     return(
-        <View style={backgroundStyle}>
+        <View style={Object.assign(backgroundStyle, {padding: 20, margin: 15})}>
             <Text style={{fontSize: 24, fontWeight: 'bold', color: textColor, marginBottom: 20}}>{title}</Text>
             <View style={{flexDirection: 'row', justifyContent: 'space-between', marginHorizontal: "8%"}}>
                 <Text style={{fontSize: 15, color: textColor }} >{advancedInfo ? "0" : "Low"}</Text>
