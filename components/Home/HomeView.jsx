@@ -16,11 +16,11 @@ const backgroundStyle = {
 const waterDropIcon = require('../../assets/WaterDropIcon.png'); // Link to waterDropIcon for the slider
 const bulbIcon = require('../../assets/BulpIcon.png'); // Link to bulbIcon for the slider
 
-const GardenEntry = (serial, onPress) => {
+const GardenEntry = (garden, onPress) => {
     return (
-        <TouchableOpacity onPress={() => onPress(serial)} activeOpacity={0.6} style={{marginBottom: 16}} key={serial}>
+        <TouchableOpacity onPress={() => onPress(garden)} activeOpacity={0.6} style={{marginBottom: 16}} key={garden.serial}>
             <Card mode="contained">
-                <Card.Title titleVariant="titleMedium" title={serial}></Card.Title>
+                <Card.Title titleVariant="titleMedium" title={garden.nickname}></Card.Title>
                 <Card.Content>
                     <View style={{flexDirection: 'row'}}>
                         <Image source={require('../../assets/WaterDropIcon.png')} style={{width: 20, height: 20, marginRight: 6}} />
@@ -58,7 +58,7 @@ export const HomeView = ({signOut, displayName, gardens, addNewGarden, openGarde
         <View style={{paddingHorizontal: 25, paddingTop: 30, paddingBottom: 30, flexDirection: "column", height: "100%"}}>
             <View style={{flexGrow: 1}}>
                 <Text variant="headlineMedium" style={{fontWeight: "bold", marginBottom: 30}} >Hello {displayName}</Text>
-                {gardens.map(g => GardenEntry(g, s => openGarden(s)))}
+                {gardens.map(g => GardenEntry(g, e => openGarden(e)))}
                 {gardens.length == 0 && <NoGardens/>}
             </View>
             <View style={{flexGrow: 0}}>

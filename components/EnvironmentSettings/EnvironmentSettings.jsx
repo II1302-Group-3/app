@@ -1,17 +1,24 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { setLight, setMoisture } from '../../store/slices/garden';
+import { setMoisture, setLight, resetGarden } from '../../store/slices/garden';
 import { EnvironmentSettingsView } from './EnvironmentSettingsView';
 
-export const EnvironmentSettings = () => {
+export const EnvironmentSettings = ({navigation}) => {
     const dispatch = useDispatch();
 
-    const light = useSelector(state => state.garden.light);
-    const moisture = useSelector(state => state.garden.moisture);
+    const nickname = useSelector(state => state.garden?.nickname ?? "");
+    const light = useSelector(state => state.garden?.light ?? 0);
+    const moisture = useSelector(state => state.garden?.moisture ?? 0);
+
+    useEffect(() => {
+        return () => dispatch(resetGarden());
+    }, [])
+
+    useEffect(() => navigation.setOptions({title: nickname}), [nickname])
 
     const [advancedInfo, setAdvancedInfo] = useState(false);
-    const changeLight = newLight => dispatch(setLight(newLight))
     const changeMoisture = newMoisture => dispatch(setMoisture(newMoisture))
+    const changeLight = newLight => dispatch(setLight(newLight))
 
     return(
         <EnvironmentSettingsView

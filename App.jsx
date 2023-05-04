@@ -40,7 +40,7 @@ function App() {
 					{isLoggedIn ? (
 						<>
 						<Stack.Screen name="Home" component={ Home } />
-						<Stack.Screen name="EnvironmentSettings" options={{title: "Garden 'One'"}} component={ EnvironmentSettings } />
+						<Stack.Screen name="EnvironmentSettings" options={{title: ""}} component={ EnvironmentSettings } />
 						<Stack.Screen name="AddGarden" options={{ title: "Add Garden" }} component={ AddGarden } />
 						<Stack.Screen name="QrScanner" options={qrOptions} component={ QrScanner } />
 						</>

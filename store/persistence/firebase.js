@@ -99,14 +99,9 @@ function getUserRefs(uid) {
 async function readGardenFromFirebase(state, dispatch) {
     const refs = getGardenRefs(state.garden.serial);
 
-    const nickname = (await database().ref(refs.nicknameRef).once("value")).val();
     const moisture = (await database().ref(refs.moistureRef).once("value")).val();
     const light = (await database().ref(refs.lightRef).once("value")).val();
 
-    if(nickname) {
-        console.log(`Dispatched nickname for garden ${state.garden.serial}: ${nickname}`);
-        dispatch(setNickname(nickname));
-    }
     if(moisture) {
         console.log(`Dispatched moisture for garden ${state.garden.serial}: ${moisture}`);
         dispatch(setMoisture(moisture));

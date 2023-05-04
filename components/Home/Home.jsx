@@ -11,17 +11,18 @@ export const Home = ({ navigation }) => {
     const displayName = useSelector(state => state.firebaseAuth.user.displayName);
     const gardens = useSelector(state => {
         return [...state.firebaseAuth.user?.claimedGardens].map(serial => {
-            const name = state.firebaseAuth.user.claimedGardenNames[serial];
-            return name ?? serial;
+            const nickname = state.firebaseAuth.user.claimedGardenNames[serial] ?? serial;
+            return {serial, nickname};
         })
     });
 
     const signOut = () => dispatch(logout());
-    const openGarden = serial => {
-        selectGarden(serial);
+
+    const addNewGarden = () => navigation.navigate("AddGarden");
+    const openGarden = garden => {
+        dispatch(selectGarden({serial: garden.serial, nickname: garden.nickname}));
         navigation.navigate("EnvironmentSettings");
     }
-    const addNewGarden = () => navigation.navigate("AddGarden");
 
     return(
         displayNameRef,

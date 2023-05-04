@@ -15,7 +15,7 @@ export const garden = createSlice({
     name: 'garden',
     initialState: null,
     reducers: {
-        selectGarden: (state, { payload }) => { state = {...initialActiveState, payload} },
+        selectGarden: (_, { payload }) => { return {...initialActiveState, serial: payload.serial, nickname: payload.nickname} },
         resetGarden: () => null,
         setGardenSyncing: (state, { payload }) => { state.syncing = payload },
 
