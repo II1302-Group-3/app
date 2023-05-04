@@ -15,7 +15,6 @@ const store = configureStore({
     }
 })
 
-store.dispatch(listenToAuthChanges());
 enablePersistence(store);
 
 export default store;

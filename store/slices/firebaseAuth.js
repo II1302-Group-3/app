@@ -1,13 +1,12 @@
 import { createSlice, createAsyncThunk, createSelector } from "@reduxjs/toolkit";
 import auth from "@react-native-firebase/auth";
-import database from "@react-native-firebase/database"
 
 const initialState = {
     signinError: null,
     signupError: null,
-    userUID: null,
-    userEmail: null,
-    displayName: null,
+
+    user: null,
+
     firebaseReady: false,
 }
 
@@ -21,17 +20,16 @@ export const createAccount = createAsyncThunk('firebaseAuth/createAccount', asyn
 
     try {
         const credentials = await auth().createUserWithEmailAndPassword(userEmail, userPassword);
-        await database().ref('users/' + credentials.user.uid + '/displayName').set(displayName)
+        return { uid: credentials.user.uid, email: credentials.user.email, displayName };
     } catch(error) {
         throw error;
     }
-
-    return displayName;
 })
 
 export const signIn = createAsyncThunk('firebaseAuth/signIn', async({ userEmail, userPassword } ) => {
     try {
-        await auth().signInWithEmailAndPassword(userEmail, userPassword)
+        const credentials = await auth().signInWithEmailAndPassword(userEmail, userPassword);
+        return { uid: credentials.user.uid, email: credentials.user.email };
     } catch(error) {
         throw error;
     }
@@ -41,16 +39,17 @@ export const firebaseAuth = createSlice({
     name: 'firebaseAuth',
     initialState,
     reducers: {
-        setDisplayName: (state, { payload }) => {
-            state.displayName = payload;
-        },
         setfirebaseReady: (state, { payload}) =>{
             state.firebaseReady = payload;
         },
         setUser: (state, { payload }) => {
-            state.userUID = payload.uid;
-            state.userEmail = payload.email;
-            state.displayName = payload.displayName
+            state.user = {...payload, needsSync: false};
+        },
+        setDisplayName: (state, { payload }) => {
+            state.user.displayName = payload;
+        },
+        setUserNeedsSync: (state, { payload }) => {
+            state.user.needsSync = payload;
         },
         reset: () => initialState,
         resetError: state => {
@@ -62,10 +61,13 @@ export const firebaseAuth = createSlice({
         const addError = error => error?.code ? error.code : error.message;
 
         builder.addCase(createAccount.fulfilled, (state, { payload }) => {
-            state.displayName = payload;
+            state.user = {uid: payload.uid, email: payload.email, displayName: payload.displayName, needsSync: false};
         })
         builder.addCase(createAccount.rejected, (state, { error }) => {
             state.signupError = addError(error);
+        })
+        builder.addCase(signIn.fulfilled, (state, { payload })  => {
+            state.user = {uid: payload.uid, email: payload.email, displayName: payload.email, needsSync: true};
         })
         builder.addCase(signIn.rejected, (state, { error }) => {
             state.signinError = addError(error);
@@ -73,22 +75,12 @@ export const firebaseAuth = createSlice({
     }
 })
 
-export const { setfirebaseReady, setDisplayName, setUser, reset, resetError } = firebaseAuth.actions;
-
-export const listenToAuthChanges = () => (dispatch, _) =>
-    auth().onAuthStateChanged(async(user) => {
-        if(user) {
-            let displayName;
-            await database().ref('users/' + user.uid + '/displayName').once("value").then(snapshot => displayName = snapshot.val())
-            dispatch(setUser({uid: user.uid, email: user.email, displayName: displayName ?? "[unknown display name]"}))
-            dispatch(setfirebaseReady(true))
-        }
-    })
+export const { setfirebaseReady, setUser, setDisplayName, setUserNeedsSync, reset, resetError } = firebaseAuth.actions;
 
 export const logout = () => (dispatch, _) => {
     dispatch(reset());
     auth().signOut();
 }
 
-const selectUserUID = state => state.firebaseAuth.userUID;
-export const selectIsLoggedIn = createSelector(selectUserUID, uid => !!uid);
+// Checks if user object is non-null
+export const selectIsLoggedIn = createSelector(state => state.firebaseAuth.user?.uid, uid => !!uid);

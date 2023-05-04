@@ -19,7 +19,7 @@ import { lightGreenTheme, darkGreenTheme } from './theme';
 
 function App() {
 	const Stack = createNativeStackNavigator();
-	const isLoggedIn = useSelector(selectIsLoggedIn)
+	const isLoggedIn = useSelector(selectIsLoggedIn);
 	const isDarkMode = useColorScheme() === 'dark';
 
 	const paperTheme = isDarkMode ? darkGreenTheme : lightGreenTheme;

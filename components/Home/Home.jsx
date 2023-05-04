@@ -8,7 +8,7 @@ import { displayNameRef } from '../../store/persistence/firebase';
 export const Home = ({ navigation }) => {
     const dispatch = useDispatch();
 
-    const displayName = useSelector(state => state.firebaseAuth.displayName);
+    const displayName = useSelector(state => state.firebaseAuth.user.displayName);
 
     const signOut = () => dispatch(logout());
     const addNewGarden = () => navigation.navigate("AddGarden");
