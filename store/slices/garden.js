@@ -1,46 +1,35 @@
 import { createSlice } from "@reduxjs/toolkit";
-import auth from "@react-native-firebase/auth";
-import { addGardenMapping, pushGarden, updateToken } from "./firebaseAuth";
+import "./firebaseAuth";
 
 const initialActiveState = {
-    needsSync: true,
+    syncing: true,
     serial: "",
+
     nickname: "",
+
     light: 50,
     moisture: 50
-}
+};
 
 export const garden = createSlice({
     name: 'garden',
     initialState: null,
     reducers: {
-        selectGarden: (state, { payload }) => {
-            state = {...initialActiveState, serial: payload};
-        },
+        selectGarden: (state, { payload }) => { state = {...initialActiveState, payload} },
         resetGarden: () => null,
-        setNickname: (state, { name }) => {
-            if(state) {
-                state.nickname = name;
-            }
-        },
-        setMoisture: (state, { moisture }) => {
-            if(state) {
-                state.moisture = moisture;
-            }
-        },
-        setLight: (state, { light }) => {
-            if(state) {
-                state.light = light;
-            }
-        }
+        setGardenSyncing: (state, { payload }) => { state.syncing = payload },
+
+        setNickname: (state, { payload }) => { state.nickname = payload },
+        setMoisture: (state, { payload }) => { state.moisture = payload },
+        setLight: (state, { payload }) => { state.light = payload }
     }
-})
+});
 
-export const { selectGarden, resetGarden, setNickname, setMoisture, setLight } = garden.actions;
+export const { selectGarden, resetGarden, setGardenSyncing, setNickname, setMoisture, setLight } = garden.actions;
 
-export async function addGarden(userIdToken, gardenSerial, gardenNickname, dispatch) {
+export async function addGarden(user, gardenSerial, gardenNickname, dispatch) {
     const params = new URLSearchParams({
-        token: userIdToken,
+        token: user.token,
         serial: gardenSerial,
         nickname: gardenNickname
     });
@@ -49,8 +38,7 @@ export async function addGarden(userIdToken, gardenSerial, gardenNickname, dispa
 
     try {
         if(result === "success") {
-            dispatch(pushGarden(gardenSerial));
-            dispatch(addGardenMapping({serial: gardenSerial, nickname: gardenNickname}));
+            dispatch(firebaseAuth.addGarden({serial: gardenSerial, nickname: gardenNickname}));
         }
         else {
             const errorCodeToMessage = {
@@ -67,14 +55,13 @@ export async function addGarden(userIdToken, gardenSerial, gardenNickname, dispa
         }
     }
     finally {
-        const newToken = await auth().currentUser.getIdToken(true);
-        dispatch(updateToken(newToken));
+        dispatch(firebaseAuth.refreshToken());
     }
 }
 
-export async function removeGarden(userIdToken, gardenSerial, dispatch) {
+export async function removeGarden(user, gardenSerial, dispatch) {
     const params = new URLSearchParams({
-        token: userIdToken,
+        token: user.token,
         serial: gardenSerial
     });
 
@@ -82,7 +69,7 @@ export async function removeGarden(userIdToken, gardenSerial, dispatch) {
 
     try {
         if(result === "success") {
-            dispatch(popGarden(gardenSerial));
+            dispatch(firebaseAuth.removeGarden(gardenSerial));
         }
         else {
             const errorCodeToMessage = {
@@ -96,7 +83,6 @@ export async function removeGarden(userIdToken, gardenSerial, dispatch) {
         }
     }
     finally {
-        const newToken = await auth().currentUser.getIdToken(true);
-        dispatch(updateToken(newToken));
+        dispatch(firebaseAuth.refreshToken());
     }
 }
