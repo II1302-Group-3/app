@@ -106,7 +106,7 @@ export const firebaseAuth = createSlice({
             state.user.claimedGardenNames[payload.serial] = payload.nickname;
         },
         removeGarden: (state, { payload }) => {
-            state.user.claimedGardens = [...state.user.claimedGardens].filter(s => s === payload);
+            state.user.claimedGardens = [...state.user.claimedGardens].filter(s => s !== payload);
             delete state.user.claimedGardenNames[payload];
         },
         addGardenNameMapping: (state, { payload }) => { state.user.claimedGardenNames[payload.serial] = payload.nickname },
