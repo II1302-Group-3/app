@@ -9,7 +9,12 @@ export const Home = ({ navigation }) => {
     const dispatch = useDispatch();
 
     const displayName = useSelector(state => state.firebaseAuth.user.displayName);
-    const gardens = useSelector(state => state.firebaseAuth.user.claimedGardens);
+    const gardens = useSelector(state => {
+        return [...state.firebaseAuth.user.claimedGardens].map(serial => {
+            const name = state.firebaseAuth.user.claimedGardenNames[serial];
+            return name ?? serial;
+        })
+    });
 
     const signOut = () => dispatch(logout());
     const openGarden = serial => {

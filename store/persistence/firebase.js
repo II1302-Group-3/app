@@ -1,13 +1,18 @@
 import database from '@react-native-firebase/database';
+import { Alert } from "react-native";
 
 import {
     setNickname,
     setLight,
     setMoisture
 } from "../slices/garden";
-import { setDisplayName, setfirebaseReady, setUserNeedsSync } from '../slices/firebaseAuth';
 
-import { Alert } from "react-native";
+import {
+    addGardenMapping,
+    setDisplayName,
+    setfirebaseReady,
+    setUserNeedsSync
+} from '../slices/firebaseAuth';
 
 export function enablePersistence(store) {
     console.log("Entered firebase");
@@ -74,8 +79,8 @@ export function enablePersistence(store) {
     })
 }
 
-function getGardenRefs(state) {
-    const garden = `garden/${state.garden.serial}`;
+function getGardenRefs(serial) {
+    const garden = `garden/${serial}`;
 
     const nicknameRef = garden + 'nickname';
     const moistureRef = garden + 'target_moisture';
@@ -84,8 +89,8 @@ function getGardenRefs(state) {
     return { nicknameRef, moistureRef, lightRef };
 }
 
-function getUserRefs(state) {
-    const user = `users/${state.firebaseAuth.user.uid}/`;
+function getUserRefs(uid) {
+    const user = `users/${uid}/`;
     const templateRef = 'templates';
     const userTemplateRef = user + 'templates';
     const displayNameRef = user + 'displayName';
@@ -94,7 +99,7 @@ function getUserRefs(state) {
 }
 
 async function readGardenFromFirebase(state, dispatch) {
-    const refs = getGardenRefs(state);
+    const refs = getGardenRefs(state.garden.serial);
 
     const nickname = (await database().ref(refs.nicknameRef).once("value")).val();
     const moisture = (await database().ref(refs.moistureRef).once("value")).val();
@@ -117,7 +122,7 @@ async function readGardenFromFirebase(state, dispatch) {
 }
 
 async function readUserFromFirebase(state, dispatch) {
-    const refs = getUserRefs(state);
+    const refs = getUserRefs(state.firebaseAuth.user.uid);
     const displayName = (await database().ref(refs.displayNameRef).once("value")).val();
 
     if(displayName) {
@@ -125,12 +130,24 @@ async function readUserFromFirebase(state, dispatch) {
         dispatch(setDisplayName(displayName));
     }
 
+    const promises = state.firebaseAuth.user.claimedGardens.map(async serial => {
+        const refs = getGardenRefs(serial);
+        const nickname = (await database().ref(refs.nicknameRef).once("value")).val();
+
+        if(nickname) {
+            console.log(`Dispatched name mapping for user${state.firebaseAuth.user.uid} garden ${serial}: ${nickname}`);
+            dispatch(addGardenMapping({serial, nickname}));
+        }
+    })
+
+    await Promise.all(promises);
+
     dispatch(setUserNeedsSync(false));
 }
 
 async function syncGardenToFirebase(state, prevState) {
     if(state.garden) {
-        const refs = getGardenRefs(state);
+        const refs = getGardenRefs(state.garden.serial);
 
         const moisture = state.garden.moisture;
         const prevMoisture = prevState.garden?.moisture;
@@ -152,7 +169,7 @@ async function syncGardenToFirebase(state, prevState) {
 
 async function syncUserToFirebase(state, prevState) {
     if(state.firebaseAuth.user) {
-        const refs = getUserRefs(state);
+        const refs = getUserRefs(state.firebaseAuth.user.uid);
 
         const displayName = state.firebaseAuth.user.displayName;
         const prevDisplayName = prevState.firebaseAuth.user?.displayName;
