@@ -1,8 +1,7 @@
 import database from '@react-native-firebase/database';
 import {
     setLight,
-    setMoisture,
-    setLedTestOn
+    setMoisture
 } from "../slices/garden";
 
 import { setfirebaseReady } from '../slices/firebaseAuth';
@@ -23,7 +22,7 @@ export const enablePersistence = (store) => {
                 const state = store.getState();
                 toFirebase(state);
                 if (state.firebaseAuth.firebaseReady) {
-                    
+
                     const {templateRef} = getRefs(state);
                     database()
                     .ref(templateRef).on('value', (snapshot) => { snapshot
@@ -31,7 +30,7 @@ export const enablePersistence = (store) => {
                         const templateKey = childSnapshot.key;
                         const templateData = childSnapshot.val();
                         console.log(templateKey, templateData);
-                    });}) 
+                    });})
 
                     const {userTemplateRef} = getRefs(state);
                             database().
@@ -42,7 +41,7 @@ export const enablePersistence = (store) => {
                             const templateData2 = childSnapshot.val();
                             console.log(templateKey2, templateData2);
                         });})
-                
+
                    dispatch(setfirebaseReady(false))
                 }
                 prevState = store.getState();
@@ -91,9 +90,6 @@ export const enablePersistence = (store) => {
         const moisture = state.garden.moisture;
         const prevMoisture = prevState.garden.moisture;
 
-        const ledTestOn = state.garden.ledTestOn;
-        const prevLedTestOn = prevState.garden.ledTestOn;
-
         const displayName = state.firebaseAuth.displayName;
         console.log("hej"+ displayName);
         const prevDisplayName = prevState.firebaseAuth.displayName;
@@ -110,28 +106,22 @@ export const enablePersistence = (store) => {
                 .set(moisture)
         }
 
-        if (ledTestOn !== prevLedTestOn) {
-            database()
-                .ref(ledTestRef)
-                .set(ledTestOn ? 1 : 0)
-        }
-
         if (!!state.firebaseAuth.userUID && displayName !== prevDisplayName) {
             database()
                 .ref(displayNameRef)
                 .set(displayName)
                 console.log("wel"+ displayName);
         }
-       
+
         /**
          * For saving new templates in firebase. For each new template, we will genarate a new key using push() function.
-         * This function will save that key under the user so we know who creaated the tempate. 
+         * This function will save that key under the user so we know who creaated the tempate.
          */
         if (/*templateName !==templateName*/false) {
-            const newChildRef = database().ref(templateRef).push(); 
-            const templateKey = newChildRef.key; 
+            const newChildRef = database().ref(templateRef).push();
+            const templateKey = newChildRef.key;
             console.log(templateKey);
-            newChildRef.set({plantName: 'apple', lightLevel: light, moistureLevel: moisture }); 
+            newChildRef.set({plantName: 'apple', lightLevel: light, moistureLevel: moisture });
             database().ref(userTemplateRef).push().set({templateKey: templateKey});
         }
     }
@@ -155,11 +145,7 @@ export const enablePersistence = (store) => {
             database()
                 .ref(moistureRef)
                 .once("value")
-                .then(snapshot => dispatch(setMoisture(snapshot.val()))),
-            database()
-                .ref(ledTestRef)
-                .once("value")
-                .then(snapshot => dispatch(setLedTestOn(snapshot.val() == 1)))
+                .then(snapshot => dispatch(setMoisture(snapshot.val())))
         ];
 
         // We have to update prevState here or the app doesn't understand if values are different from the initial ones

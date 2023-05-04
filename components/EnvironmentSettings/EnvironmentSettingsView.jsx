@@ -10,12 +10,10 @@ const bulbIcon = require('../../assets/BulpIcon.png'); // Link to bulbIcon for t
 export const EnvironmentSettingsView = ({
 	setLight,
 	setMoisture,
-	setLedTestOn,
 	setAdvancedInfo,
 	advancedInfo,
 	light,
-	moisture,
-	ledTestOn
+	moisture
 }) => {
 	const moistureTitle = 'Moisture Level';
 	const lightTitle = 'Light Level';
@@ -27,36 +25,28 @@ export const EnvironmentSettingsView = ({
     return(
         <View style={{paddingHorizontal: 20, paddingTop: 30, paddingBottom: 30 + headerHeight, justifyContent: "center", flexDirection: "column", height: "100%" }}>
 			<View style={{marginBottom: 20}}>
-				<EnvironmentSettingsSliderView 
-					title={ moistureTitle } 
-					sliderIcon={ waterDropIcon } 
+				<EnvironmentSettingsSliderView
+					title={ moistureTitle }
+					sliderIcon={ waterDropIcon }
 					nutrition={ moisture }
-					onSlide={ setMoisture } 
+					onSlide={ setMoisture }
 					advancedInfo={ advancedInfo }
 				/>
 			</View>
-			<EnvironmentSettingsSliderView 
-				title={ lightTitle } 
-				sliderIcon={ bulbIcon } 
+			<EnvironmentSettingsSliderView
+				title={ lightTitle }
+				sliderIcon={ bulbIcon }
 				nutrition={ light }
-				onSlide={ setLight } 
+				onSlide={ setLight }
 				advancedInfo={ advancedInfo }
 			/>
 
 			<View style={{ paddingVertical: 20 }}>
-				<EnvironmentSettingsSwitch 
+				<EnvironmentSettingsSwitch
 					title={ advancedInfoTitle }
 					onToggle={ setAdvancedInfo }
-					active={ advancedInfo } 
+					active={ advancedInfo }
 				/>
-
-				<View style={{ marginTop: 10 }}>
-					<EnvironmentSettingsSwitch 
-						title={ ledTestTitle }
-						onToggle={ setLedTestOn }
-						active={ ledTestOn } 
-					/>
-				</View>
 			</View>
 		</View>
     )
