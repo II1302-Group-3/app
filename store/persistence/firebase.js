@@ -114,3 +114,53 @@ export const enablePersistence = (store) => {
         return Promise.all(promises).then(() => prevState = store.getState());
     }
 }
+
+export const addGarden = async (userIdToken, gardenSerial, gardenNickname) => {
+    const params = new URLSearchParams({
+        token: userIdToken,
+        serial: gardenSerial,
+        nickname: gardenNickname
+    });
+
+    const result = fetch("https://europe-west1-greengarden-iot.cloudfunctions.net/addGarden?" + params, { method: "POST" });
+
+    if(result == "success") {
+        // TODO: Refresh token to get new user claims
+    }
+    else {
+        const errorCodeToMessage = {
+            "missing_parameter": "Missing parameter in request",
+            "invalid_token": "Firebase ID token is invalid",
+            "invalid_serial": "Invalid serial number specified",
+            "garden_offline": "This garden is not connected to Wi-Fi",
+            "garden_already_claimed": "This garden is already claimed by another user",
+            "too_many_gardens": "You have claimed too many gardens already"
+        };
+
+        throw new Error(errorCodeToMessage[result]);
+    }
+}
+
+export const removeGarden = async (userIdToken, gardenSerial, gardenNickname) => {
+    const params = new URLSearchParams({
+        token: userIdToken,
+        serial: gardenSerial,
+        nickname: gardenNickname
+    });
+
+    const result = fetch("https://europe-west1-greengarden-iot.cloudfunctions.net/removeGarden?" + params, { method: "POST" });
+
+    if(result == "success") {
+        // TODO: Refresh token to get new user claims
+    }
+    else {
+        const errorCodeToMessage = {
+            "missing_parameter": "Missing parameter in request",
+            "invalid_token": "Firebase ID token is invalid",
+            "invalid_serial": "Invalid serial number specified",
+            "garden_not_claimed": "This garden has never been claimed or is claimed by another user",
+        };
+
+        throw new Error(errorCodeToMessage[result]);
+    }
+}
