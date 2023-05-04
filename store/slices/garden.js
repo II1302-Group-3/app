@@ -1,4 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
+import auth from "@react-native-firebase/auth";
+import { addGardenMapping, pushGarden, updateToken } from "./firebaseAuth";
 
 const initialActiveState = {
     needsSync: true,
@@ -36,17 +38,20 @@ export const garden = createSlice({
 
 export const { selectGarden, resetGarden, setNickname, setMoisture, setLight } = garden.actions;
 
-async function addGarden(userIdToken, gardenSerial, gardenNickname) {
+export async function addGarden(userIdToken, gardenSerial, gardenNickname, dispatch) {
     const params = new URLSearchParams({
         token: userIdToken,
         serial: gardenSerial,
         nickname: gardenNickname
     });
 
-    const result = await fetch("https://europe-west1-greengarden-iot.cloudfunctions.net/addGarden?" + params, { method: "POST" });
+    const result = await (await fetch("https://europe-west1-greengarden-iot.cloudfunctions.net/addGarden?" + params)).text();
 
-    if(result == "success") {
-        // TODO: Refresh token to get new user claims
+    if(result === "success") {
+        const newToken = await auth().currentUser.getIdToken(true);
+        dispatch(updateToken(newToken));
+        dispatch(pushGarden(gardenSerial));
+        dispatch(addGardenMapping({serial: gardenSerial, nickname: gardenNickname}));
     }
     else {
         const errorCodeToMessage = {
@@ -58,21 +63,22 @@ async function addGarden(userIdToken, gardenSerial, gardenNickname) {
             "too_many_gardens": "You have claimed too many gardens already"
         };
 
-        throw new Error(errorCodeToMessage[result]);
+        throw new Error(errorCodeToMessage[result] ?? `Unknown error: ${result}`);
     }
 }
 
-async function removeGarden(userIdToken, gardenSerial, gardenNickname) {
+export async function removeGarden(userIdToken, gardenSerial, dispatch) {
     const params = new URLSearchParams({
         token: userIdToken,
-        serial: gardenSerial,
-        nickname: gardenNickname
+        serial: gardenSerial
     });
 
-    const result = await fetch("https://europe-west1-greengarden-iot.cloudfunctions.net/removeGarden?" + params, { method: "POST" });
+    const result = await (await fetch("https://europe-west1-greengarden-iot.cloudfunctions.net/removeGarden?" + params)).text();
 
-    if(result == "success") {
-        // TODO: Refresh token to get new user claims
+    if(result === "success") {
+        const newToken = await auth().currentUser.getIdToken(true);
+        dispatch(updateToken(newToken));
+        dispatch(popGarden(gardenSerial));
     }
     else {
         const errorCodeToMessage = {
@@ -82,6 +88,6 @@ async function removeGarden(userIdToken, gardenSerial, gardenNickname) {
             "garden_not_claimed": "This garden has never been claimed or is claimed by another user",
         };
 
-        throw new Error(errorCodeToMessage[result]);
+        throw new Error(errorCodeToMessage[result] ?? `Unknown error: ${result}`);
     }
 }

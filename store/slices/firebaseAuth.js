@@ -75,8 +75,18 @@ export const firebaseAuth = createSlice({
         setUserNeedsSync: (state, { payload }) => {
             state.user.needsSync = payload;
         },
+        pushGarden: (state, { payload }) => {
+            state.user.claimedGardens = [...state.user.claimedGardens, payload];
+        },
+        popGarden: (state, { payload }) => {
+            state.user.claimedGardens = [...state.user.claimedGardens].filter(s => s === payload);
+            delete state.user.claimedGardenNames[payload];
+        },
         addGardenMapping: (state, { payload }) => {
             state.user.claimedGardenNames[payload.serial] = payload.nickname;
+        },
+        updateToken: (state, { payload }) => {
+            state.user.token = payload;
         },
         reset: () => initialState,
         resetError: state => {
@@ -93,7 +103,7 @@ export const firebaseAuth = createSlice({
                 email: payload.email,
                 displayName: payload.displayName,
 
-                idToken: payload.token,
+                token: payload.token,
                 claimedGardens: [],
                 claimedGardenNames: {},
 
@@ -122,7 +132,7 @@ export const firebaseAuth = createSlice({
     }
 })
 
-export const { setfirebaseReady, setUser, setDisplayName, setUserNeedsSync, addGardenMapping, reset, resetError } = firebaseAuth.actions;
+export const { setfirebaseReady, setUser, setDisplayName, setUserNeedsSync, pushGarden, popGarden, addGardenMapping, updateToken, reset, resetError } = firebaseAuth.actions;
 
 // We need to unsubscribe from the auth changes callback because otherwise it will set the user before creating a new account
 let authUnsubscribeFunction;
@@ -139,6 +149,7 @@ export const listenToAuthChanges = () => (dispatch, _) =>
 
                 token: idTokenResult.token,
                 claimedGardens: idTokenResult.claims.claimedGardens ?? [],
+                claimedGardenNames: {},
                 needsSync: true
             }));
 

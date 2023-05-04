@@ -10,7 +10,7 @@ export const Home = ({ navigation }) => {
 
     const displayName = useSelector(state => state.firebaseAuth.user.displayName);
     const gardens = useSelector(state => {
-        return [...state.firebaseAuth.user.claimedGardens].map(serial => {
+        return [...state.firebaseAuth.user?.claimedGardens].map(serial => {
             const name = state.firebaseAuth.user.claimedGardenNames[serial];
             return name ?? serial;
         })

@@ -80,7 +80,7 @@ export function enablePersistence(store) {
 }
 
 function getGardenRefs(serial) {
-    const garden = `garden/${serial}`;
+    const garden = `garden/${serial}/`;
 
     const nicknameRef = garden + 'nickname';
     const moistureRef = garden + 'target_moisture';
@@ -130,7 +130,7 @@ async function readUserFromFirebase(state, dispatch) {
         dispatch(setDisplayName(displayName));
     }
 
-    const promises = state.firebaseAuth.user.claimedGardens.map(async serial => {
+    for(const serial of state.firebaseAuth.user.claimedGardens) {
         const refs = getGardenRefs(serial);
         const nickname = (await database().ref(refs.nicknameRef).once("value")).val();
 
@@ -138,9 +138,7 @@ async function readUserFromFirebase(state, dispatch) {
             console.log(`Dispatched name mapping for user${state.firebaseAuth.user.uid} garden ${serial}: ${nickname}`);
             dispatch(addGardenMapping({serial, nickname}));
         }
-    })
-
-    await Promise.all(promises);
+    }
 
     dispatch(setUserNeedsSync(false));
 }
