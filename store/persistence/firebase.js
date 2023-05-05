@@ -17,7 +17,7 @@ import {
 function readTemplates(state) {
     const {templateRef} = getUserRefs(state.firebaseAuth.user.uid);
 
-    database().ref(templateRef).on('value', (snapshot) => { 
+    database().ref(templateRef).on('value', (snapshot) => {
         snapshot.forEach((childSnapshot) => {
             const templateKey = childSnapshot.key;
             const templateData = childSnapshot.val();
@@ -168,18 +168,6 @@ async function syncUserToFirebase(state, prevState) {
         if(displayName !== prevDisplayName) {
             console.log(`Synced display name to user ${state.firebaseAuth.user.uid}: ${displayName} (prev ${prevDisplayName})`);
             await database().ref(refs.displayNameRef).set(displayName);
-        }
-
-        /**
-         * For saving new templates in firebase. For each new template, we will genarate a new key using push() function.
-         * This function will save that key under the user so we know who creaated the tempate.
-         */
-        if (/*templateName !==templateName*/false) {
-            const newChildRef = database().ref(templateRef).push();
-            const templateKey = newChildRef.key;
-            console.log(templateKey);
-            newChildRef.set({plantName: 'apple', lightLevel: light, moistureLevel: moisture });
-            database().ref(userTemplateRef).push().set({templateKey: templateKey});
         }
     }
 }

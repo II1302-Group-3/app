@@ -24,8 +24,10 @@ export const Home = ({ navigation }) => {
         navigation.navigate("EnvironmentSettings");
     }
 
-    return(
+    const addNewTemplate = () => navigation.navigate("AddTemplate")
+
+    return (
         displayNameRef,
-        <HomeView signOut={signOut} gardens={gardens} addNewGarden={addNewGarden} openGarden={openGarden} displayName={displayName} navigation={navigation} />
-    )
+        <HomeView signOut={signOut} gardens={gardens} addNewGarden={addNewGarden} openGarden={openGarden} addNewTemplate={addNewTemplate} displayName={displayName} navigation={navigation} />
+    );
 }
