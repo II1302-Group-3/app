@@ -9,11 +9,11 @@ export const EnvironmentSettingsSwitch = ({
 }) => {
     return(
         <View style={{ flexDirection: "row" }}>
-            <Text style={{ flex: 1, alignSelf: "flex-start", fontSize: 20 }}>
+            <Text style={{ flexGrow: 1, alignSelf: "flex-start", verticalAlign: "middle", height: "100%" }}>
                 { title }
             </Text>
             <Switch 
-                style={{ flex: 1, alignSelf: "flex-end" }}
+                style={{ alignSelf: "flex-end" }}
                 onValueChange={() => onToggle(!active)}
                 value={active}
             />
