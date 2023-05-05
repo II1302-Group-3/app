@@ -16,7 +16,7 @@ const backgroundStyle = {
 const waterDropIcon = require('../../assets/WaterDropIcon.png'); // Link to waterDropIcon for the slider
 const bulbIcon = require('../../assets/BulpIcon.png'); // Link to bulbIcon for the slider
 
-export const HomeView = ({signOut, displayName, addNewGarden, navigation}) => {
+export const HomeView = ({signOut, displayName, addNewGarden,addNewTemplate, navigation}) => {
     const headerHeight = useHeaderHeight();
 
     return(
@@ -42,6 +42,7 @@ export const HomeView = ({signOut, displayName, addNewGarden, navigation}) => {
                 </TouchableOpacity>
             </View>
             <View style={{flexGrow: 0}}>
+                <Button mode="contained" style={{marginBottom: 10}} onPress={() => addNewTemplate()}>Create a plant template and share</Button>
                 <Button mode="contained" style={{marginBottom: 10}} onPress={() => addNewGarden()}>Add a new Green Garden</Button>
                 <Button mode="contained-tonal" style={{}} onPress={() => signOut()}>Sign out</Button>
             </View>
