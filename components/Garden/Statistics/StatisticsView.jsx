@@ -30,11 +30,11 @@ export const StatisticsView = ({
         }
 
         return (
-            <>
+            <View style={{flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-between', alignItems: 'center'}}>
                 { renderButton(BUTTON.LEFT) }
                 <Text style={{textAlign: 'center'}} variant="displayMedium">{day}</Text>
                 { renderButton(BUTTON.RIGHT) }
-            </>
+            </ View>
         )
 
         function renderButton(direction) {
@@ -77,8 +77,8 @@ export const StatisticsView = ({
             },
             moisture: {
                 color: {
-                    from: "#00ff00",
-                    to: "#0000ff"
+                    from: "#0000ff",
+                    to: "#00ff00"
                 }
             }
         })
@@ -174,9 +174,7 @@ export const StatisticsView = ({
 
     return(
         <View>
-            <View style={{flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-between', alignItems: 'center'}}>
-                { renderDay() }
-            </View>
+            { renderDay() }
             { renderCharts() }
         </View>
     )

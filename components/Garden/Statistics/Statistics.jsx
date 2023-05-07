@@ -6,7 +6,6 @@ import {
     resetError,
     NUTRITIENT_PATHS } from "../../../store/slices/garden";
 import { DAYS } from "../../../constants";
-import { ActivityIndicator, MD2Colors } from "react-native-paper";
 import { View } from "react-native";
 
 export const Statistics = () => {
