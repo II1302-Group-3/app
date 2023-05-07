@@ -90,7 +90,7 @@ export const StatisticsView = ({
             loading: lightIsLoading,
             error: lightError}, 
 
-            {legend: 'Water', 
+            {legend: 'Moisture', 
             color: chartStyles.moisture.color, 
             data: [
                 Math.random() * 100,
