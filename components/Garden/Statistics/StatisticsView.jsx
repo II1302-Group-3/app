@@ -53,24 +53,6 @@ export const StatisticsView = ({
     }
 
     function renderCharts() {
-        const charts = [
-            {legend: 'Light', 
-            color: '#fb8c00', 
-            data: lightData,
-            loading: lightIsLoading,
-            error: lightError}, 
-
-            {legend: 'Water', 
-            color: '#00FF00', 
-            data: [
-                Math.random() * 100,
-                Math.random() * 100,
-                Math.random() * 100
-            ],
-            loading: moistureIsLoading,
-            error: moistureError}
-        ];
-
         const loadingIconStyles = StyleSheet.create({
             wrapper: {
                 position: 'absolute',
@@ -85,6 +67,39 @@ export const StatisticsView = ({
             size: "large",
             color: MD2Colors.red800
         })
+
+        const chartStyles = StyleSheet.create({
+            light: {
+                color: {
+                    from: "#fb8c00",
+                    to: "#ffd700"
+                }
+            },
+            moisture: {
+                color: {
+                    from: "#00ff00",
+                    to: "#0000ff"
+                }
+            }
+        })
+
+        const charts = [
+            {legend: 'Light', 
+            color: chartStyles.light.color, 
+            data: lightData,
+            loading: lightIsLoading,
+            error: lightError}, 
+
+            {legend: 'Water', 
+            color: chartStyles.moisture.color, 
+            data: [
+                Math.random() * 100,
+                Math.random() * 100,
+                Math.random() * 100
+            ],
+            loading: moistureIsLoading,
+            error: moistureError}
+        ];
 
         const Transition = props => {
             const fadeAnim = useRef(new Animated.Value(0)).current;
@@ -134,8 +149,8 @@ export const StatisticsView = ({
                     chartConfig={{
                         strokeWidth: "5",
                     backgroundColor: "#e26a00",
-                    backgroundGradientFrom: chart.color,
-                    backgroundGradientTo: '#ffa726',
+                    backgroundGradientFrom: chart.color.from,
+                    backgroundGradientTo: chart.color.to,
                     decimalPlaces: 2, // optional, defaults to 2dp
                     color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
                     labelColor: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,

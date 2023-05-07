@@ -55,13 +55,8 @@ export const garden = createSlice({
         }),
         builder.addCase(getStatistics.rejected, (state, { meta, error }) => {
             meta.arg.nutritientPath === NUTRITIENT_PATHS.LIGHT ?
-             state.statistics.light.error = addError() :
-             state.statistics.moisture.error = addError();
-
-             function addError() {
-                return error.message === "Cannot read property 'filter' of null" ?
-                    "Data unavailable" : error.message;
-             }
+             state.statistics.light.error = error.message :
+             state.statistics.moisture.error = error.message;
         })
     }
 })
@@ -81,7 +76,10 @@ export const getStatistics = createAsyncThunk('garden/getStatistics', async({
     const snapshot = await database().ref(ref).once("value")
     const data = snapshot.val();
     
+    if(!data) throw new Error("Data unavailable.")
+
     let averagePerHour = [];
+
     data.filter(hour => Array.isArray(hour)).forEach(hour => {
         const sum = hour.reduce((a, b) => a + b, 0)
         averagePerHour.push(Math.round((sum / hour.length) || 0))
