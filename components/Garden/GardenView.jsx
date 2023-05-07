@@ -3,6 +3,7 @@ import { useCardStyle } from '../../style';
 import { useColorScheme } from 'react-native';
 import { StyleSheet, View, Text, Image, TouchableHighlight } from 'react-native';
 import { useColors } from '../../style';
+import database from '@react-native-firebase/database';
 
 export const GardenView = ({ navigation }) => {
     const isDarkMode = useColorScheme() === 'dark';
@@ -22,6 +23,7 @@ export const GardenView = ({ navigation }) => {
 
         return cards.map(card => 
             <TouchableHighlight 
+                key={card.nav}
                 style={styles.cardStyle} 
                 activeOpacity={0.1}
                 underlayColor={styles.color.lightGray}

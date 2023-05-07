@@ -1,100 +1,166 @@
-import React from "react";
-import { View, Dimensions } from "react-native";
-import { Text, Button } from "react-native-paper";
+import React, { useRef, useEffect } from "react";
+import { View, Dimensions, StyleSheet, Animated } from "react-native";
+import { 
+    Text,
+    Button,
+    ActivityIndicator,
+    MD2Colors } from "react-native-paper";
 import { LineChart } from "react-native-chart-kit";
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 export const StatisticsView = ({
     data,
-    month,
-    lightYAxis,
-    waterYAxis,
+    day,
     xAxis,
     lightData,
-    waterData,
-    setNextMonth,
-    setPrevMonth
+    moistureData,
+    setNextDay,
+    setPrevDay,
+    lightIsLoading,
+    moistureIsLoading,
+    lightError,
+    moistureError
 }) => {
-    // const data = {
-    //     labels: ["January", "February", "March", "April", "May", "June"],
-    //     datasets: [
-    //       {
-    //         data: [20, 45, 28, 80, 99, 43],
-    //         color: (opacity = 1) => `rgba(134, 65, 244, ${opacity})`, // optional
-    //         strokeWidth: 2 // optional
-    //       }
-    //     ],
-    //     legend: ["Rainy Days"] // optional
-    //   };
+    const width = Dimensions.get("window").width;
+    const height = 220;
 
-    const screenWidth = Dimensions.get("window").width;
-    
-    const chartConfig = {
-        backgroundGradientFrom: "#1E2923",
-        backgroundGradientFromOpacity: 0,
-        backgroundGradientTo: "#08130D",
-        backgroundGradientToOpacity: 0.5,
-        color: (opacity = 1) => `rgba(26, 255, 146, ${opacity})`,
-        strokeWidth: 2, // optional, default 3
-        barPercentage: 0.5,
-        useShadowColorFromDataset: false // optional
-      };
+    function renderDay() {
+        const BUTTON = {
+            LEFT: 'left',
+            RIGHT: 'right'
+        }
+
+        return (
+            <>
+                { renderButton(BUTTON.LEFT) }
+                <Text style={{textAlign: 'center'}} variant="displayMedium">{day}</Text>
+                { renderButton(BUTTON.RIGHT) }
+            </>
+        )
+
+        function renderButton(direction) {
+            const comparedDay = isDirectionLeftOrRight() ? 'Monday' : 'Sunday';
+            const icon = isDirectionLeftOrRight() ? "arrow-left" : 'arrow-right';
+            const callback = isDirectionLeftOrRight() ? setPrevDay : setNextDay;
+
+            return day !== comparedDay ?
+                 <Button icon={icon} mode="text" onPress={() => callback()} /> :
+                 <Text>{ " ".repeat(20) }</Text>
+
+            function isDirectionLeftOrRight() {
+                return direction === 'left'
+            }
+        }
+    }
 
     function renderCharts() {
-        const charts = [{legend: 'Light', color: '#fb8c00'}, {legend: 'Water', color: '#00FF00'}];
+        const charts = [
+            {legend: 'Light', 
+            color: '#fb8c00', 
+            data: lightData,
+            loading: lightIsLoading,
+            error: lightError}, 
 
-        return charts.map(chart => <View>
-            <LineChart
-                data={{
-                labels: xAxis,
-                datasets: [
-                    {
-                    data: [
-                        Math.random() * 100,
-                        Math.random() * 100,
-                        Math.random() * 100
-                    ]
+            {legend: 'Water', 
+            color: '#00FF00', 
+            data: [
+                Math.random() * 100,
+                Math.random() * 100,
+                Math.random() * 100
+            ],
+            loading: moistureIsLoading,
+            error: moistureError}
+        ];
+
+        const loadingIconStyles = StyleSheet.create({
+            wrapper: {
+                position: 'absolute',
+                width,
+                height: height + 36,
+                top: 7,
+                backgroundColor: 'rgba(230, 230, 100, 0.5)',
+                zIndex: 1,
+                justifyContent: 'center',
+                alignItems: 'center'
+            },
+            size: "large",
+            color: MD2Colors.red800
+        })
+
+        const Transition = props => {
+            const fadeAnim = useRef(new Animated.Value(0)).current;
+
+            useEffect(() => {
+                const toValue = props.loading ? 1 : 0;
+
+                Animated.timing(fadeAnim, {
+                  toValue,
+                  duration: 500,
+                  useNativeDriver: true,
+                }).start();
+              }, [props.loading]);
+
+              return (
+                <Animated.View style={{...props.style, opacity: fadeAnim}}>
+                  {props.children}
+                </Animated.View>
+              );
+        }
+
+        return charts.map(chart => 
+            <View key={chart.legend}>
+                <Transition style={loadingIconStyles.wrapper} loading={chart.loading}>
+                    { chart.error ? (
+                        <Text>{chart.error}</Text>
+                    ) : (
+                        <ActivityIndicator size={loadingIconStyles.size} animating={true} color={loadingIconStyles.color} />
+                    )}
+                    
+                </Transition>
+                <LineChart
+                    data={{
+                    labels: xAxis,
+                    datasets: [
+                        {
+                        data: chart.data[0] ? chart.data : [0]
+                        }
+                    ],
+                    legend: [chart.legend]
+                    }}
+                    width={width} // from react-native
+                    height={height}
+                    yAxisLabel=""
+                    yAxisSuffix=""
+                    yAxisInterval={1} // optional, defaults to 1
+                    chartConfig={{
+                        strokeWidth: "5",
+                    backgroundColor: "#e26a00",
+                    backgroundGradientFrom: chart.color,
+                    backgroundGradientTo: '#ffa726',
+                    decimalPlaces: 2, // optional, defaults to 2dp
+                    color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
+                    labelColor: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
+                    style: {
+                        borderRadius: 16
+                    },
+                    propsForDots: {
+                        r: "6",
+                        strokeWidth: "2",
+                        stroke: "#ffa726"
                     }
-                ],
-                legend: [chart.legend]
-                }}
-                width={Dimensions.get("window").width} // from react-native
-                height={220}
-                yAxisLabel="$"
-                yAxisSuffix="k"
-                yAxisInterval={1} // optional, defaults to 1
-                chartConfig={{
-                    strokeWidth: "5",
-                backgroundColor: "#e26a00",
-                backgroundGradientFrom: chart.color,
-                backgroundGradientTo: '#ffa726',
-                decimalPlaces: 2, // optional, defaults to 2dp
-                color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
-                labelColor: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
-                style: {
+                    }}
+                    bezier
+                    style={{
+                    marginVertical: 8,
                     borderRadius: 16
-                },
-                propsForDots: {
-                    r: "6",
-                    strokeWidth: "2",
-                    stroke: "#ffa726"
-                }
-                }}
-                bezier
-                style={{
-                marginVertical: 8,
-                borderRadius: 16
-                }}
-            />
-        </View>)
+                    }}
+                />
+            </View>)
     }
 
     return(
         <View>
             <View style={{flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-between', alignItems: 'center'}}>
-                <Button icon="arrow-left" mode="text" onPress={() => setPrevMonth()} />
-                <Text style={{textAlign: 'center'}} variant="displayLarge">{month}</Text>
-                <Button icon="arrow-right" mode="text" onPress={() => setNextMonth()} />
+                { renderDay() }
             </View>
             { renderCharts() }
         </View>

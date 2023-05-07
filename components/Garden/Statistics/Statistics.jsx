@@ -1,49 +1,75 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { StatisticsView } from "./StatisticsView";
-import { getStatistics, resetError } from "../../../store/slices/garden";
-import { MONTHS } from "../../../constants";
+import { 
+    getStatistics, 
+    resetError,
+    NUTRITIENT_PATHS } from "../../../store/slices/garden";
+import { DAYS } from "../../../constants";
+import { ActivityIndicator, MD2Colors } from "react-native-paper";
+import { View } from "react-native";
 
 export const Statistics = () => {
     const dispatch = useDispatch();
 
-    const [month, setMonth] = useState(MONTHS[new Date().getMonth()])
+    const [date, setDate] = useState(new Date());
+    const [day, setDay] = useState(DAYS[date.getDay()]);
     const [lightYAxis, setLightYAxis] = useState([]);
-    const [waterYAxis, setWaterYAxis] = useState([]);
-    const [xAxis, setXAxis] = useState((() => getDaysOfMonthUntilPresent())());
-    const lightData = useSelector(state => state.garden.statistics.light);
-    const waterData = useSelector(state => state.garden.statistics.water);
-    const error = useSelector(state => state.garden.statistics.error);
+    const [moistureYAxis, setMoistureYAxis] = useState([]);
+    const [xAxis, setXAxis] = useState();
+    const [lightData, setLightData] = useState([]);
+    const [moistureData, setMoistureData] = useState([]);
+    const lightIsLoading = useSelector(state => state.garden.statistics.light.isLoading);
+    const moistureIsLoading = useSelector(state => state.garden.statistics.moisture.isLoading);
+    const lightError = useSelector(state => state.garden.statistics.light.error);
+    const moistureError = useSelector(state => state.garden.statistics.moisture.error);
 
-    const setNextMonth = () => {
-        if(month !== 'December') setMonth(MONTHS[MONTHS.indexOf(month) + 1]);
+    const setNextDay = () => {
+        if(day !== 'Sunday') {
+            if(lightError || moistureError) dispatch(resetError());
+            setDate(new Date(date.setDate(date.getDate() + 1)));
+            setDay(DAYS[date.getDay()]);
+        }
     }
-    const setPrevMonth = () => {
-        if(month !== 'January') setMonth(MONTHS[MONTHS.indexOf(month) - 1]);
+    const setPrevDay = () => {
+        if(day !== 'Monday') {
+            if(lightError || moistureError) dispatch(resetError());
+            setDate(new Date(date.setDate(date.getDate() - 1)));
+            setDay(DAYS[date.getDay()]);
+        }
     }
-    console.log(MONTHS)
-    console.log(MONTHS.indexOf(month))
-    console.log(new Date().getMonth())
-    console.log(MONTHS[0])
-
-    const nutritients = ['light', 'water']
-
-    // useEffect(() => {
-    //     nutritients.forEach(nutritient => dispatch(getStatistics(nutritient)))
-    // }, [])
 
     useEffect(() => {
-        if(error) {
-            alert(error)
-            dispatch(resetError())
-        }
-    }, [error])
+        dispatch(getStatistics({
+            nutritientPath: NUTRITIENT_PATHS.LIGHT,
+            date
+        })).unwrap().then(lightData => {
+            setLightData(lightData);
+            setXAxis(getDaysOfMonthUntilPresent(lightData.length));
+        });
 
+        // dispatch(getStatistics({
+        //     nutritientPath: NUTRITIENT_PATHS.MOISTURE,
+        //     date
+        // })).unwrap().then(moistureData => setMoistureData(moistureData));
+    }, [date]);
+    
     return (
-        <StatisticsView month={month} xAxis={xAxis} setNextMonth={setNextMonth} setPrevMonth={setPrevMonth} />
+        <View>
+            <StatisticsView 
+                lightData={lightData} 
+                day={day} 
+                setNextDay={setNextDay} 
+                setPrevDay={setPrevDay}
+                xAxis={xAxis}
+                lightIsLoading={lightIsLoading}
+                moistureIsLoading={moistureIsLoading}
+                lightError={lightError}
+                moistureError={moistureError} />
+        </View>
     )
 }
 
-function getDaysOfMonthUntilPresent() {
-    return [...Array(new Date().getDay()).keys()].map(date => ++date);
+function getDaysOfMonthUntilPresent(length) {
+    return [...Array(length).keys()].map(zeroIndexedDate => ++zeroIndexedDate);
 }

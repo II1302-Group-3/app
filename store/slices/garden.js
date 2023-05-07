@@ -1,20 +1,27 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import database from '@react-native-firebase/database';
-import { MONTHS } from "../../constants";
 
 const initialState = {
     serialNumber: null,
     light: 50,
     moisture: 50,
     ledTestOn: false,
-
+    
     statistics: {
-        light: [],
-        water: [],
-        xAxis: [],
-        month: "",
-        error: null
-    },
+        light: {
+            error: null,
+            isLoading: false
+        },
+        moisture: {
+            error: null,
+            isLoading: false
+        }
+    }
+}
+
+export const NUTRITIENT_PATHS = {
+    LIGHT: 'light_level',
+    MOISTURE: 'moisture_level'
 }
 
 export const garden = createSlice({
@@ -31,47 +38,54 @@ export const garden = createSlice({
             state.ledTestOn = payload;
         },
         resetError: state => {
-            state.statistics.error = null;
+            state.statistics.light.error = null;
+            state.statistics.moisture.error = null;
         }
     },
     extraReducers: builder => {
-        builder.addCase(getStatistics.fulfilled, (state, { payload }) => {
-            state.statistics[payload.nutritientName].data = payload.data;
-        })
-        builder.addCase(getStatistics.rejected, (state, { error }) => {
-            state.statistics.error = error.message;
+        builder.addCase(getStatistics.fulfilled, (state, { meta }) => {
+            meta.arg.nutritientPath === NUTRITIENT_PATHS.LIGHT ?
+             state.statistics.light.isLoading = false :
+             state.statistics.moisture.isLoading = false;
+        }),
+        builder.addCase(getStatistics.pending, (state, { meta }) => {
+            meta.arg.nutritientPath === NUTRITIENT_PATHS.LIGHT ?
+             state.statistics.light.isLoading = true :
+             state.statistics.moisture.isLoading = true;
+        }),
+        builder.addCase(getStatistics.rejected, (state, { meta, error }) => {
+            meta.arg.nutritientPath === NUTRITIENT_PATHS.LIGHT ?
+             state.statistics.light.error = addError() :
+             state.statistics.moisture.error = addError();
+
+             function addError() {
+                return error.message === "Cannot read property 'filter' of null" ?
+                    "Data unavailable" : error.message;
+             }
         })
     }
 })
 
-export const { setLight, setMoisture, setLedTestOn, resetError } = garden.actions;
+export const { 
+    setLight,
+    setMoisture,
+    setLedTestOn,
+    resetError } = garden.actions;
 
-const getStatisticsRef = (state, nutritientName) => {
-    const date = new Date();
-
-    return 'garden/' + 
-        state.serialNumber + 
-        `/statistics/${nutritientName}/` + 
-        MONTHS[date.getMonth()] + 
-        '/' +
-        date.getDay() +
-        '/data';
-}
-
-export const getStatistics = createAsyncThunk('garden/getStatistics', async(nutritientName, { getState }) => {
-    const state = getState();
-    const ref = getStatisticsRef(state, nutritientName)
-
-    let data;
-
-    try {
-        await database()
-            .ref(ref)
-            .once("value")
-            .then(snapshot => data = snapshot.val());
-    } catch(error) {
-        throw error;
-    }
+export const getStatistics = createAsyncThunk('garden/getStatistics', async({
+    nutritientPath,
+    date
+}) => {
+    const processedDate = date.toISOString().split('T')[0];
+    const ref = `garden/251951091481/${nutritientPath}/${processedDate}`;
+    const snapshot = await database().ref(ref).once("value")
+    const data = snapshot.val();
     
-    return { data, nutritientName };
-});
+    let averagePerHour = [];
+    data.filter(hour => Array.isArray(hour)).forEach(hour => {
+        const sum = hour.reduce((a, b) => a + b, 0)
+        averagePerHour.push(Math.round((sum / hour.length) || 0))
+    })
+
+    return averagePerHour
+})
