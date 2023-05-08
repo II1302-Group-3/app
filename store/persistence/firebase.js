@@ -70,7 +70,7 @@ export function enablePersistence(store) {
         if(state.firebaseAuth.user?.syncing) {
             if(!prevState.firebaseAuth.user) {
                 promises = [...promises, readUserFromFirebase(state, dispatch)];
-                readTemplates(state, dispatch);
+                //readTemplates(state, dispatch);
             }
         }
         else {

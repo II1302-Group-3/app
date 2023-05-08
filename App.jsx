@@ -22,7 +22,7 @@ import { lightGreenTheme, darkGreenTheme } from './theme';
 
 function App() {
 	const Stack = createNativeStackNavigator();
-	const isLoggedIn = useSelector(selectIsLoggedIn)
+	const isLoggedIn = useSelector(selectIsLoggedIn);
 	const isDarkMode = useColorScheme() === 'dark';
 
 	const paperTheme = isDarkMode ? darkGreenTheme : lightGreenTheme;
@@ -43,7 +43,7 @@ function App() {
 					{isLoggedIn ? (
 						<>
 						<Stack.Screen name="Home" component={ Home } />
-						<Stack.Screen name="EnvironmentSettings" options={{title: "Garden 'One'"}} component={ EnvironmentSettings } />
+						<Stack.Screen name="EnvironmentSettings" options={{title: ""}} component={ EnvironmentSettings } />
 						<Stack.Screen name="AddGarden" options={{ title: "Add Garden" }} component={ AddGarden } />
 						<Stack.Screen name="BrowseTemplate" options={{ title: "Browse Template" }} component={ BrowseTemplate } />
 						<Stack.Screen name="AddTemplate" options={{ title: "Add Template" }} component={ AddTemplate } />

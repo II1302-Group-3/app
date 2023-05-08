@@ -1,57 +1,115 @@
 import { createSlice, createAsyncThunk, createSelector } from "@reduxjs/toolkit";
 import auth from "@react-native-firebase/auth";
-import database from "@react-native-firebase/database"
+import { Alert } from "react-native";
+
+const initialUserState = {
+    uid: "",
+    token: "",
+
+    email: "",
+    displayName: "",
+
+    claimedGardens: [],
+    claimedGardenNames: {},
+
+    syncing: true
+};
 
 const initialState = {
     signinError: null,
     signupError: null,
-    userUID: null,
-    userEmail: null,
-    displayName: null,
-    firebaseReady: false,
-}
 
-export const createAccount = createAsyncThunk('firebaseAuth/createAccount', async({
+    user: null,
+
+    firebaseReady: false,
+};
+
+// We need to unsubscribe from the auth observer because otherwise it will set the user to "syncing" when creating a new account
+let authObserverUnsubscribe;
+
+export const listenToAuthChanges = () => (dispatch, _) => {
+    authObserverUnsubscribe = auth().onAuthStateChanged(async user => {
+        if(user) {
+            const idTokenResult = await user.getIdTokenResult(false);
+
+            const params = {
+                uid: user.uid,
+                token: idTokenResult.token,
+
+                email: user.email,
+                displayName: user.email,
+
+                claimedGardens: idTokenResult.claims.claimedGardens ?? []
+            };
+
+            dispatch(firebaseAuth.actions.setUser({...initialUserState, ...params}));
+            authObserverUnsubscribe();
+        }
+    });
+};
+
+export const createAccount = createAsyncThunk('firebaseAuth/createAccount', async ({
     displayName,
     userEmail,
     userPassword,
     confirmPassword
 }) => {
-    if(userPassword !== confirmPassword) throw new Error("Passwords do not match.")
-
-    try {
-        const credentials = await auth().createUserWithEmailAndPassword(userEmail, userPassword);
-        await database().ref('users/' + credentials.user.uid + '/displayName').set(displayName)
-    } catch(error) {
-        throw error;
+    if(userPassword !== confirmPassword) { 
+        throw new Error("Passwords do not match.");
     }
 
-    return displayName;
+    if(authObserverUnsubscribe) {
+        authObserverUnsubscribe();
+        authObserverUnsubscribe = null;
+    }
+
+    const credentials = await auth().createUserWithEmailAndPassword(userEmail, userPassword);
+    const idTokenResult = await credentials.user.getIdTokenResult(false);
+
+    return {
+        uid: credentials.user.uid,
+        token: idTokenResult.token,
+
+        email: credentials.user.email,
+        displayName
+    };
 })
 
-export const signIn = createAsyncThunk('firebaseAuth/signIn', async({ userEmail, userPassword } ) => {
-    try {
-        await auth().signInWithEmailAndPassword(userEmail, userPassword)
-    } catch(error) {
-        throw error;
+export const signIn = createAsyncThunk('firebaseAuth/signIn', async ({ userEmail, userPassword } ) => {
+    if(authObserverUnsubscribe) {
+        authObserverUnsubscribe();
+        authObserverUnsubscribe = null;
     }
+
+    const credentials = await auth().signInWithEmailAndPassword(userEmail, userPassword);
+    const idTokenResult = await credentials.user.getIdTokenResult(false);
+
+    return {
+        uid: credentials.user.uid,
+        token: idTokenResult.token,
+
+        email: credentials.user.email,
+        claimedGardens: idTokenResult.claims.claimedGardens ?? []
+    };
 })
 
 export const firebaseAuth = createSlice({
     name: 'firebaseAuth',
     initialState,
     reducers: {
-        setDisplayName: (state, { payload }) => {
-            state.displayName = payload;
+        setUser: (state, { payload }) => { state.user = payload },
+        setDisplayName: (state, { payload }) => { state.user.displayName = payload },
+        setUserSyncing: (state, { payload }) => { state.user.syncing = payload },
+        setUserToken: (state, { payload }) => { state.user.token = payload },
+        addGarden: (state, { payload }) => {
+            state.user.claimedGardens = [...state.user.claimedGardens, payload.serial];
+            state.user.claimedGardenNames[payload.serial] = payload.nickname;
         },
-        setfirebaseReady: (state, { payload}) =>{
-            state.firebaseReady = payload;
+        removeGarden: (state, { payload }) => {
+            state.user.claimedGardens = [...state.user.claimedGardens].filter(s => s !== payload);
+            delete state.user.claimedGardenNames[payload];
         },
-        setUser: (state, { payload }) => {
-            state.userUID = payload.uid;
-            state.userEmail = payload.email;
-            state.displayName = payload.displayName
-        },
+        addGardenNameMapping: (state, { payload }) => { state.user.claimedGardenNames[payload.serial] = payload.nickname },
         reset: () => initialState,
         resetError: state => {
             state.signupError = null;
@@ -61,34 +119,33 @@ export const firebaseAuth = createSlice({
     extraReducers: builder => {
         const addError = error => error?.code ? error.code : error.message;
 
-        builder.addCase(createAccount.fulfilled, (state, { payload }) => {
-            state.displayName = payload;
-        })
-        builder.addCase(createAccount.rejected, (state, { error }) => {
-            state.signupError = addError(error);
-        })
-        builder.addCase(signIn.rejected, (state, { error }) => {
-            state.signinError = addError(error);
-        })
+        builder.addCase(createAccount.fulfilled, (state, { payload }) => { 
+            state.user = {...initialUserState, ...payload, syncing: false}
+        });
+        builder.addCase(createAccount.rejected, (state, { error }) => { 
+            state.signupError = addError(error)
+        });
+        builder.addCase(signIn.fulfilled, (state, { payload }) => { 
+            state.user = {...initialUserState, ...payload}
+        });
+        builder.addCase(signIn.rejected, (state, { error }) => { 
+            state.signinError = addError(error)
+        });
     }
 })
 
-export const { setfirebaseReady, setDisplayName, setUser, reset, resetError } = firebaseAuth.actions;
-
-export const listenToAuthChanges = () => (dispatch, _) =>
-    auth().onAuthStateChanged(async(user) => {
-        if(user) {
-            let displayName;
-            await database().ref('users/' + user.uid + '/displayName').once("value").then(snapshot => displayName = snapshot.val())
-            dispatch(setUser({uid: user.uid, email: user.email, displayName: displayName ?? "[unknown display name]"}))
-            dispatch(setfirebaseReady(true))
-        }
-    })
+export const { setDisplayName, setUserSyncing, addGarden, removeGarden, addGardenNameMapping, resetError } = firebaseAuth.actions;
 
 export const logout = () => (dispatch, _) => {
-    dispatch(reset());
+    dispatch(firebaseAuth.actions.reset());
     auth().signOut();
 }
 
-const selectUserUID = state => state.firebaseAuth.userUID;
-export const selectIsLoggedIn = createSelector(selectUserUID, uid => !!uid);
+// This is used by addGarden and removeGarden to refresh the ID token, which contains the user's collection of gardens
+export const refreshToken = () => (dispatch, state) => {
+    auth().currentUser.getIdToken(true)
+        .then(token => dispatch(firebaseAuth.actions.setUserToken(token)))
+        .catch(error => Alert.alert("Failed to refresh ID token", error.message));
+}
+
+export const selectIsLoggedIn = createSelector(state => state.firebaseAuth.user?.uid, uid => !!uid);

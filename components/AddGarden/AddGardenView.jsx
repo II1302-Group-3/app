@@ -7,26 +7,26 @@ export const AddGardenView = props => {
         <View style={{paddingHorizontal: 25, paddingVertical: 30, flexDirection: "column", height: "100%"}}>
 			<View style={{flexGrow: 1, justifyContent: "center", flexDirection: "column"}}>
 				<View>
-					<TextInput 
-						label="Name your garden" 
-						mode="outlined" 
+					<TextInput
+						label="Name your garden"
+						mode="outlined"
 
-						error={!props.isValidName} 
-						value={props.name} 
-						onChangeText={props.setName} 
+						error={!props.isValidName}
+						value={props.name}
+						onChangeText={props.setName}
 					/>
-					<TextInput 
-						label="Serial number" 
-						mode="outlined" 
+					<TextInput
+						label="Serial number"
+						mode="outlined"
 
-						error={!props.isValidSerial} 
-						value={props.serial} 
-						onChangeText={props.setSerial} 
-						
-						keyboardType="numeric" 
-						maxLength={12} 
+						error={!props.isValidSerial}
+						value={props.serial}
+						onChangeText={props.setSerial}
+
+						keyboardType="numeric"
+						maxLength={12}
 					/>
-					<Button mode="contained" style={{marginVertical: 25}} onPress={() => {}}>Claim</Button>
+					<Button mode="contained" disabled={!props.canPressButton} style={{marginVertical: 25}} onPress={props.claimGarden}>Claim</Button>
 					<Button mode="text" icon={require("../../assets/qrexample.png")} onPress={props.openQrScanner}>Scan a QR code</Button>
 				</View>
 			</View>
