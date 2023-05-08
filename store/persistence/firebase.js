@@ -4,6 +4,9 @@ import {
     setMoisture,
     setLedTestOn
 } from "../slices/garden";
+import {
+    setTemplateName
+} from "../slices/templateName";
 
 import { setfirebaseReady } from '../slices/firebaseAuth';
 import { Alert } from 'react-native';
@@ -22,16 +25,20 @@ export const enablePersistence = (store) => {
             store.subscribe(() => {
                 const state = store.getState();
                 toFirebase(state);
+                const templateDataArray = []; // Array to store template data objects
                 if (state.firebaseAuth.firebaseReady) {
-                    
                     const {templateRef} = getRefs(state);
                     database()
                     .ref(templateRef).on('value', (snapshot) => { snapshot
                     .forEach((childSnapshot) => {
                         const templateKey = childSnapshot.key;
                         const templateData = childSnapshot.val();
-                        console.log(templateKey, templateData);
-                    });}) 
+                        templateDataArray.push(templateData)
+                    });
+                    console.log(setTemplateName)
+                    dispatch(setTemplateName('hej'))
+                    console.log(  templateDataArray);
+                    }) 
 
                     const {userTemplateRef} = getRefs(state);
                             database().

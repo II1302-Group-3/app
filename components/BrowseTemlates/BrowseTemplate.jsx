@@ -1,29 +1,16 @@
-import { TemplateFormView } from './TemplateFormView';
+import { BrowseTemplateNameView  } from './BrowseTemplateNameView';
 import React, { useReducer, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import {saveTemplate} from '../../store/slices/templateValue' 
+import {setTemplateName } from '../../store/slices/templateName';
 
-export const AddTemplate = () => {
-    const uid = useSelector(state => state.firebaseAuth.userUID)
-
+export const BrowseTemplate = () => {
+    const templatesName = useSelector(state => state.templateName.templatesName);
     const dispatch = useDispatch();
-    const [advancedInfo, setAdvancedInfo] = useState(false);
-    const [changeLight, setLightLevel] = useState(0); 
-    const [moistureLevel, setMoisture] = useState(0); 
-    const [templateName, setTemplateName] = useState("");
-    console.log(changeLight, moistureLevel, templateName);
-    const saveTemplateValue = () => dispatch(saveTemplate({tempLight: changeLight, tempmoisture: moistureLevel, tempName: templateName, uid}));
-
-
+    const templateNams = templateNames => dispatch(setTemplateName(templateNames))
+    const [templateName, setTemplateName] = useState("grape");
     return(
-        <TemplateFormView 
-            name={templateName}
-            setLight={ setLightLevel }
-            setMoisture={ setMoisture }
-            setAdvancedInfo={ setAdvancedInfo }
-            advancedInfo={ advancedInfo }
-            saveTemplateValue ={saveTemplateValue}
-            setTemplateName={setTemplateName}
+        <BrowseTemplateNameView
+            plantName={templateName}
         />
     )
   

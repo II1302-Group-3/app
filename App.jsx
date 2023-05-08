@@ -11,6 +11,8 @@ import { LoginForm } from './components/Authentication/LoginForm/LoginForm';
 import { RegistrationForm } from './components/Authentication/RegistrationForm/RegistrationForm';
 import { AddGarden } from './components/AddGarden/AddGarden';
 import { AddTemplate } from './components/Template/AddTemplate';
+import { BrowseTemplate } from './components/BrowseTemlates/BrowseTemplate';
+
 import {
 	DarkTheme as NavigationDarkTheme,
 	DefaultTheme as NavigationDefaultTheme
@@ -43,6 +45,7 @@ function App() {
 						<Stack.Screen name="Home" component={ Home } />
 						<Stack.Screen name="EnvironmentSettings" options={{title: "Garden 'One'"}} component={ EnvironmentSettings } />
 						<Stack.Screen name="AddGarden" options={{ title: "Add Garden" }} component={ AddGarden } />
+						<Stack.Screen name="BrowseTemplate" options={{ title: "Browse Template" }} component={ BrowseTemplate } />
 						<Stack.Screen name="AddTemplate" options={{ title: "Add Template" }} component={ AddTemplate } />
 						<Stack.Screen name="QrScanner" options={qrOptions} component={ QrScanner } />
 						</>
