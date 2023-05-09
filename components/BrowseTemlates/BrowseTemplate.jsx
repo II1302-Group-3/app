@@ -6,7 +6,9 @@ import {setTemplateName } from '../../store/slices/garden';
 export const BrowseTemplate = () => {
     //const templatesName = useSelector(state => state.templateName.templatesName);
     //const dispatch = useDispatch();
-    //const templateName = useSelector(state => state.templateName.templatesName);
+    const templatesData = useSelector(state => state.templateName.templatesData);
+    const plantNames = Object.values(templateData).map(item => item.plantName);
+    console.log(plantNames)
    // const templateName = useSelector(state => state.templateName.templatesName);
    const templatesName = ['apple', 'grape', 'tomato', "fdgsfg", "dwfwg ", "sdgdg", "dsf s", "sdf df "]
     //console.log(templateName + '3')
