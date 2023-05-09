@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-    templatesName: 10,
+    templatesName: "apple", 
     templateDataArray: "DG", 
 }
 

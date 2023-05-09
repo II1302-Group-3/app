@@ -19,22 +19,18 @@ import {
 } from "../slices/templateName";
 
 
-function readTemplates(state, dispatch) {
-    const {templateRef} = getUserRefs(state.firebaseAuth.user.uid);
-    const templateData = []; 
+async function readTemplates(state, dispatch) {
+    const  refs = getUserRefs(state.firebaseAuth.user.uid);
     console.log("read template")
-    database().ref(templateRef).on('value', (snapshot) => {
-        snapshot.forEach((childSnapshot) => {
-            const templateKey = childSnapshot.key;
-            templateData = childSnapshot.val();
-            console.log(templateKey, templateData);
-        });
-    });
+    const templateData = (await database().ref(refs.templateRef).once('value')).val()
+    const plantNames = Object.values(templateData).map(item => item.plantName);
+
     if (templateData) {
-        dispatch(setTemplateName(templateData))
+        console.log(plantNames)
+        dispatch(setTemplateName(plantNames))
     }
     
-
+/*
     const {userTemplateRef} = getUserRefs(state.firebaseAuth.user.uid);
 
     database().ref(userTemplateRef).on('value', (snapshot) => {
@@ -44,7 +40,7 @@ function readTemplates(state, dispatch) {
             const templateData2 = childSnapshot.val();
             console.log(templateKey2, templateData2);
         });
-    })
+    }) */
 }
 
 export function enablePersistence(store) {
@@ -70,6 +66,8 @@ export function enablePersistence(store) {
         if(state.firebaseAuth.user?.syncing) {
             if(!prevState.firebaseAuth.user) {
                 promises = [...promises, readUserFromFirebase(state, dispatch)];
+                promises = [...promises, readTemplates(state, dispatch)];
+
                 //readTemplates(state, dispatch);
             }
         }
