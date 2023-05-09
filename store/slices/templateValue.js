@@ -1,6 +1,7 @@
 import { createSlice, createAsyncThunk} from "@reduxjs/toolkit";
 import database from '@react-native-firebase/database';
-import { Alert } from "react-native";
+import { Alert } from 'react-native';
+
 
 const initialState = {
     tempLight: 50,
@@ -17,7 +18,8 @@ export const saveTemplate = createAsyncThunk(
         const templateKey = newChildRef.key;
         const userTemplateRef =  `users/${uid}/` + 'templates';
         database().ref(userTemplateRef).push().set({templateKey: templateKey});
-        Alert.alert('Template saved successfully!');
+        Alert.alert('Template saved successfully!'); 
+        
     }
 )
 

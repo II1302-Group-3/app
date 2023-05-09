@@ -14,17 +14,23 @@ import {
     addGardenNameMapping
 } from '../slices/firebaseAuth';
 
-function readTemplates(state) {
-    const {templateRef} = getUserRefs(state.firebaseAuth.user.uid);
+import {
+    setTemplateName
+} from "../slices/templateName";
 
-    database().ref(templateRef).on('value', (snapshot) => {
-        snapshot.forEach((childSnapshot) => {
-            const templateKey = childSnapshot.key;
-            const templateData = childSnapshot.val();
-            console.log(templateKey, templateData);
-        });
-    });
 
+async function readTemplates(state, dispatch) {
+    const  refs = getUserRefs(state.firebaseAuth.user.uid);
+    console.log("read template")
+    const templateData = (await database().ref(refs.templateRef).once('value')).val()
+    const plantNames = Object.values(templateData).map(item => item.plantName);
+
+    if (templateData) {
+        console.log(plantNames)
+        dispatch(setTemplateName(plantNames))
+    }
+    
+/*
     const {userTemplateRef} = getUserRefs(state.firebaseAuth.user.uid);
 
     database().ref(userTemplateRef).on('value', (snapshot) => {
@@ -34,7 +40,7 @@ function readTemplates(state) {
             const templateData2 = childSnapshot.val();
             console.log(templateKey2, templateData2);
         });
-    })
+    }) */
 }
 
 export function enablePersistence(store) {
@@ -46,6 +52,7 @@ export function enablePersistence(store) {
     store.subscribe(() => {
         const state = store.getState();
         let promises = [];
+        
 
         if(state.garden?.syncing) {
             if(!prevState.garden) {
@@ -59,7 +66,9 @@ export function enablePersistence(store) {
         if(state.firebaseAuth.user?.syncing) {
             if(!prevState.firebaseAuth.user) {
                 promises = [...promises, readUserFromFirebase(state, dispatch)];
-                readTemplates(state);
+                promises = [...promises, readTemplates(state, dispatch)];
+
+                //readTemplates(state, dispatch);
             }
         }
         else {

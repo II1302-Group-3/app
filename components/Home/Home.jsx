@@ -19,6 +19,7 @@ export const Home = ({ navigation }) => {
     const signOut = () => dispatch(logout());
 
     const addNewGarden = () => navigation.navigate("AddGarden");
+    const browseTemplate = () => navigation.navigate("BrowseTemplate")
     const openGarden = garden => {
         dispatch(selectGarden({serial: garden.serial, nickname: garden.nickname}));
         navigation.navigate("EnvironmentSettings");
@@ -28,6 +29,6 @@ export const Home = ({ navigation }) => {
 
     return (
         displayNameRef,
-        <HomeView signOut={signOut} gardens={gardens} addNewGarden={addNewGarden} openGarden={openGarden} addNewTemplate={addNewTemplate} displayName={displayName} navigation={navigation} />
+        <HomeView signOut={signOut} gardens={gardens} addNewGarden={addNewGarden} openGarden={openGarden} addNewTemplate={addNewTemplate} displayName={displayName} navigation={navigation}  browseTemplate={browseTemplate}/>
     );
 }
