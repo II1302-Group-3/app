@@ -3,21 +3,20 @@ import React, { useReducer, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {setTemplateName } from '../../store/slices/garden';
 
-export const BrowseTemplate = () => {
+export const BrowseTemplate = ( {navigation} ) => {
     //const templatesName = useSelector(state => state.templateName.templatesName);
     //const dispatch = useDispatch();
     const templatesData = useSelector(state => state.templateName.templatesData);
-    const plantNames = Object.values(templateData).map(item => item.plantName);
+    const plantNames = Object.values(templatesData).map(item => item.plantName);
     console.log(plantNames)
    // const templateName = useSelector(state => state.templateName.templatesName);
-   const templatesName = ['apple', 'grape', 'tomato', "fdgsfg", "dwfwg ", "sdgdg", "dsf s", "sdf df "]
     //console.log(templateName + '3')
+
+    const tempDetailPress = () => navigation.navigate("BrowseTemplateView")
+
+
     return(
-
-          <BrowseTemplateNameView plantName={templatesName} />
-
-  
-
+          <BrowseTemplateNameView plantName={plantNames}  tempDetailPress={tempDetailPress} advancedIntoTitle={"title"}/>
     )
   
 }

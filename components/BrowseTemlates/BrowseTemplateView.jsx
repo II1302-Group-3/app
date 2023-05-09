@@ -1,5 +1,5 @@
 import React from 'react';
-import { View } from 'react-native';
+import { View, Text} from 'react-native';
 import { EnvironmentSettingsSliderView } from '../EnvironmentSettings/EnvironmentSettingsSliderView';
 import { EnvironmentSettingsSwitch } from '../EnvironmentSettings/EnvironmentSettingsSwitchView';
 import { useHeaderHeight } from '@react-navigation/elements';
@@ -27,21 +27,21 @@ export const BrowseTemplateView = ({
     return(
         <View style={{paddingHorizontal: 20, paddingTop: 30, paddingBottom: 30 + headerHeight, justifyContent: "center", flexDirection: "column", height: "100%" }}>
             <View>
-                <Text variant="headlineMedium" style={{fontWeight: "bold", marginBottom: 30}} >Hello {plantName}</Text>
+                <Text variant="headlineMedium" style={{fontWeight: "bold", marginBottom: 30}} >Hello "Banana"</Text>
             </View>
            
             <View style={{marginBottom: 20}}>
 				<EnvironmentSettingsSliderView 
 					title={ moistureTitle } 
 					sliderIcon={ waterDropIcon } 
-                    nutrition={ moisture }
+                    nutrition={ 600 }
 					advancedInfo={ advancedInfo }
 				/>
 			</View>
 			<EnvironmentSettingsSliderView 
 				title={ lightTitle } 
 				sliderIcon={ bulbIcon } 
-                nutrition={ light }
+                nutrition={ 1000 }
 				advancedInfo={ advancedInfo }
 			/>
 

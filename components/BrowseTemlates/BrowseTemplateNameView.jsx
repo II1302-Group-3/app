@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { View, Text, Image, TouchableOpacity } from 'react-native';
 import { TextInput } from 'react-native-paper';
 
-export const BrowseTemplateNameView = ({ plantName }) => {
+export const BrowseTemplateNameView = ({ plantName, tempDetailPress }) => {
   const [searchText, setSearchText] = useState('');
 
   const filteredPlantNames = plantName.filter(name =>
@@ -13,6 +13,7 @@ export const BrowseTemplateNameView = ({ plantName }) => {
     console.log('Pressed plant:', name);
   };
 
+  
   return (
     <View>
         <View style={{margin:'5%',}}>
@@ -26,6 +27,7 @@ export const BrowseTemplateNameView = ({ plantName }) => {
       <View style={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap' }}>
         {filteredPlantNames.map((name, index) => (
           <TouchableOpacity
+              
             key={index}
             style={{
               backgroundColor: '#90ee90',
@@ -36,7 +38,7 @@ export const BrowseTemplateNameView = ({ plantName }) => {
               width: '45%', 
               height: 80,
             }}
-            onPress={() => handlePlantPress(name)}
+            onPress={() => tempDetailPress(name)}
           >
             <Text style={{ fontWeight: 'bold', fontSize: 25 }}>{name}</Text>
             <View style={{ flexDirection: 'row' }}>
