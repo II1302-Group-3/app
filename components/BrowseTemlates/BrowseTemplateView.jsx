@@ -21,7 +21,7 @@ export const BrowseTemplateView = ({
 	const moistureTitle = 'Moisture Level';
 	const lightTitle = 'Light Level';
 	const advancedInfoTitle = 'Advanced info';
-	
+	console.log(setAdvancedInfo)
 	const headerHeight = useHeaderHeight();
 
     return(
@@ -33,6 +33,7 @@ export const BrowseTemplateView = ({
             <View style={{marginBottom: 20}}>
 				<EnvironmentSettingsSliderView 
 					title={ moistureTitle } 
+					isDisabled ={true}
 					sliderIcon={ waterDropIcon } 
                     nutrition={ 600 }
 					advancedInfo={ advancedInfo }
@@ -40,6 +41,7 @@ export const BrowseTemplateView = ({
 			</View>
 			<EnvironmentSettingsSliderView 
 				title={ lightTitle } 
+				isDisabled ={true}
 				sliderIcon={ bulbIcon } 
                 nutrition={ 1000 }
 				advancedInfo={ advancedInfo }

@@ -2,17 +2,12 @@ import React, { useState } from 'react';
 import { View, Text, Image, TouchableOpacity } from 'react-native';
 import { TextInput } from 'react-native-paper';
 
-export const BrowseTemplateNameView = ({ plantName, tempDetailPress }) => {
+export const BrowseTemplateNameView = ({ plantName, tempDetailPress,  plantMoisture, plantLight, templatesData}) => {
   const [searchText, setSearchText] = useState('');
 
-  const filteredPlantNames = plantName.filter(name =>
-    name.toLowerCase().includes(searchText.toLowerCase())
+  const filteredPlantNames = templatesData.filter(name =>
+    name.plantName.toLowerCase().includes(searchText.toLowerCase())
   );
-
-  const handlePlantPress = name => {
-    console.log('Pressed plant:', name);
-  };
-
   
   return (
     <View>
@@ -38,20 +33,23 @@ export const BrowseTemplateNameView = ({ plantName, tempDetailPress }) => {
               width: '45%', 
               height: 80,
             }}
-            onPress={() => tempDetailPress(name)}
+            onPress={() => tempDetailPress(name.plantName, name.moistureLevel, name.lightLevel)}
           >
-            <Text style={{ fontWeight: 'bold', fontSize: 25 }}>{name}</Text>
+            <Text style={{ fontWeight: 'bold', fontSize: 25 }}>{name.plantName}</Text>
             <View style={{ flexDirection: 'row' }}>
               <Image
                 source={require('../../assets/WaterDropIcon.png')}
                 style={{ width: 20, height: 20, marginRight: 6 }}
               />
-              <Text style={{ marginRight: 10 }}>High</Text>
+
+            <Text style={{ marginRight: 10 }}>{name.moistureLevel}</Text>
+        
+              
               <Image
                 source={require('../../assets/BulpIcon.png')}
                 style={{ width: 20, height: 20, marginRight: 6 }}
               />
-              <Text>Medium</Text>
+              <Text>{name.lightLevel}</Text>
             </View>
           </TouchableOpacity>
         ))}

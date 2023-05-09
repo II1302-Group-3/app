@@ -3,6 +3,10 @@ import { createSlice } from "@reduxjs/toolkit";
 const initialState = {
     templatesData: null, 
     templateDataArray: null, 
+    moisture: null,
+    light: null, 
+    name: null,
+
 }
 
 
