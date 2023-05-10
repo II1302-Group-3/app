@@ -34,7 +34,7 @@ export const DetailsTemp = ({route }) => {
             moisture={ moisture }
             plantName={templateData.plantName}
             applyTemplate={applyTemplate}
-            //gardens={gardens}
+         //   gardens={gardens}
         />
     )
 }

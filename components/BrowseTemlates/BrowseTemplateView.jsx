@@ -17,14 +17,13 @@ export const BrowseTemplateView = ({
 	moisture,
     plantName,
 	//applyTemplate,
-	gardens
-
+	//gardens,
 }) => {
 	const moistureTitle = 'Moisture Level';
 	const lightTitle = 'Light Level';
 	const advancedInfoTitle = 'Advanced info';
 	const headerHeight = useHeaderHeight();
-
+	console.log(gardens)
     return(
         <View style={{paddingHorizontal: 20, paddingTop: 30, paddingBottom: 30 + headerHeight, justifyContent: "center", flexDirection: "column", height: "100%" }}>
             <View>
@@ -55,12 +54,14 @@ export const BrowseTemplateView = ({
 					active={ advancedInfo } 
 				/>
 			</View>
-
-			<Button mode="contained" style={{marginBottom: 10}} onPress={() => applyTemplate()}>Apply Templates</Button>
+			
 
 
 
 		</View>
 
     )
+
+	//{gardens.length != 0 &&	<Button mode="contained" style={{marginBottom: 10}} onPress={() => applyTemplate()}>Apply Templates</Button> }
+
 }
