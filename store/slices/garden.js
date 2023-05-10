@@ -20,7 +20,8 @@ export const garden = createSlice({
         setGardenSyncing: (state, { payload }) => { state.syncing = payload },
 
         setNickname: (state, { payload }) => { state.nickname = payload },
-        setMoisture: (state, { payload }) => { state.moisture = payload },
+        setMoisture: (state, { payload }) => { 
+            state.moisture = payload },
         setLight: (state, { payload }) => { state.light = payload }
     }
 });

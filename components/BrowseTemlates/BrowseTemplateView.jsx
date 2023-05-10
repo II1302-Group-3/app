@@ -15,19 +15,20 @@ export const BrowseTemplateView = ({
 	advancedInfo,
     light,
 	moisture,
-    plantName
+    plantName,
+	//applyTemplate,
+	gardens
 
 }) => {
 	const moistureTitle = 'Moisture Level';
 	const lightTitle = 'Light Level';
 	const advancedInfoTitle = 'Advanced info';
-	console.log(setAdvancedInfo)
 	const headerHeight = useHeaderHeight();
 
     return(
         <View style={{paddingHorizontal: 20, paddingTop: 30, paddingBottom: 30 + headerHeight, justifyContent: "center", flexDirection: "column", height: "100%" }}>
             <View>
-                <Text variant="headlineMedium" style={{fontWeight: "bold", marginBottom: 30}} >Hello "Banana"</Text>
+                <Text variant="headlineMedium" style={{fontWeight: "bold", marginBottom: 30, fontSize:40}}>{plantName}</Text>
             </View>
            
             <View style={{marginBottom: 20}}>
@@ -35,7 +36,7 @@ export const BrowseTemplateView = ({
 					title={ moistureTitle } 
 					isDisabled ={true}
 					sliderIcon={ waterDropIcon } 
-                    nutrition={ 600 }
+                    nutrition={ moisture}
 					advancedInfo={ advancedInfo }
 				/>
 			</View>
@@ -43,7 +44,7 @@ export const BrowseTemplateView = ({
 				title={ lightTitle } 
 				isDisabled ={true}
 				sliderIcon={ bulbIcon } 
-                nutrition={ 1000 }
+                nutrition={ light }
 				advancedInfo={ advancedInfo }
 			/>
 
@@ -54,6 +55,10 @@ export const BrowseTemplateView = ({
 					active={ advancedInfo } 
 				/>
 			</View>
+
+			<Button mode="contained" style={{marginBottom: 10}} onPress={() => applyTemplate()}>Apply Templates</Button>
+
+
 
 		</View>
 

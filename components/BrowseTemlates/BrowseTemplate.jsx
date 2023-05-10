@@ -12,8 +12,6 @@ export const BrowseTemplate = ( {navigation} ) => {
     const plantLight = Object.values(templatesData).map(item => item.lightLevel);
     const plantMoisture = Object.values(templatesData).map(item => item.moistureLevel);
     let templateData2 = {}; 
-
-    console.log(templatesData)
    // const templateName = useSelector(state => state.templateName.templatesName);
     //console.log(templateName + '3')
 
@@ -23,8 +21,7 @@ export const BrowseTemplate = ( {navigation} ) => {
             lightLevel: light,
             moistureLevel: moisture,
         }
-        console.log(templateData2)
-        navigation.navigate("DetailsTemp")}
+        navigation.navigate("DetailsTemp", { templateData: templateData2 })}
 
 
     return(
@@ -32,3 +29,4 @@ export const BrowseTemplate = ( {navigation} ) => {
     )
   
 }
+

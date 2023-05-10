@@ -33,7 +33,7 @@ export const BrowseTemplateNameView = ({ plantName, tempDetailPress,  plantMoist
               width: '45%', 
               height: 80,
             }}
-            onPress={() => tempDetailPress(name.plantName, name.moistureLevel, name.lightLevel)}
+            onPress={() => tempDetailPress(name.plantName, name.lightLevel, name.moistureLevel)}
           >
             <Text style={{ fontWeight: 'bold', fontSize: 25 }}>{name.plantName}</Text>
             <View style={{ flexDirection: 'row' }}>

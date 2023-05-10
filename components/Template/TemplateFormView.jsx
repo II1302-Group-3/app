@@ -17,7 +17,7 @@ export const TemplateFormView = ({
 	advancedInfo,
     saveTemplateValue,
     setTemplateName,
-    name
+    name,
 }) => {
 	const moistureTitle = 'Moisture Level';
 	const lightTitle = 'Light Level';

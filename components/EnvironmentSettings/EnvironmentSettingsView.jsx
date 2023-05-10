@@ -14,7 +14,7 @@ export const EnvironmentSettingsView = ({
 	advancedInfo,
 	light,
 	moisture,
-
+	
 	canDeleteGarden,
 	deleteGarden
 }) => {
