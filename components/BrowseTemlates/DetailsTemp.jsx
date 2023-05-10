@@ -16,6 +16,10 @@ export const DetailsTemp = ({route }) => {
     const serial = useSelector(state => state.garden?.serial ?? "");
     const nickname = useSelector(state => state.garden?.nickname ?? "");
 
+    useEffect(() => {
+        return () => dispatch(resetGarden());
+    }, [])
+
     const applyTemplate = () => {console.log('applyTemplate pressed');
                                 dispatch(selectGarden({serial: serial, nickname: nickname}));
                                  console.log(moisture, light)

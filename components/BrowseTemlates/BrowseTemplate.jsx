@@ -11,6 +11,7 @@ export const BrowseTemplate = ( {navigation} ) => {
     const plantNames = Object.values(templatesData).map(item => item.plantName);
     const plantLight = Object.values(templatesData).map(item => item.lightLevel);
     const plantMoisture = Object.values(templatesData).map(item => item.moistureLevel);
+    //console.log(templatesData)
     let templateData2 = {}; 
    // const templateName = useSelector(state => state.templateName.templatesName);
     //console.log(templateName + '3')
