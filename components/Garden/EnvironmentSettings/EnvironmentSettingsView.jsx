@@ -1,71 +1,55 @@
 import React from 'react';
-import { useColorScheme, View, StatusBar } from 'react-native';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { View } from 'react-native';
+import { Button } from 'react-native-paper';
 import { EnvironmentSettingsSliderView } from './EnvironmentSettingsSliderView';
 import { EnvironmentSettingsSwitch } from './EnvironmentSettingsSwitchView';
-import { BottomBarView } from '../BottomBarView';
+
+const waterDropIcon = require('../../assets/WaterDropIcon.png'); // Link to waterDropIcon for the slider
+const bulbIcon = require('../../assets/BulpIcon.png'); // Link to bulbIcon for the slider
+
 export const EnvironmentSettingsView = ({
 	setLight,
 	setMoisture,
-	setLedTestOn,
 	setAdvancedInfo,
 	advancedInfo,
 	light,
 	moisture,
-	ledTestOn,
-	navigation
+	canDeleteGarden,
+	deleteGarden
 }) => {
-    const isDarkMode = useColorScheme() === 'dark';
-	const textColor = isDarkMode ? "#fafafa" : "#050505";
-
-	const Tab = createBottomTabNavigator();
-
 	const moistureTitle = 'Moisture Level';
 	const lightTitle = 'Light Level';
 	const advancedInfoTitle = 'Advanced info';
-	const ledTestTitle = 'LED test';
-
-	const waterDropIcon = require('../../../assets/WaterDropIcon.png'); // Link to waterDropIcon for the slider
-	const bulbIcon = require('../../../assets/BulpIcon.png'); // Link to bulbIcon for the slider
 
     return(
-        <View>
-			<StatusBar
-				backgroundColor="transparent"
-				barStyle={isDarkMode ? "light-content" : "dark-content"}
-			/>
-			<EnvironmentSettingsSliderView 
-				title={ moistureTitle } 
-				sliderIcon={ waterDropIcon } 
-				nutrition={ moisture }
-				onSlide={ setMoisture } 
-				advancedInfo={ advancedInfo }
-				textColor={ textColor }/>
-			<EnvironmentSettingsSliderView 
-				title={ lightTitle } 
-				sliderIcon={ bulbIcon } 
-				nutrition={ light }
-				onSlide={ setLight } 
-				advancedInfo={ advancedInfo }
-				textColor={ textColor }/>
-
-			<View style={{ paddingVertical: 20, paddingHorizontal: 20 }}>
-				<EnvironmentSettingsSwitch 
+        <View style={{paddingHorizontal: 20, paddingTop: 30, paddingBottom: 30, flexDirection: "column", height: "100%" }}>
+			<View style={{flexGrow: 1, justifyContent: "center"}}>
+				<View style={{marginBottom: 20}}>
+					<EnvironmentSettingsSliderView
+						title={ moistureTitle }
+						sliderIcon={ waterDropIcon }
+						nutrition={ moisture }
+						onSlide={ setMoisture }
+						advancedInfo={ advancedInfo }
+					/>
+				</View>
+				<EnvironmentSettingsSliderView
+					title={ lightTitle }
+					sliderIcon={ bulbIcon }
+					nutrition={ light }
+					onSlide={ setLight }
+					advancedInfo={ advancedInfo }
+				/>
+			</View>
+			
+			<View>
+				<EnvironmentSettingsSwitch
 					title={ advancedInfoTitle }
 					onToggle={ setAdvancedInfo }
 					active={ advancedInfo }
-					textColor={ textColor } />
-
-				<View style={{ marginTop: 10 }}>
-					<EnvironmentSettingsSwitch 
-						title={ ledTestTitle }
-						onToggle={ setLedTestOn }
-						active={ ledTestOn }
-						textColor={ textColor } />
-				</View>
+				/>
+				<Button mode="contained" style={{marginTop: 25}} onPress={deleteGarden} disabled={!canDeleteGarden}>Delete garden from collection</Button>
 			</View>
-			
-			{/* <BottomBarView navigation={ navigation } /> */}
 		</View>
     )
 }

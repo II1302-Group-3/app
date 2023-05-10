@@ -1,30 +1,68 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { setLedTestOn, setLight, setMoisture } from '../../../store/slices/garden';
+import { setMoisture, setLight, resetGarden, removeGarden } from '../../store/slices/garden';
 import { EnvironmentSettingsView } from './EnvironmentSettingsView';
+import { Alert } from 'react-native';
 
 export const EnvironmentSettings = ({ navigation }) => {
     const dispatch = useDispatch();
-    
-    const light = useSelector(state => state.garden.light);
-    const moisture = useSelector(state => state.garden.moisture);
-    const ledTestOn = useSelector(state => state.garden.ledTestOn);
+
+    const serial = useSelector(state => state.garden?.serial ?? "");
+    const nickname = useSelector(state => state.garden?.nickname ?? "");
+    const light = useSelector(state => state.garden?.light ?? 0);
+    const moisture = useSelector(state => state.garden?.moisture ?? 0);
+
+    useEffect(() => {
+        return () => dispatch(resetGarden());
+    }, [])
+
+    useEffect(() => navigation.setOptions({title: nickname}), [nickname])
 
     const [advancedInfo, setAdvancedInfo] = useState(false);
-    const changeLight = newLight => dispatch(setLight(newLight))
     const changeMoisture = newMoisture => dispatch(setMoisture(newMoisture))
-    const changeLedTestOn = newLedTest => dispatch(setLedTestOn(newLedTest))
+    const changeLight = newLight => dispatch(setLight(newLight))
+
+	const userToken = useSelector(state => state.firebaseAuth.user.token);
+	const [isDeleting, setIsDeleting] = useState(false);
+	
+	const deleteGarden = () => {
+        setIsDeleting(true);
+
+        const deleteFunction = () => {
+            removeGarden(userToken, serial, dispatch)
+                .catch(error => Alert.alert("Failed to remove garden", error.message))
+                .finally(() => {
+                    setIsDeleting(false);
+                    navigation.navigate("Home");
+                });
+        }
+
+        Alert.alert(
+            "Are you sure?", 
+            "Anyone will be able to claim this garden after you delete it from your collection.", 
+            [{
+                text: "Cancel",
+                onPress: () => setIsDeleting(false),
+                style: "cancel"
+            },
+            {
+                text: "Delete",
+                onPress: deleteFunction,
+                style: "destructive"
+            }]
+        )
+	}
 
     return(
-        <EnvironmentSettingsView 
+        <EnvironmentSettingsView
             setLight={ changeLight }
             setMoisture={ changeMoisture }
-            setLedTestOn={ changeLedTestOn }
             setAdvancedInfo={ setAdvancedInfo }
             advancedInfo={ advancedInfo }
-            light={ light } 
+            light={ light }
             moisture={ moisture }
-            ledTestOn={ ledTestOn }
-            navigation={ navigation } />
+            canDeleteGarden={ !isDeleting }
+            deleteGarden={ deleteGarden }
+        />
     )
 }

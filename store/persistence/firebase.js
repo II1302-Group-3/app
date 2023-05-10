@@ -1,116 +1,182 @@
 import database from '@react-native-firebase/database';
+import { Alert } from "react-native";
+
 import {
-    setLight,
+    setGardenSyncing,
+    setNickname,
     setMoisture,
-    setLedTestOn
+    setLight
 } from "../slices/garden";
-import { Alert } from 'react-native';
 
-export const enablePersistence = (store) => {
-    console.log("Entered firebase");
+import {
+    setDisplayName,
+    setUserSyncing,
+    addGardenNameMapping
+} from '../slices/firebaseAuth';
 
+import {
+    setTemplateName
+} from "../slices/templateName";
+
+
+async function readTemplates(state, dispatch) {
+    const  refs = getUserRefs(state.firebaseAuth.user.uid);
+    console.log("read template")
+    const templateData = (await database().ref(refs.templateRef).once('value')).val()
+    const plantNames = Object.values(templateData).map(item => item.plantName);
+
+    if (templateData) {
+        console.log(plantNames)
+        dispatch(setTemplateName(plantNames))
+    }
+    
+/*
+    const {userTemplateRef} = getUserRefs(state.firebaseAuth.user.uid);
+
+    database().ref(userTemplateRef).on('value', (snapshot) => {
+        console.log("1" + userTemplateRef)
+        snapshot.forEach((childSnapshot) => {
+            const templateKey2 = childSnapshot.key;
+            const templateData2 = childSnapshot.val();
+            console.log(templateKey2, templateData2);
+        });
+    }) */
+}
+
+export function enablePersistence(store) {
     let prevState = store.getState();
     const dispatch = store.dispatch;
 
-    readFromFirebase(prevState)
-        .then(() => {
-            console.log("Subscribing to send values to Firebase");
+    console.log("Firebase persistence enabled");
 
-            // Only subscribe once we have read values from Firebase
-            store.subscribe(() => {
-                const state = store.getState();
-                toFirebase(state);
-                prevState = store.getState();
-            })
-        })
-        .catch(error => Alert.alert("Failed to read from Firebase", "Error: " + error))
+    store.subscribe(() => {
+        const state = store.getState();
+        let promises = [];
+        
 
-    function getRefs(state) {
-        const garden = 'garden/251951091481/';
-        const lightRef = garden + 'target_light_level';
-        const moistureRef = garden + 'target_moisture';
-        const ledTestRef = garden + 'test_led_on';
+        if(state.garden?.syncing) {
+            if(!prevState.garden) {
+                promises = [...promises, readGardenFromFirebase(state, dispatch)];
+            }
+        }
+        else {
+            syncGardenToFirebase(state, prevState);
+        }
 
-        const uid = state.firebaseAuth.userUID
-        const user = `users/${uid}/`
-        const displayNameRef = user + 'displayName';
+        if(state.firebaseAuth.user?.syncing) {
+            if(!prevState.firebaseAuth.user) {
+                promises = [...promises, readUserFromFirebase(state, dispatch)];
+                promises = [...promises, readTemplates(state, dispatch)];
 
-        return {
-            lightRef,
-            moistureRef,
-            ledTestRef,
-            displayNameRef
+                //readTemplates(state, dispatch);
+            }
+        }
+        else {
+            syncUserToFirebase(state, prevState);
+        }
+
+        if(promises.length > 0) {
+            const errorFn = e => Alert.alert("Failed to read from Firebase", "Error: " + e);
+            const finallyFn = () => prevState = store.getState();
+
+            Promise.all(promises).catch(errorFn).finally(finallyFn);
+        }
+
+        prevState = store.getState();
+    })
+}
+
+function getGardenRefs(serial) {
+    const garden = `garden/${serial}/`;
+
+    const nicknameRef = garden + 'nickname';
+    const moistureRef = garden + 'target_moisture';
+    const lightRef = garden + 'target_light_level';
+
+    return { nicknameRef, moistureRef, lightRef };
+}
+
+function getUserRefs(uid) {
+    const user = `users/${uid}/`;
+    const templateRef = 'templates';
+    const userTemplateRef = user + 'templates';
+    const displayNameRef = user + 'displayName';
+
+    return { templateRef, userTemplateRef, displayNameRef };
+}
+
+async function readGardenFromFirebase(state, dispatch) {
+    const refs = getGardenRefs(state.garden.serial);
+
+    const moisture = (await database().ref(refs.moistureRef).once("value")).val();
+    const light = (await database().ref(refs.lightRef).once("value")).val();
+
+    if(moisture) {
+        console.log(`Dispatched moisture for garden ${state.garden.serial}: ${moisture}`);
+        dispatch(setMoisture(moisture));
+    }
+    if(light) {
+        console.log(`Dispatched light for garden ${state.garden.serial}: ${light}`);
+        dispatch(setLight(light));
+    }
+
+    dispatch(setGardenSyncing(false));
+}
+
+async function readUserFromFirebase(state, dispatch) {
+    const refs = getUserRefs(state.firebaseAuth.user.uid);
+    const displayName = (await database().ref(refs.displayNameRef).once("value")).val();
+
+    if(displayName) {
+        console.log(`Dispatched display name for user ${state.firebaseAuth.user.uid}: ${displayName}`);
+        dispatch(setDisplayName(displayName));
+    }
+
+    for(const serial of state.firebaseAuth.user.claimedGardens) {
+        const refs = getGardenRefs(serial);
+        const nickname = (await database().ref(refs.nicknameRef).once("value")).val();
+
+        if(nickname) {
+            console.log(`Dispatched name mapping for user${state.firebaseAuth.user.uid} garden ${serial}: ${nickname}`);
+            dispatch(addGardenNameMapping({serial, nickname}));
         }
     }
 
-    function toFirebase(state) {
-        const {
-            lightRef,
-            moistureRef,
-            ledTestRef,
-            displayNameRef
-        } = getRefs(state);
+    dispatch(setUserSyncing(false));
+}
 
-        const light = state.garden.light;
-        const prevLight = prevState.garden.light;
+async function syncGardenToFirebase(state, prevState) {
+    if(state.garden) {
+        const refs = getGardenRefs(state.garden.serial);
 
         const moisture = state.garden.moisture;
-        const prevMoisture = prevState.garden.moisture;
+        const prevMoisture = prevState.garden?.moisture;
 
-        const ledTestOn = state.garden.ledTestOn;
-        const prevLedTestOn = prevState.garden.ledTestOn;
+        const light = state.garden.light;
+        const prevLight = prevState.garden?.light;
 
-        const displayName = state.firebaseAuth.displayName;
-        const prevDisplayName = prevState.firebaseAuth.displayName;
-
-        if (light !== prevLight) {
-            database()
-                .ref(lightRef)
-                .set(light)
+        if(moisture !== prevMoisture) {
+            console.log(`Synced moisture to garden ${state.garden.serial}: ${moisture} (prev ${prevMoisture})`);
+            await database().ref(refs.moistureRef).set(moisture);
         }
 
-        if (moisture !== prevMoisture) {
-            database()
-                .ref(moistureRef)
-                .set(moisture)
-        }
-
-        if (ledTestOn !== prevLedTestOn) {
-            database()
-                .ref(ledTestRef)
-                .set(ledTestOn ? 1 : 0)
-        }
-
-        if (!!state.firebaseAuth.userUID && displayName !== prevDisplayName) {
-            database()
-                .ref(displayNameRef)
-                .set(displayName)
+        if(light !== prevLight) {
+            console.log(`Synced light to garden ${state.garden.serial}: ${light} (prev ${prevLight})`);
+            await database().ref(refs.lightRef).set(light);
         }
     }
+}
 
-    function readFromFirebase(state) {
-        const {
-            lightRef,
-            moistureRef,
-            ledTestRef
-        } = getRefs(state);
+async function syncUserToFirebase(state, prevState) {
+    if(state.firebaseAuth.user) {
+        const refs = getUserRefs(state.firebaseAuth.user.uid);
 
-        promises = [
-            database()
-                .ref(lightRef)
-                .once("value")
-                .then(snapshot => dispatch(setLight(snapshot.val()))),
-            database()
-                .ref(moistureRef)
-                .once("value")
-                .then(snapshot => dispatch(setMoisture(snapshot.val()))),
-            database()
-                .ref(ledTestRef)
-                .once("value")
-                .then(snapshot => dispatch(setLedTestOn(snapshot.val() == 1)))
-        ];
+        const displayName = state.firebaseAuth.user.displayName;
+        const prevDisplayName = prevState.firebaseAuth.user?.displayName;
 
-        // We have to update prevState here or the app doesn't understand if values are different from the initial ones
-        return Promise.all(promises).then(() => prevState = store.getState());
+        if(displayName !== prevDisplayName) {
+            console.log(`Synced display name to user ${state.firebaseAuth.user.uid}: ${displayName} (prev ${prevDisplayName})`);
+            await database().ref(refs.displayNameRef).set(displayName);
+        }
     }
 }

@@ -51,5 +51,7 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
+	<key>NSCameraUsageDescription</key>
+	<string>The Green Garden app needs to access your camera to scan a QR code</string>
 </dict>
 </plist>
