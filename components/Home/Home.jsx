@@ -10,7 +10,9 @@ export const Home = ({ navigation }) => {
 
     const displayName = useSelector(state => state.firebaseAuth.user.displayName);
     const gardens = useSelector(state => {
+
         return [...state.firebaseAuth.user?.claimedGardens].map(serial => {
+            console.log("test")
             const nickname = state.firebaseAuth.user.claimedGardenNames[serial] ?? serial;
             return {serial, nickname};
         })
@@ -22,7 +24,7 @@ export const Home = ({ navigation }) => {
     const browseTemplate = () => navigation.navigate("BrowseTemplate")
     const openGarden = garden => {
         dispatch(selectGarden({serial: garden.serial, nickname: garden.nickname}));
-        navigation.navigate("EnvironmentSettings");
+        navigation.navigate("Garden");
     }
 
     const addNewTemplate = () => navigation.navigate("AddTemplate")

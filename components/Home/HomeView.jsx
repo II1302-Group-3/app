@@ -17,6 +17,7 @@ const waterDropIcon = require('../../assets/WaterDropIcon.png'); // Link to wate
 const bulbIcon = require('../../assets/BulpIcon.png'); // Link to bulbIcon for the slider
 
 const GardenEntry = (garden, onPress) => {
+    console.log(garden)
     return (
         <TouchableOpacity onPress={() => onPress(garden)} activeOpacity={0.6} style={{marginBottom: 16}} key={garden.serial}>
             <Card mode="contained">

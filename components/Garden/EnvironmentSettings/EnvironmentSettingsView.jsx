@@ -4,8 +4,8 @@ import { Button } from 'react-native-paper';
 import { EnvironmentSettingsSliderView } from './EnvironmentSettingsSliderView';
 import { EnvironmentSettingsSwitch } from './EnvironmentSettingsSwitchView';
 
-const waterDropIcon = require('../../assets/WaterDropIcon.png'); // Link to waterDropIcon for the slider
-const bulbIcon = require('../../assets/BulpIcon.png'); // Link to bulbIcon for the slider
+const waterDropIcon = require('../../../assets/WaterDropIcon.png'); // Link to waterDropIcon for the slider
+const bulbIcon = require('../../../assets/BulpIcon.png'); // Link to bulbIcon for the slider
 
 export const EnvironmentSettingsView = ({
 	setLight,
