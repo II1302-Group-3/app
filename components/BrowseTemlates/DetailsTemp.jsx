@@ -12,19 +12,23 @@ export const DetailsTemp = ({route }) => {
     const moisture = templateData.moistureLevel    
     const [advancedInfo, setAdvancedInfo] = useState(false);
 
+    useEffect(() => {
+        return () => dispatch(resetGarden());
+    }, [])
+
     const applyTemplate = () => {console.log('applyTemplate pressed');
                                  console.log(moisture, light)
                                 dispatch(setMoisture(moisture)); 
-                                dispatch(setLight(light))
+                                dispatch(setLight(light));
                                 Alert.alert('Template applied successfully!'); 
                                 }
     
-    /*const gardens = useSelector(state => {
+    const gardens = useSelector(state => {
         return [...state.firebaseAuth.user?.claimedGardens].map(serial => {
         const nickname = state.firebaseAuth.user.claimedGardenNames[serial] ?? serial;
         return {serial, nickname};
     })
-    });*/
+    });
 
     return(
         <BrowseTemplateView
@@ -34,7 +38,7 @@ export const DetailsTemp = ({route }) => {
             moisture={ moisture }
             plantName={templateData.plantName}
             applyTemplate={applyTemplate}
-         //   gardens={gardens}
+            gardens={gardens}
         />
     )
 }

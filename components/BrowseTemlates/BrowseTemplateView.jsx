@@ -16,14 +16,14 @@ export const BrowseTemplateView = ({
     light,
 	moisture,
     plantName,
-	//applyTemplate,
-	//gardens,
+	applyTemplate,
+	gardens,
 }) => {
 	const moistureTitle = 'Moisture Level';
 	const lightTitle = 'Light Level';
 	const advancedInfoTitle = 'Advanced info';
 	const headerHeight = useHeaderHeight();
-	console.log(gardens)
+	//console.log(gardens)
     return(
         <View style={{paddingHorizontal: 20, paddingTop: 30, paddingBottom: 30 + headerHeight, justifyContent: "center", flexDirection: "column", height: "100%" }}>
             <View>
@@ -55,6 +55,7 @@ export const BrowseTemplateView = ({
 				/>
 			</View>
 			
+			{gardens.length != 0 &&	<Button mode="contained" style={{marginBottom: 10}} onPress={() => applyTemplate()}>Apply Templates</Button> }
 
 
 
@@ -62,6 +63,5 @@ export const BrowseTemplateView = ({
 
     )
 
-	//{gardens.length != 0 &&	<Button mode="contained" style={{marginBottom: 10}} onPress={() => applyTemplate()}>Apply Templates</Button> }
 
 }
