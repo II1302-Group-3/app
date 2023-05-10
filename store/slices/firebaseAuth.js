@@ -39,7 +39,7 @@ export const listenToAuthChanges = () => (dispatch, _) => {
                 email: user.email,
                 displayName: user.email,
 
-                claimedGardens: idTokenResult.claims.claimedGardens ?? []
+                claimedGardens: Object.keys(idTokenResult.claims.claimedGardens ?? {})
             };
 
             dispatch(firebaseAuth.actions.setUser({...initialUserState, ...params}));
@@ -89,7 +89,7 @@ export const signIn = createAsyncThunk('firebaseAuth/signIn', async ({ userEmail
         token: idTokenResult.token,
 
         email: credentials.user.email,
-        claimedGardens: idTokenResult.claims.claimedGardens ?? []
+        claimedGardens: Object.keys(idTokenResult.claims.claimedGardens ?? {})
     };
 })
 
