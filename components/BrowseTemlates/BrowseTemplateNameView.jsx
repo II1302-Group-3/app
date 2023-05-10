@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { View, Text, Image, TouchableOpacity } from 'react-native';
 import { TextInput } from 'react-native-paper';
 
-export const BrowseTemplateNameView = ({ plantName, tempDetailPress, plantMoisture, plantLight, templatesData }) => {
+export const BrowseTemplateNameView = ({ plantName, tempDetailPress, plantMoisture, plantLight, templatesData, isFilled, setIsFilled, likePath, setLikePath }) => {
   const [searchText, setSearchText] = useState('');
 
   const filteredPlantNames = templatesData.filter(name =>
@@ -36,8 +36,10 @@ export const BrowseTemplateNameView = ({ plantName, tempDetailPress, plantMoistu
             onPress={() => tempDetailPress(name.plantName, name.moistureLevel, name.lightLevel)}
           >
             <Text style={{ fontWeight: 'bold', fontSize: 25 }}>{name.plantName}</Text>
+            <Text>{ }</Text>
             <Image
-              source={require('../../assets/heart.png')}
+              onPress={() => likePath === '../../assets/filled_heart.png' ? setLikePath('../../assets/heart.png') : setLikePath('../../assets/filled_heart.png')}
+              source={require(likePath)}
               style={{ width: 20, height: 20, marginRight: 6 }}
             ></Image>
             <View style={{ flexDirection: 'row' }}>
