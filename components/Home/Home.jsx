@@ -10,10 +10,12 @@ export const Home = ({ navigation }) => {
 
     const displayName = useSelector(state => state.firebaseAuth.user.displayName);
     const gardens = useSelector(state => {
-        return [...state.firebaseAuth.user?.claimedGardens].map(serial => {
-            const nickname = state.firebaseAuth.user.claimedGardenNames[serial] ?? serial;
-            return {serial, nickname};
-        })
+        return [...state.firebaseAuth.user?.claimedGardens]
+            .map(serial => {
+                const nickname = state.firebaseAuth.user.claimedGardenNames[serial] ?? serial;
+                return {serial, nickname};
+            })
+            .sort((a, b) => a.nickname.localeCompare(b.nickname));
     });
 
     const signOut = () => dispatch(logout());
