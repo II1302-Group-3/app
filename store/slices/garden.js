@@ -8,7 +8,9 @@ const initialActiveState = {
     nickname: "",
 
     light: 50,
-    moisture: 50
+    moisture: 50,
+
+    waterLevelLow: false
 };
 
 export const garden = createSlice({
@@ -21,12 +23,16 @@ export const garden = createSlice({
 
         setNickname: (state, { payload }) => { state.nickname = payload },
         setMoisture: (state, { payload }) => { 
+            console.log(payload)
             state.moisture = payload },
-        setLight: (state, { payload }) => { state.light = payload }
+        setLight: (state, { payload }) => { state.light = payload },
+
+        setWaterLevelLow: state => { state.waterLevelLow = true },
+        resetWaterLevelLow: state => { state.waterLevelLow = false }
     }
 });
 
-export const { selectGarden, resetGarden, setGardenSyncing, setNickname, setMoisture, setLight } = garden.actions;
+export const { selectGarden, resetGarden, setGardenSyncing, setNickname, setMoisture, setLight, setWaterLevelLow, resetWaterLevelLow } = garden.actions;
 
 export async function addGarden(userToken, gardenSerial, gardenNickname, dispatch) {
     const params = new URLSearchParams({

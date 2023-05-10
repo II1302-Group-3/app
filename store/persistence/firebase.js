@@ -5,7 +5,8 @@ import {
     setGardenSyncing,
     setNickname,
     setMoisture,
-    setLight
+    setLight,
+    setWaterLevelLow
 } from "../slices/garden";
 
 import {
@@ -52,7 +53,6 @@ export function enablePersistence(store) {
     store.subscribe(() => {
         const state = store.getState();
         let promises = [];
-        
 
         if(state.garden?.syncing) {
             if(!prevState.garden) {
@@ -92,8 +92,9 @@ function getGardenRefs(serial) {
     const nicknameRef = garden + 'nickname';
     const moistureRef = garden + 'target_moisture';
     const lightRef = garden + 'target_light_level';
+    const waterLevelRef = garden + 'water_level_low';
 
-    return { nicknameRef, moistureRef, lightRef };
+    return { nicknameRef, moistureRef, lightRef, waterLevelRef };
 }
 
 function getUserRefs(uid) {
@@ -110,6 +111,7 @@ async function readGardenFromFirebase(state, dispatch) {
 
     const moisture = (await database().ref(refs.moistureRef).once("value")).val();
     const light = (await database().ref(refs.lightRef).once("value")).val();
+    const waterLevelLow = (await database().ref(refs.waterLevelRef).once("value")).val();
 
     if(moisture) {
         console.log(`Dispatched moisture for garden ${state.garden.serial}: ${moisture}`);
@@ -118,6 +120,14 @@ async function readGardenFromFirebase(state, dispatch) {
     if(light) {
         console.log(`Dispatched light for garden ${state.garden.serial}: ${light}`);
         dispatch(setLight(light));
+    }
+
+    if(waterLevelLow) {
+        console.log(`Dispatched notification (water level low) for garden ${state.garden.serial}`);
+        dispatch(setWaterLevelLow());
+
+        // Now that the notification has been seen, it should be reset in the database
+        await database().ref(refs.waterLevelRef).remove();
     }
 
     dispatch(setGardenSyncing(false));

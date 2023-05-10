@@ -16,7 +16,7 @@ export const BrowseTemplateView = ({
     light,
 	moisture,
     plantName,
-	//applyTemplate,
+	applyTemplate,
 	gardens
 
 }) => {
@@ -56,7 +56,8 @@ export const BrowseTemplateView = ({
 				/>
 			</View>
 
-			<Button mode="contained" style={{marginBottom: 10}} onPress={() => applyTemplate()}>Apply Templates</Button>
+
+			{gardens.length != 0 &&	<Button mode="contained" style={{marginBottom: 10}} onPress={() => applyTemplate()}>Apply Templates</Button>}
 
 
 
