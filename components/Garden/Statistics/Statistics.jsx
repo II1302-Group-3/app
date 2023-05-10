@@ -14,11 +14,10 @@ export const Statistics = () => {
 
     const [date, setDate] = useState(new Date());
     const [day, setDay] = useState(DAYS[date.getDay()]);
-    const [lightYAxis, setLightYAxis] = useState([0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100]);
-    const [moistureYAxis, setMoistureYAxis] = useState([]);
-    const [xAxis, setXAxis] = useState();
-    const [lightData, set_light_percentage] = useState([]);
+    const [lightXAxis, setLightXAxis] = useState();
+    const [lightData, setLightData] = useState([]);
     const [moistureData, setMoistureData] = useState([]);
+    const [moistureXAxis, setMoistureXAxis] = useState([0]);
     const lightIsLoading = useSelector(state => state.garden.statistics.light.isLoading);
     const moistureIsLoading = useSelector(state => state.garden.statistics.moisture.isLoading);
     const lightError = useSelector(state => state.garden.statistics.light.error);
@@ -40,42 +39,68 @@ export const Statistics = () => {
         }
     }
 
-    const getPercentage = (lightData) => {
-        const lightData_as_percentage = lightData.map(hour => ((hour / 10764) * 100))
-        set_light_percentage(lightData_as_percentage)
-    }
-
     useEffect(() => {
-        dispatch(getStatistics({
-            nutritientPath: NUTRITIENT_PATHS.LIGHT,
-            date
-        })).unwrap().then(lightData => {
-            getPercentage(lightData);
-            setXAxis(getDaysOfMonthUntilPresent(lightData.length));
-        });
+        const NUTRITIENT = {
+            LIGHT: 10764,
+            MOISTURE: 100,
+            HUMIDITY: 0,
+            TEMPERATURE: 0
+        }
 
-        // dispatch(getStatistics({
-        //     nutritientPath: NUTRITIENT_PATHS.MOISTURE,
-        //     date
-        // })).unwrap().then(moistureData => setMoistureData(moistureData));
+        // updateAllStatistics()
+        updateStatistics(NUTRITIENT.LIGHT, NUTRITIENT_PATHS.LIGHT)
+
+        function updateAllStatistics() {
+            Object.keys(NUTRITIENT).forEach((_, index) => updateStatistics(NUTRITIENT[index]), NUTRITIENT_PATHS[index])
+        }
+
+        function updateStatistics(nutritient, nutritientPath) {
+            dispatch(getStatistics({ nutritientPath, date })).unwrap().then(data => setStatistics(data));
+
+            function setStatistics(data) {
+                let dataSetter;
+                let xAxisSetter;
+    
+                switch(nutritient) {
+                    case NUTRITIENT.LIGHT:
+                        dataSetter = setLightData;
+                        xAxisSetter = setLightXAxis;
+                        break;
+                    case NUTRITIENT.MOISTURE:
+                        dataSetter = setMoistureData;
+                        xAxisSetter = setMoistureXAxis;
+                        break;
+                }
+    
+                setPercentage(data, nutritient, dataSetter);
+                const hours = getArrayOfHours(data);
+                xAxisSetter(hours);
+
+                function setPercentage(data, max, setData) {
+                    const dataAsPercentage = data.map(hour => ((hour.val / max) * 100))
+                    setData(dataAsPercentage)
+                }
+
+                function getArrayOfHours(data) {
+                    return data.map(hourAndValPair => hourAndValPair['hour']);
+                }
+            }
+        }
+        
     }, [date]);
 
     return (
         <View>
             <StatisticsView
                 lightData={lightData}
+                lightXAxis={lightXAxis}
                 day={day}
                 setNextDay={setNextDay}
                 setPrevDay={setPrevDay}
-                xAxis={xAxis}
                 lightIsLoading={lightIsLoading}
                 moistureIsLoading={moistureIsLoading}
                 lightError={lightError}
                 moistureError={moistureError} />
         </View>
     )
-}
-
-function getDaysOfMonthUntilPresent(length) {
-    return [...Array(length).keys()].map(zeroIndexedDate => ++zeroIndexedDate);
 }

@@ -8,10 +8,10 @@ import {
 import { LineChart } from "react-native-chart-kit";
 
 export const StatisticsView = ({
-    data,
     day,
-    xAxis,
+    lightXAxis,
     lightData,
+    moistureXAxis,
     moistureData,
     setNextDay,
     setPrevDay,
@@ -87,6 +87,7 @@ export const StatisticsView = ({
             {legend: 'Light', 
             color: chartStyles.light.color, 
             data: lightData,
+            xAxis: lightXAxis,
             loading: lightIsLoading,
             error: lightError}, 
 
@@ -97,6 +98,7 @@ export const StatisticsView = ({
                 Math.random() * 100,
                 Math.random() * 100
             ],
+            xAxis: moistureXAxis,
             loading: moistureIsLoading,
             error: moistureError}
         ];
@@ -133,7 +135,7 @@ export const StatisticsView = ({
                 </Transition>
                 <LineChart
                     data={{
-                    labels: xAxis,
+                    labels: chart.xAxis,
                     datasets: [
                         {
                         data: chart.data[0] ? chart.data : [0]
@@ -144,14 +146,14 @@ export const StatisticsView = ({
                     width={width} // from react-native
                     height={height}
                     yAxisLabel=""
-                    yAxisSuffix=""
+                    yAxisSuffix="%"
                     yAxisInterval={1} // optional, defaults to 1
                     chartConfig={{
                         strokeWidth: "5",
                     backgroundColor: "#e26a00",
                     backgroundGradientFrom: chart.color.from,
                     backgroundGradientTo: chart.color.to,
-                    decimalPlaces: 2, // optional, defaults to 2dp
+                    decimalPlaces: 0, // optional, defaults to 2dp
                     color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
                     labelColor: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
                     style: {

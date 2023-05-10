@@ -21,7 +21,9 @@ const initialState = {
 
 export const NUTRITIENT_PATHS = {
     LIGHT: 'light_level',
-    MOISTURE: 'moisture_level'
+    MOISTURE: 'moisture_level',
+    HUMIDITY: 'humidity_level',
+    TEMPERATURE: 'temperature_level'
 }
 
 export const garden = createSlice({
@@ -75,15 +77,29 @@ export const getStatistics = createAsyncThunk('garden/getStatistics', async({
     const ref = `garden/251951091481/${nutritientPath}/${processedDate}`;
     const snapshot = await database().ref(ref).once("value")
     const data = snapshot.val();
-    
     if(!data) throw new Error("Data unavailable.")
 
-    let averagePerHour = [];
-
-    data.filter(hour => Array.isArray(hour)).forEach(hour => {
-        const sum = hour.reduce((a, b) => a + b, 0)
-        averagePerHour.push(Math.round((sum / hour.length) || 0))
-    })
+    const averagePerHour = pairTogetherHourWithAverageSensorDataPerHour(data);
 
     return averagePerHour
+
+    function pairTogetherHourWithAverageSensorDataPerHour(data) {
+        let hours = [];
+        for(const hour in data) {
+            let vals = data[hour];
+            if(vals instanceof Object) {
+                let newVals = [];
+                for(const minute in vals) {
+                    newVals.push(vals[minute]);
+                }
+                vals = newVals;
+            }
+
+            const hourWithMinutes = Object.keys(data).length < 6 ? hour + ":00" : hour;
+            const val = vals.filter(val => val !== null).reduce((a, b) => a + b, 0) / vals.length || 0
+            hours.push({hour: hourWithMinutes, val})
+        }
+
+        return hours;
+    }
 })
