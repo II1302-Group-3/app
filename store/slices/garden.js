@@ -115,9 +115,12 @@ export async function addGarden(userToken, gardenSerial, gardenNickname, dispatc
 export const getStatistics = createAsyncThunk('garden/getStatistics', async({
     nutritientPath,
     date
-}) => {
+}, {getState}) => {
     const processedDate = date.toISOString().split('T')[0];
-    const ref = `garden/251951091481/${nutritientPath}/${processedDate}`;
+    const state = getState();
+    console.log("test");
+    console.log(state.garden.serial)
+    const ref = `garden/${state.garden.serial}/${nutritientPath}/${processedDate}`;
     const snapshot = await database().ref(ref).once("value")
     const data = snapshot.val();
     if(!data) throw new Error("Data unavailable.")

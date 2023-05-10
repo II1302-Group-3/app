@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { setMoisture, setLight, resetGarden, removeGarden, resetWaterLevelLow } from '../../store/slices/garden';
+import { setMoisture, setLight, resetGarden, removeGarden, resetWaterLevelLow } from '../../../store/slices/garden';
 import { EnvironmentSettingsView } from './EnvironmentSettingsView';
 import { Alert } from 'react-native';
 
