@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { setMoisture, setLight, resetGarden, removeGarden } from '../../../store/slices/garden';
+import { setMoisture, setLight, resetGarden, removeGarden, resetWaterLevelLow } from '../../store/slices/garden';
 import { EnvironmentSettingsView } from './EnvironmentSettingsView';
 import { Alert } from 'react-native';
 
@@ -17,6 +17,19 @@ export const EnvironmentSettings = ({ navigation }) => {
     }, [])
 
     useEffect(() => navigation.setOptions({title: nickname}), [nickname])
+
+    const waterLevelLow = useSelector(state => state.garden?.waterLevelLow ?? false);
+
+    useEffect(() => {
+        if(waterLevelLow && nickname !== "") {
+            Alert.alert(
+                `Warning for ${nickname}`, 
+                "The water level in the tank is low. Refill the tank as soon as possible."
+            );
+
+            dispatch(resetWaterLevelLow());
+        }
+    }, [waterLevelLow, nickname]);
 
     const [advancedInfo, setAdvancedInfo] = useState(false);
     const changeMoisture = newMoisture => dispatch(setMoisture(newMoisture))

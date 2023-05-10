@@ -11,6 +11,7 @@ const initialActiveState = {
     light: 50,
     moisture: 50,
 
+    waterLevelLow: false,
     statistics: {
         light: {
             error: null,
@@ -22,6 +23,13 @@ const initialActiveState = {
         }
     }
 };
+
+export const NUTRITIENT_PATHS = {
+    LIGHT: 'light_level',
+    MOISTURE: 'moisture_level',
+    HUMIDITY: 'humidity_level',
+    TEMPERATURE: 'temperature_level'
+}
 
 export const garden = createSlice({
     name: 'garden',
@@ -35,6 +43,8 @@ export const garden = createSlice({
         setMoisture: (state, { payload }) => { state.moisture = payload },
         setLight: (state, { payload }) => { state.light = payload },
 
+        setWaterLevelLow: state => { state.waterLevelLow = true },
+        resetWaterLevelLow: state => { state.waterLevelLow = false },
         resetError: state => {
             state.statistics.light.error = null;
             state.statistics.moisture.error = null;
@@ -66,7 +76,9 @@ export const {
     setGardenSyncing, 
     setNickname, 
     setMoisture, 
-    setLight } = garden.actions;
+    setLight,
+    setWaterLevelLow, 
+    resetWaterLevelLow } = garden.actions;
 
 export async function addGarden(userToken, gardenSerial, gardenNickname, dispatch) {
     const params = new URLSearchParams({

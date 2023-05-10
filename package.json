@@ -29,10 +29,8 @@
     "react-native-screens": "^3.20.0",
     "react-native-svg": "^13.9.0",
     "react-native-vector-icons": "^9.2.0",
-    "react-native-vision-camera": "^2.15.4",
     "react-redux": "^8.0.5",
-    "redux-mock-store": "^1.5.4",
-    "vision-camera-code-scanner": "^0.2.0"
+    "redux-mock-store": "^1.5.4"
   },
   "devDependencies": {
     "@babel/core": "^7.21.4",
