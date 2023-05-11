@@ -16,7 +16,7 @@ import {
 } from '../slices/firebaseAuth';
 
 import {
-    setTemplateName, 
+    setTemplateName,
     setUserTemplate
 } from "../slices/templateName";
 
@@ -24,22 +24,20 @@ import {
 async function readTemplates(state, dispatch) {
     const  refs = getUserRefs(state.firebaseAuth.user.uid);
     console.log("read template")
-    const templateData = (await database().ref(refs.templateRef).once('value')).val()
+    const templateData = (await database().ref(refs.templateRef).once('value')).val() ?? {};
     const plantNames = Object.values(templateData).map(item => item);
     if (templateData) {
         dispatch(setTemplateName(plantNames))
     }
-    
 
-
-    const userTemplates = (await database().ref(refs.userTemplateRef).once('value')).val(); 
+    const userTemplates = (await database().ref(refs.userTemplateRef).once('value')).val() ?? {};
     const userTemplate = Object.values(userTemplates).map(item => item.templateKey);
 
     if (userTemplate) {
         dispatch(setUserTemplate({userTemplate, templateData} ))
     }
-    
-    
+
+
 }
 
 export function enablePersistence(store) {
