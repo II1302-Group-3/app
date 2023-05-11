@@ -19,7 +19,12 @@ export const AddGarden = ({navigation}) => {
 
 	const userToken = useSelector(state => state.firebaseAuth.user.token);
 	const [isClaiming, setIsClaiming] = useState(false);
-	
+
+	useEffect(() => {
+        const backHandler = BackHandler.addEventListener("hardwareBackPress", () => isClaiming);
+        return () => backHandler.remove();
+      }, []);
+
 	const claimGarden = () => {
 		if(canClaim) {
 			setIsClaiming(true);
@@ -54,7 +59,8 @@ export const AddGarden = ({navigation}) => {
 			isValidName={isValidName}
 			isValidSerial={isValidSerial}
 
-			canPressButton={canClaim && !isClaiming}
+			canPressClaim={canClaim && !isClaiming}
+			canPressQr={!isClaiming}
 
 			claimGarden={claimGarden}
 			openQrScanner={openQrScanner}
