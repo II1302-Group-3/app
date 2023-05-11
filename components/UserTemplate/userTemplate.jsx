@@ -1,4 +1,4 @@
-import { BrowseTemplateNameView  } from './BrowseTemplateNameView';
+import { userTemplateView  } from './userTemplateView';
 import React, { useReducer, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
@@ -19,7 +19,7 @@ export const BrowseTemplate = ( {navigation} ) => {
 
 
     return(
-          <BrowseTemplateNameView plantName={plantNames}  tempDetailPress={tempDetailPress} plantLight={plantLight} plantMoisture={plantMoisture} templatesData={templatesData} />
+          <userTemplateView plantName={plantNames}  tempDetailPress={tempDetailPress} plantLight={plantLight} plantMoisture={plantMoisture} templatesData={templatesData} />
     )
   
 }

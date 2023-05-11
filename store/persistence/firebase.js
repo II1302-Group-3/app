@@ -27,7 +27,6 @@ async function readTemplates(state, dispatch) {
     const plantNames = Object.values(templateData).map(item => item);
 
     if (templateData) {
-        console.log(plantNames)
         dispatch(setTemplateName(plantNames))
     }
     
