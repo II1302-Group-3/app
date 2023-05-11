@@ -27,9 +27,10 @@ export const Home = ({ navigation }) => {
     }
 
     const addNewTemplate = () => navigation.navigate("AddTemplate")
+    const myTemplates = () => navigation.navigate("UserTemplate")
 
     return (
         displayNameRef,
-        <HomeView signOut={signOut} gardens={gardens} addNewGarden={addNewGarden} openGarden={openGarden} addNewTemplate={addNewTemplate} displayName={displayName} navigation={navigation}/>
+        <HomeView myTemplates={myTemplates} signOut={signOut} gardens={gardens} addNewGarden={addNewGarden} openGarden={openGarden} addNewTemplate={addNewTemplate} displayName={displayName} navigation={navigation}/>
     );
 }
