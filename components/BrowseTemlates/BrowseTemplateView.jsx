@@ -1,5 +1,5 @@
 import React from 'react';
-import { View } from 'react-native';
+import { View, Text, Image, TouchableOpacity } from 'react-native';
 import { EnvironmentSettingsSliderView } from '../Garden/EnvironmentSettings/EnvironmentSettingsSliderView';
 import { EnvironmentSettingsSwitch } from '../Garden/EnvironmentSettings/EnvironmentSettingsSwitchView';
 import { useHeaderHeight } from '@react-navigation/elements';
@@ -13,35 +13,50 @@ const bulbIcon = require('../../assets/BulpIcon.png'); // Link to bulbIcon for t
 export const BrowseTemplateView = ({
 	setAdvancedInfo,
 	advancedInfo,
+	name,
     light,
 	moisture,
-    plantName
+    plantName,
+	isFilled,
+	onPress,
 
 }) => {
+	
 	const moistureTitle = 'Moisture Level';
 	const lightTitle = 'Light Level';
 	const advancedInfoTitle = 'Advanced info';
-	
 	const headerHeight = useHeaderHeight();
+	
+	const filledHeart = require('../../assets/filled_heart.png')
+	const unfilledHeart = require('../../assets/heart.png')
 
     return(
         <View style={{paddingHorizontal: 20, paddingTop: 30, paddingBottom: 30 + headerHeight, justifyContent: "center", flexDirection: "column", height: "100%" }}>
-            <View>
-                <Text variant="headlineMedium" style={{fontWeight: "bold", marginBottom: 30}} >Hello {plantName}</Text>
+            <View style={{ justifyContent: 'space-between', flexDirection: 'row' }}>
+                <Text variant="headlineMedium" style={{fontWeight: "bold", marginBottom: 30}} >Hello "{name}"</Text>
+				<TouchableOpacity onPress={() => onPress(!isFilled)}>
+					<Image 
+						source={isFilled ? filledHeart : unfilledHeart}
+						style={{ width: 30, height: 30}}
+					/>
+				</TouchableOpacity>
+				
             </View>
            
             <View style={{marginBottom: 20}}>
 				<EnvironmentSettingsSliderView 
 					title={ moistureTitle } 
+					isDisabled ={true}
 					sliderIcon={ waterDropIcon } 
-                    nutrition={ moisture }
+                    nutrition={ 600 }
 					advancedInfo={ advancedInfo }
 				/>
 			</View>
 			<EnvironmentSettingsSliderView 
 				title={ lightTitle } 
+				isDisabled ={true}
 				sliderIcon={ bulbIcon } 
-                nutrition={ light }
+                nutrition={ 1000 }
 				advancedInfo={ advancedInfo }
 			/>
 

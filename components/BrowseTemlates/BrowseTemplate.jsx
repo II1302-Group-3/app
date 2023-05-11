@@ -1,21 +1,40 @@
-import { BrowseTemplateNameView  } from './BrowseTemplateNameView';
+import { BrowseTemplateNameView } from './BrowseTemplateNameView';
 import React, { useReducer, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import {setTemplateName } from '../../store/slices/garden';
+import { setTemplateName, setSelectedTemplate } from '../../store/slices/templateName';
+import module from '@react-native-firebase/app';
 
-export const BrowseTemplate = () => {
+export const BrowseTemplate = ({ navigation }) => {
     //const templatesName = useSelector(state => state.templateName.templatesName);
-    //const dispatch = useDispatch();
-    //const templateName = useSelector(state => state.templateName.templatesName);
-   // const templateName = useSelector(state => state.templateName.templatesName);
-   const templatesName = ['apple', 'grape', 'tomato', "fdgsfg", "dwfwg ", "sdgdg", "dsf s", "sdf df "]
+    const dispatch = useDispatch();
+    const templatesData = useSelector(state => state.templateName.templatesData);
+    const plantNames = Object.values(templatesData).map(item => item.plantName);
+    const plantLight = Object.values(templatesData).map(item => item.lightLevel);
+    const plantMoisture = Object.values(templatesData).map(item => item.moistureLevel);
+
+
+    let templateData2 = {};
+
+    console.log("huuh")
+    console.log(templatesData)
+    // const templateName = useSelector(state => state.templateName.templatesName);
     //console.log(templateName + '3')
-    return(
 
-          <BrowseTemplateNameView plantName={templatesName} />
+    const tempDetailPress = (name, light, moisture, id) => {
+        templateData2 = {
+            plantName: name,
+            lightLevel: light,
+            moistureLevel: moisture,
+            id
+        }
+        console.log("templateData2")
+        dispatch(setSelectedTemplate(templateData2))
+        navigation.navigate("DetailsTemp")
+    }
 
-  
 
+    return (
+        <BrowseTemplateNameView plantName={plantNames} tempDetailPress={tempDetailPress} plantLight={plantLight} plantMoisture={plantMoisture} templatesData={templatesData} />
     )
-  
+
 }
