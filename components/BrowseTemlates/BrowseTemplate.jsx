@@ -2,20 +2,32 @@ import { BrowseTemplateNameView  } from './BrowseTemplateNameView';
 import React, { useReducer, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {setTemplateName } from '../../store/slices/garden';
+import module from '@react-native-firebase/app';
 
-export const BrowseTemplate = () => {
+export const BrowseTemplate = ( {navigation} ) => {
     //const templatesName = useSelector(state => state.templateName.templatesName);
     //const dispatch = useDispatch();
-    //const templateName = useSelector(state => state.templateName.templatesName);
+    const templatesData = useSelector(state => state.templateName.templatesData);
+    const plantNames = Object.values(templatesData).map(item => item.plantName);
+    const plantLight = Object.values(templatesData).map(item => item.lightLevel);
+    const plantMoisture = Object.values(templatesData).map(item => item.moistureLevel);
+    //console.log(templatesData)
+    let templateData2 = {}; 
    // const templateName = useSelector(state => state.templateName.templatesName);
-   const templatesName = ['apple', 'grape', 'tomato', "fdgsfg", "dwfwg ", "sdgdg", "dsf s", "sdf df "]
     //console.log(templateName + '3')
+
+    const tempDetailPress = (name, light, moisture) => {
+        templateData2 = {
+            plantName: name,
+            lightLevel: light,
+            moistureLevel: moisture,
+        }
+        navigation.navigate("DetailsTemp", { templateData: templateData2 })}
+
+
     return(
-
-          <BrowseTemplateNameView plantName={templatesName} />
-
-  
-
+          <BrowseTemplateNameView plantName={plantNames}  tempDetailPress={tempDetailPress} plantLight={plantLight} plantMoisture={plantMoisture} templatesData={templatesData} />
     )
   
 }
+

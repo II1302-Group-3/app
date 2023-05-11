@@ -14,6 +14,8 @@ export const EnvironmentSettings = ({navigation}) => {
     const nickname = useSelector(state => state.garden?.nickname ?? "");
     const light = useSelector(state => state.garden?.light ?? 0);
     const moisture = useSelector(state => state.garden?.moisture ?? 0);
+    console.log(light, moisture)
+    const browseTemplate = () => navigation.navigate("BrowseTemplate")
 
     useEffect(() => {
         return () => dispatch(resetGarden());
@@ -81,7 +83,7 @@ export const EnvironmentSettings = ({navigation}) => {
             advancedInfo={ advancedInfo }
             light={ light }
             moisture={ moisture }
-
+            browseTemplate={browseTemplate}
             canDeleteGarden={ !isDeleting }
             deleteGarden={ deleteGarden }
         />

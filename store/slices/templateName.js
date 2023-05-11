@@ -1,8 +1,9 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-    templatesName: "apple", 
-    templateDataArray: "DG", 
+    templatesData: [], 
+    templateDataArray: [],
+
 }
 
 
@@ -12,8 +13,7 @@ export const templateName = createSlice({
     reducers: {
       setTemplateName: (state, { payload }) => {
         console.log(payload)
-        console.log("gello")
-        state.templatesName = payload;
+        state.templatesData = payload;
       },
       setTemplateData: (state, { payload }) => {
         console.log("gello2")
