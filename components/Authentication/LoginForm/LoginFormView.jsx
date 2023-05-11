@@ -9,6 +9,7 @@ export const LoginFormView = ({
     password,
     canPressLogin,
     canPressSignUp,
+    loading,
     setEmail,
     setPassword,
     login,
@@ -35,7 +36,7 @@ export const LoginFormView = ({
                     secureTextEntry={true}
                     autoComplete="current-password"
                 />
-                <Button mode="contained" disabled={!canPressLogin} style={{marginVertical: 25}} onPress={login}>
+                <Button mode="contained" disabled={!canPressLogin} loading={loading} style={{marginVertical: 25}} onPress={login}>
                     Log In
                 </Button>
                 <Button mode="text" disabled={!canPressSignUp} onPress={() => navigation.navigate('Signup')}>

@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
+import { BackHandler } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import { AddGardenView } from "./AddGardenView";
 import { resetScannedSerial } from "../../store/slices/qrScanner";
-import { addGarden, removeGarden } from "../../store/slices/garden";
+import { addGarden } from "../../store/slices/garden";
 import { Alert } from "react-native";
 
 export const AddGarden = ({navigation}) => {
@@ -61,6 +62,7 @@ export const AddGarden = ({navigation}) => {
 
 			canPressClaim={canClaim && !isClaiming}
 			canPressQr={!isClaiming}
+			loading={isClaiming}
 
 			claimGarden={claimGarden}
 			openQrScanner={openQrScanner}

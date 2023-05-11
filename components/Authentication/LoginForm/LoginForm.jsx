@@ -56,6 +56,7 @@ export const LoginForm = ({ navigation }) => {
             password={ password }
             canPressLogin={ allArgumentsSet & !isLoggingIn }
             canPressSignUp={ !isLoggingIn }
+            loading={ isLoggingIn }
             setEmail={ setEmail }
             setPassword={ setPassword }
             login={ login }

@@ -71,6 +71,7 @@ export const RegistrationForm = ({ navigation }) => {
             confirmPassword={ confirmPassword }
             signUpEnabled={ allArgumentsSet && !isCreatingAccount }
             backEnabled={ !isCreatingAccount }
+            loading={ isCreatingAccount }
             setDisplayName={ setDisplayName }
             setEmail={ setEmail }
             setPassword={ setPassword }

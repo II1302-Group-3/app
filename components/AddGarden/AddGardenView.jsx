@@ -26,7 +26,7 @@ export const AddGardenView = props => {
 						keyboardType="numeric"
 						maxLength={12}
 					/>
-					<Button mode="contained" disabled={!props.canPressClaim} style={{marginVertical: 25}} onPress={props.claimGarden}>Claim</Button>
+					<Button mode="contained" disabled={!props.canPressClaim} loading={props.loading} style={{marginVertical: 25}} onPress={props.claimGarden}>Claim</Button>
 					<Button mode="text" disabled={!props.canPressQr} icon={require("../../assets/qrexample.png")} onPress={props.openQrScanner}>Scan a QR code</Button>
 				</View>
 			</View>
