@@ -1,5 +1,6 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import * as firebaseAuth from "./firebaseAuth";
+import database from '@react-native-firebase/database';
 
 const initialActiveState = {
     syncing: true,
@@ -10,8 +11,33 @@ const initialActiveState = {
     light: 50,
     moisture: 50,
 
-    waterLevelLow: false
+    waterLevelLow: false,
+    statistics: {
+        light: {
+            error: null,
+            isLoading: false
+        },
+        moisture: {
+            error: null,
+            isLoading: false
+        },
+        humidity: {
+            error: null,
+            isLoading: false
+        },
+        temperature: {
+            error: null,
+            isLoading: false
+        },
+    }
 };
+
+export const NUTRITIENT_PATHS = {
+    LIGHT: 'light_level',
+    MOISTURE: 'moisture_level',
+    HUMIDITY: 'humidity_level',
+    TEMPERATURE: 'temperature_level'
+}
 
 export const garden = createSlice({
     name: 'garden',
@@ -28,11 +54,74 @@ export const garden = createSlice({
         setLight: (state, { payload }) => { state.light = payload },
 
         setWaterLevelLow: state => { state.waterLevelLow = true },
-        resetWaterLevelLow: state => { state.waterLevelLow = false }
+        resetWaterLevelLow: state => { state.waterLevelLow = false },
+        resetError: state => {
+            state.statistics.light.error = null;
+            state.statistics.moisture.error = null;
+        }
+    },
+    extraReducers: builder => {
+        builder.addCase(getStatistics.fulfilled, (state, { meta }) => {
+            switch(meta.arg.nutritientPath) {
+                case NUTRITIENT_PATHS.LIGHT:
+                    state.statistics.light.isLoading = false;
+                    break;
+                case NUTRITIENT_PATHS.MOISTURE:
+                    state.statistics.moisture.isLoading = false;
+                    break;
+                case NUTRITIENT_PATHS.HUMIDITY:
+                    state.statistics.humidity.isLoading = false;
+                    break;
+                case NUTRITIENT_PATHS.TEMPERATURE:
+                    state.statistics.temperature.isLoading = false;
+                    break;
+            }
+        }),
+        builder.addCase(getStatistics.pending, (state, { meta }) => {
+            switch(meta.arg.nutritientPath) {
+                case NUTRITIENT_PATHS.LIGHT:
+                    state.statistics.light.isLoading = true;
+                    break;
+                case NUTRITIENT_PATHS.MOISTURE:
+                    state.statistics.moisture.isLoading = true;
+                    break;
+                case NUTRITIENT_PATHS.HUMIDITY:
+                    state.statistics.humidity.isLoading = true;
+                    break;
+                case NUTRITIENT_PATHS.TEMPERATURE:
+                    state.statistics.temperature.isLoading = true;
+                    break;
+            }
+        }),
+        builder.addCase(getStatistics.rejected, (state, { meta, error }) => {
+            switch(meta.arg.nutritientPath) {
+                case NUTRITIENT_PATHS.LIGHT:
+                    state.statistics.light.error = error.message;
+                    break;
+                case NUTRITIENT_PATHS.MOISTURE:
+                    state.statistics.moisture.error = error.message;
+                    break;
+                case NUTRITIENT_PATHS.HUMIDITY:
+                    state.statistics.humidity.error = error.message;
+                    break;
+                case NUTRITIENT_PATHS.TEMPERATURE:
+                    state.statistics.temperature.error = error.message;
+                    break;
+            }
+        })
     }
 });
 
-export const { selectGarden, resetGarden, setGardenSyncing, setNickname, setMoisture, setLight, setWaterLevelLow, resetWaterLevelLow } = garden.actions;
+export const { 
+    selectGarden, 
+    resetGarden,
+    resetError, 
+    setGardenSyncing, 
+    setNickname, 
+    setMoisture, 
+    setLight,
+    setWaterLevelLow, 
+    resetWaterLevelLow } = garden.actions;
 
 export async function addGarden(userToken, gardenSerial, gardenNickname, dispatch) {
     const params = new URLSearchParams({
@@ -65,6 +154,44 @@ export async function addGarden(userToken, gardenSerial, gardenNickname, dispatc
         dispatch(firebaseAuth.refreshToken());
     }
 }
+
+export const getStatistics = createAsyncThunk('garden/getStatistics', async({
+    nutritientPath,
+    date
+}, {getState}) => {
+    const processedDate = date.toISOString().split('T')[0];
+    const state = getState();
+    console.log("test");
+    console.log(state.garden.serial)
+    const ref = `garden/${state.garden.serial}/${nutritientPath}/${processedDate}`;
+    const snapshot = await database().ref(ref).once("value")
+    const data = snapshot.val();
+    if(!data) throw new Error("Data unavailable.")
+
+    const averagePerHour = pairTogetherHourWithAverageSensorDataPerHour(data);
+
+    return averagePerHour
+
+    function pairTogetherHourWithAverageSensorDataPerHour(data) {
+        let hours = [];
+        for(const hour in data) {
+            let vals = data[hour];
+            if(vals instanceof Object) {
+                let newVals = [];
+                for(const minute in vals) {
+                    newVals.push(vals[minute]);
+                }
+                vals = newVals;
+            }
+
+            const hourWithMinutes = Object.keys(data).length < 6 ? hour + ":00" : hour;
+            const val = vals.filter(val => val !== null).reduce((a, b) => a + b, 0) / vals.length || 0
+            hours.push({hour: hourWithMinutes, val})
+        }
+
+        return hours;
+    }
+})
 
 export async function removeGarden(userToken, gardenSerial, dispatch) {
     const params = new URLSearchParams({

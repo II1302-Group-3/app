@@ -1,13 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { setMoisture, setLight, resetGarden, removeGarden, resetWaterLevelLow } from '../../store/slices/garden';
+import { setMoisture, setLight, removeGarden, resetWaterLevelLow } from '../../../store/slices/garden';
 import { EnvironmentSettingsView } from './EnvironmentSettingsView';
 import { Alert } from 'react-native';
-import { Spinner } from '../Spinner';
+import { Spinner } from '../../Spinner';
 
-export const EnvironmentSettings = ({navigation}) => {
+export const EnvironmentSettings = ({ navigation }) => {
     const dispatch = useDispatch();
-
     const isSyncing = useSelector(state => state.garden?.syncing ?? true);
 
     const serial = useSelector(state => state.garden?.serial ?? "");
@@ -16,10 +15,6 @@ export const EnvironmentSettings = ({navigation}) => {
     const moisture = useSelector(state => state.garden?.moisture ?? 0);
     console.log(light, moisture)
     const browseTemplate = () => navigation.navigate("BrowseTemplate")
-
-    useEffect(() => {
-        return () => dispatch(resetGarden());
-    }, [])
 
     useEffect(() => navigation.setOptions({title: nickname}), [nickname])
 

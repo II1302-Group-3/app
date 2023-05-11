@@ -12,7 +12,13 @@ export const AddTemplate = () => {
     const [moistureLevel, setMoisture] = useState(0);
     const [templateName, setTemplateName] = useState("");
     console.log(changeLight, moistureLevel, templateName);
-    const saveTemplateValue = () => dispatch(saveTemplate({tempLight: changeLight, tempmoisture: moistureLevel, tempName: templateName, uid}));
+    const saveTemplateValue = () => dispatch(saveTemplate({
+        tempLight: changeLight, 
+        tempmoisture: moistureLevel, 
+        tempName: templateName, 
+        uid,
+        date: new Date().getTime()
+        }));
 
 
     return(

@@ -1,7 +1,7 @@
 import React from 'react';
 import { View } from 'react-native';
-import { EnvironmentSettingsSliderView } from '../EnvironmentSettings/EnvironmentSettingsSliderView';
-import { EnvironmentSettingsSwitch } from '../EnvironmentSettings/EnvironmentSettingsSwitchView';
+import { EnvironmentSettingsSliderView } from '../Garden/EnvironmentSettings/EnvironmentSettingsSliderView';
+import { EnvironmentSettingsSwitch } from '../Garden/EnvironmentSettings/EnvironmentSettingsSwitchView';
 import { useHeaderHeight } from '@react-navigation/elements';
 import { Button, TextInput } from 'react-native-paper';
 import { template } from '@babel/core';

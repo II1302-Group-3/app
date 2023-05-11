@@ -1,7 +1,7 @@
-import React from 'react';
-import { View, Text} from 'react-native';
-import { EnvironmentSettingsSliderView } from '../EnvironmentSettings/EnvironmentSettingsSliderView';
-import { EnvironmentSettingsSwitch } from '../EnvironmentSettings/EnvironmentSettingsSwitchView';
+import React, { useEffect } from 'react';
+import { View, Text, Image, TouchableOpacity } from 'react-native';
+import { EnvironmentSettingsSliderView } from '../Garden/EnvironmentSettings/EnvironmentSettingsSliderView';
+import { EnvironmentSettingsSwitch } from '../Garden/EnvironmentSettings/EnvironmentSettingsSwitchView';
 import { useHeaderHeight } from '@react-navigation/elements';
 import { Button, TextInput } from 'react-native-paper';
 import { template } from '@babel/core';
@@ -16,17 +16,32 @@ export const BrowseTemplateView = ({
     light,
 	moisture,
     plantName,
+	isFilled,
+	onPress,
 	applyTemplate,
 	gardens,
+
 }) => {
+	
 	const moistureTitle = 'Moisture Level';
 	const lightTitle = 'Light Level';
 	const advancedInfoTitle = 'Advanced info';
 	const headerHeight = useHeaderHeight();
+	
+	const filledHeart = require('../../assets/filled_heart.png')
+	const unfilledHeart = require('../../assets/heart.png')
+
     return(
         <View style={{paddingHorizontal: 20, paddingTop: 30, paddingBottom: 30 + headerHeight, justifyContent: "center", flexDirection: "column", height: "100%" }}>
-            <View>
-                <Text variant="headlineMedium" style={{fontWeight: "bold", marginBottom: 30, fontSize:40}}>{plantName}</Text>
+            <View style={{ justifyContent: 'space-between', flexDirection: 'row' }}>
+                <Text variant="headlineMedium" style={{fontWeight: "bold", marginBottom: 30}} >Template "{plantName}"</Text>
+				<TouchableOpacity onPress={() => onPress(!isFilled)}>
+					<Image 
+						source={isFilled ? filledHeart : unfilledHeart}
+						style={{ width: 30, height: 30 }}
+					/>
+				</TouchableOpacity>
+				
             </View>
            
             <View style={{marginBottom: 20}}>

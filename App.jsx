@@ -6,7 +6,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { selectIsLoggedIn } from './store/slices/firebaseAuth';
 import { Home } from './components/Home/Home';
-import { EnvironmentSettings } from './components/EnvironmentSettings/EnvironmentSettings';
+import { EnvironmentSettings } from './components/Garden/EnvironmentSettings/EnvironmentSettings';
 import { LoginForm } from './components/Authentication/LoginForm/LoginForm';
 import { RegistrationForm } from './components/Authentication/RegistrationForm/RegistrationForm';
 import { AddGarden } from './components/AddGarden/AddGarden';
@@ -15,12 +15,12 @@ import { BrowseTemplate } from './components/BrowseTemlates/BrowseTemplate';
 import { DetailsTemp } from './components/BrowseTemlates/DetailsTemp';
 import { UserTemplate } from './components/UserTemplate/UserTemplate';
 
-
-
 import {
 	DarkTheme as NavigationDarkTheme,
 	DefaultTheme as NavigationDefaultTheme
   } from '@react-navigation/native';
+import { GardenView } from './components/Garden/GardenView';
+import { Statistics } from './components/Garden/Statistics/Statistics';
 import { QrScanner } from './components/AddGarden/QrScanner';
 import { lightGreenTheme, darkGreenTheme } from './theme';
 
@@ -47,6 +47,8 @@ function App() {
 					{isLoggedIn ? (
 						<>
 						<Stack.Screen name="Home" component={ Home } />
+						<Stack.Screen name="Garden" component={ GardenView } />
+						<Stack.Screen name="Statistics" component={ Statistics } />
 						<Stack.Screen name="EnvironmentSettings" options={{title: ""}} component={ EnvironmentSettings } />
 						<Stack.Screen name="AddGarden" options={{ title: "Add Garden" }} component={ AddGarden } />
 						<Stack.Screen name="UserTemplate" options={{ title: "My Templates" }} component={ UserTemplate } />

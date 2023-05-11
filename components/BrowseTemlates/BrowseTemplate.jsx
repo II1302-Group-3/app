@@ -1,26 +1,42 @@
-import { BrowseTemplateNameView  } from './BrowseTemplateNameView';
-import React, { useReducer, useState } from 'react';
+import { BrowseTemplateNameView } from './BrowseTemplateNameView';
+import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { setSelectedTemplate } from '../../store/slices/templateName';
 
-export const BrowseTemplate = ( {navigation} ) => {
+export const BrowseTemplate = ({ navigation }) => {
+    //const templatesName = useSelector(state => state.templateName.templatesName);
+    const dispatch = useDispatch();
     const templatesData = useSelector(state => state.templateName.templatesData);
     const plantNames = Object.values(templatesData).map(item => item.plantName);
     const plantLight = Object.values(templatesData).map(item => item.lightLevel);
     const plantMoisture = Object.values(templatesData).map(item => item.moistureLevel);
-    let templateData2 = {}; 
 
-    const tempDetailPress = (name, light, moisture) => {
+    const sortByRecent = templatesData => {
+        return Object.values(templatesData).sort((template1, template2) => template1?.date ?? 0 < template2?.date ?? 0);
+    }
+
+    const sortByLikes = templatesData => {
+        return Object.values(templatesData).sort((template1, template2) => (template2?.likedBy?.length ?? 0) - (template1?.likedBy?.length ?? 0));
+    }
+
+    let templateData2 = {};
+
+    const tempDetailPress = (name, light, moisture, id) => {
         templateData2 = {
             plantName: name,
             lightLevel: light,
             moistureLevel: moisture,
+            id
         }
-        navigation.navigate("DetailsTemp", { templateData: templateData2 })}
+        console.log("template data 2");
+        console.log(templateData2);
+        dispatch(setSelectedTemplate(templateData2))
+        navigation.navigate("DetailsTemp")
+    }
 
-
-    return(
-          <BrowseTemplateNameView plantName={plantNames}  tempDetailPress={tempDetailPress} plantLight={plantLight} plantMoisture={plantMoisture} templatesData={templatesData} />
+    return (
+        <BrowseTemplateNameView sortByRecent={sortByRecent} sortByLikes={sortByLikes} tempDetailPress={tempDetailPress} />
     )
-  
+
 }
 
