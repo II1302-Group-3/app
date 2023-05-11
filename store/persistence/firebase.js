@@ -50,6 +50,7 @@ export function enablePersistence(store) {
         const state = store.getState();
         let promises = [];
 
+        // User selected new garden
         if(state.garden?.syncing) {
             if(!prevState.garden) {
                 promises = [...promises, readGardenFromFirebase(state, dispatch)];
@@ -59,10 +60,15 @@ export function enablePersistence(store) {
             syncGardenToFirebase(state, prevState);
         }
 
+        // User just logged in
+        if(state.firebaseAuth.user && !prevState.firebaseAuth.user) {
+            promises = [...promises, readTemplates(state, dispatch)];
+        }
+
+        // User just logged in and needs to download data from Firebase
         if(state.firebaseAuth.user?.syncing) {
             if(!prevState.firebaseAuth.user) {
                 promises = [...promises, readUserFromFirebase(state, dispatch)];
-                promises = [...promises, readTemplates(state, dispatch)];
 
                 //readTemplates(state, dispatch);
             }

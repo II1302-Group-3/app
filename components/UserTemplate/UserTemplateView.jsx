@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, Image, TouchableOpacity } from 'react-native';
+import { ScrollView, View, Text, Image, TouchableOpacity } from 'react-native';
 import { TextInput } from 'react-native-paper';
 
 export const UserTemplateView = ({ tempDetailPress, templatesData}) => {
@@ -8,9 +8,9 @@ export const UserTemplateView = ({ tempDetailPress, templatesData}) => {
   const filteredPlantNames = templatesData.filter(name =>
     name.plantName.toLowerCase().includes(searchText.toLowerCase())
   );
-  
+
   return (
-    <View>
+    <ScrollView>
         <View style={{margin:'5%',}}>
         <TextInput
         label="Search"
@@ -18,11 +18,11 @@ export const UserTemplateView = ({ tempDetailPress, templatesData}) => {
         onChangeText={text => setSearchText(text)}
       />
     </View>
- 
+
       <View style={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap' }}>
         {filteredPlantNames.map((name, index) => (
           <TouchableOpacity
-              
+
             key={index}
             style={{
               backgroundColor: '#90ee90',
@@ -30,7 +30,7 @@ export const UserTemplateView = ({ tempDetailPress, templatesData}) => {
               padding: '3%',
               margin: '2%',
               elevation: 6,
-              width: '45%', 
+              width: '45%',
               height: 80,
             }}
             onPress={() => tempDetailPress(name.plantName, name.lightLevel, name.moistureLevel)}
@@ -43,8 +43,8 @@ export const UserTemplateView = ({ tempDetailPress, templatesData}) => {
               />
 
             <Text style={{ marginRight: 10 }}>{name.moistureLevel}</Text>
-        
-              
+
+
               <Image
                 source={require('../../assets/BulpIcon.png')}
                 style={{ width: 20, height: 20, marginRight: 6 }}
@@ -54,6 +54,6 @@ export const UserTemplateView = ({ tempDetailPress, templatesData}) => {
           </TouchableOpacity>
         ))}
       </View>
-    </View>
+    </ScrollView>
   );
 };
