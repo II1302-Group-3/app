@@ -128,9 +128,6 @@ async function readGardenFromFirebase(state, dispatch) {
     if(waterLevelLow) {
         console.log(`Dispatched notification (water level low) for garden ${state.garden.serial}`);
         dispatch(setWaterLevelLow());
-
-        // Now that the notification has been seen, it should be reset in the database
-        await database().ref(refs.waterLevelRef).remove();
     }
 
     dispatch(setGardenSyncing(false));
