@@ -1,9 +1,19 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, Image, TouchableOpacity } from 'react-native';
 import { TextInput } from 'react-native-paper';
+import { useIsFocused } from "@react-navigation/native";
+import { useDispatch, useSelector } from 'react-redux';
+import { getTemplates } from '../../store/slices/templateName';
 
-export const BrowseTemplateNameView = ({ plantName, tempDetailPress, plantMoisture, plantLight, templatesData, likePath, setLikePath }) => {
+export const BrowseTemplateNameView = ({ plantName, tempDetailPress, plantMoisture, plantLight, likePath, setLikePath }) => {
   const [searchText, setSearchText] = useState('');
+  const dispatch = useDispatch();
+	const isFocused = useIsFocused();
+	useEffect(() => {
+		console.log("called")
+    dispatch(getTemplates());
+	}, [isFocused])
+  const templatesData = useSelector(state => state.templateName.templatesData);
 
   const filteredPlantNames = Object.keys(templatesData).map(a => templatesData[a]).filter(name => 
     name.plantName.toLowerCase().includes(searchText.toLowerCase())
@@ -39,7 +49,6 @@ export const BrowseTemplateNameView = ({ plantName, tempDetailPress, plantMoistu
             <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
               <Text style={{ fontWeight: 'bold', fontSize: 25 }}>{name.plantName}</Text>
               <View style={{ flexDirection: 'row' }}>
-                {console.log(name)}
                 <Text style={{ marginRight: 5}}>{ name.likedBy?.length ?? 0 }</Text>
                 <Image
                 source={require('../../assets/filled_heart.png')}

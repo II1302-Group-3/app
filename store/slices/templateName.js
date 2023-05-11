@@ -2,29 +2,38 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import database from '@react-native-firebase/database';
 
 const initialState = {
-  templatesData: null,
-  templateDataArray: null,
+  templatesData: [],
+  templateDataArray: [],
   moisture: null,
   light: null,
   name: null,
   likes: null,
-  likedByUser: null,
 
   selectedTemplate: {
     name: "",
     light: 0,
     moisture: 0,
-    id: ""
+    id: "",
+    hasLiked: null
   }
 }
 
-export const getLikes = createAsyncThunk('templateName/getLikes', async (_, {getState, dispatch}) => {
+export const getTemplates = createAsyncThunk('templateName/getTemplates', async(_, {getState, dispatch}) => {
+  const state = getState();
+  const ref = `templates`;
+  const templateData = (await database().ref(ref).once('value')).val()
+
+  return templateData;
+})
+
+export const alreadyLiked = createAsyncThunk('templateName/alreadyLiked', async(_, {getState}) => {
   const state = getState();
   const ref = `templates/${state.templateName.selectedTemplate.id}/likedBy`;
   const snapshot = await database().ref(ref).once("value");
   const likedBy = snapshot.val()
+  const hasLiked = !!likedBy?.includes(state.firebaseAuth.user.uid);
 
-  return {likes: likedBy.length, likedByUser: !!likedBy?.includes(state.firebaseAuth.user.uid)}
+  return hasLiked;
 })
 
 export const setLiked = createAsyncThunk('templateName/setLiked', async({isFilled}, {getState, dispatch}) => {
@@ -63,6 +72,9 @@ export const templateName = createSlice({
       state.likes = payload;
       console.log(state.likes)
     },
+    setHasLiked: (state, { payload }) => {
+      state.selectedTemplate.hasLiked = payload;
+    },
     setSelectedTemplate: (state, { payload }) => {
       console.log(payload)
       state.selectedTemplate.name = payload.plantName;
@@ -72,12 +84,16 @@ export const templateName = createSlice({
     }
   },
   extraReducers: builder => {
-    builder.addCase(getLikes.fulfilled, (state, { payload }) => {
-      state.likes = payload.likes
-      state
+    builder.addCase(alreadyLiked.fulfilled, (state, { payload }) => {
+      console.log("hasLiked?")
+      console.log(payload)
+      state.selectedTemplate.hasLiked = payload;
+    })
+    builder.addCase(getTemplates.fulfilled, (state, { payload }) => {
+      state.templatesData = payload;
     })
   }
 });
 
 
-export const { setTemplateName, setTemplateData, setSelectedTemplate, setLikes } = templateName.actions;
+export const { setTemplateName, setTemplateData, setSelectedTemplate, setLikes, setHasLiked } = templateName.actions;

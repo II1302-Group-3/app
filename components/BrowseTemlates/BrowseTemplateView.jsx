@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { View, Text, Image, TouchableOpacity } from 'react-native';
 import { EnvironmentSettingsSliderView } from '../Garden/EnvironmentSettings/EnvironmentSettingsSliderView';
 import { EnvironmentSettingsSwitch } from '../Garden/EnvironmentSettings/EnvironmentSettingsSwitchView';
@@ -13,12 +13,13 @@ const bulbIcon = require('../../assets/BulpIcon.png'); // Link to bulbIcon for t
 export const BrowseTemplateView = ({
 	setAdvancedInfo,
 	advancedInfo,
-	name,
     light,
 	moisture,
     plantName,
 	isFilled,
 	onPress,
+	applyTemplate,
+	gardens,
 
 }) => {
 	
@@ -33,7 +34,7 @@ export const BrowseTemplateView = ({
     return(
         <View style={{paddingHorizontal: 20, paddingTop: 30, paddingBottom: 30 + headerHeight, justifyContent: "center", flexDirection: "column", height: "100%" }}>
             <View style={{ justifyContent: 'space-between', flexDirection: 'row' }}>
-                <Text variant="headlineMedium" style={{fontWeight: "bold", marginBottom: 30}} >Hello "{name}"</Text>
+                <Text variant="headlineMedium" style={{fontWeight: "bold", marginBottom: 30}} >Hello "{plantName}"</Text>
 				<TouchableOpacity onPress={() => onPress(!isFilled)}>
 					<Image 
 						source={isFilled ? filledHeart : unfilledHeart}
@@ -48,7 +49,7 @@ export const BrowseTemplateView = ({
 					title={ moistureTitle } 
 					isDisabled ={true}
 					sliderIcon={ waterDropIcon } 
-                    nutrition={ 600 }
+                    nutrition={ moisture}
 					advancedInfo={ advancedInfo }
 				/>
 			</View>
@@ -56,7 +57,7 @@ export const BrowseTemplateView = ({
 				title={ lightTitle } 
 				isDisabled ={true}
 				sliderIcon={ bulbIcon } 
-                nutrition={ 1000 }
+                nutrition={ light }
 				advancedInfo={ advancedInfo }
 			/>
 
@@ -68,7 +69,14 @@ export const BrowseTemplateView = ({
 				/>
 			</View>
 
+
+			{gardens.length != 0 &&	<Button mode="contained" style={{marginBottom: 10}} onPress={() => applyTemplate( )}>Apply Templates</Button>}
+
+
+
 		</View>
 
     )
+
+
 }

@@ -26,8 +26,8 @@ export const EnvironmentSettingsSliderView = ({
                 <View style={{paddingHorizontal: 25}}>
                     <Slider
                         style={{width: "100%", height: 60}}
-                        minimumValue={200} // min value of the slider 
-                        maximumValue={1000} // Max value of the slider 
+                        minimumValue={0} // min value of the slider 
+                        maximumValue={800} // Max value of the slider 
                         disabled = {isDisabled}
                         onValueChange={(value) => onSlide(value)} // We give waterLevel the value when it changes 
                         value={nutrition}

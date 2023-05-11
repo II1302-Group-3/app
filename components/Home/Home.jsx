@@ -31,6 +31,6 @@ export const Home = ({ navigation }) => {
 
     return (
         displayNameRef,
-        <HomeView signOut={signOut} gardens={gardens} addNewGarden={addNewGarden} openGarden={openGarden} addNewTemplate={addNewTemplate} displayName={displayName} navigation={navigation}  browseTemplate={browseTemplate}/>
+        <HomeView signOut={signOut} gardens={gardens} addNewGarden={addNewGarden} openGarden={openGarden} addNewTemplate={addNewTemplate} displayName={displayName} navigation={navigation}/>
     );
 }
