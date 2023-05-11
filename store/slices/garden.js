@@ -1,5 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import * as firebaseAuth from "./firebaseAuth";
+import auth from '@react-native-firebase/auth';
 import database from '@react-native-firebase/database';
 
 const initialActiveState = {
@@ -129,8 +130,13 @@ export async function addGarden(userToken, gardenSerial, gardenNickname, dispatc
 
     try {
         if(result === "success") {
-            const online = ((Date.now() / 1000) - await database.ref(`garden/${serial}/last_sync_time`).get() ?? 0) < 5 * 60;
-            const waterLevelLow = await database.ref(`garden/${serial}/water_level_low`).get() ?? false;
+            // refresh token
+            await auth().currentUser.getIdToken(true);
+
+            let online = false; 
+            await database().ref(`garden/${gardenSerial}/last_sync_time`).once("value", val => { online = (Date.now() / 1000) - val.val() < 5 * 60 });
+            let waterLevelLow = false;
+            await database().ref(`garden/${gardenSerial}/water_level_low`).once("value", val => { waterLevelLow = val.val() == true });
 
             dispatch(firebaseAuth.addGarden({serial: gardenSerial, nickname: gardenNickname, online, waterLevelLow}));
         }
@@ -149,7 +155,7 @@ export async function addGarden(userToken, gardenSerial, gardenNickname, dispatc
         }
     }
     finally {
-        dispatch(firebaseAuth.refreshToken());
+        dispatch(firebaseAuth.reloadToken());
     }
 }
 
@@ -201,6 +207,9 @@ export async function removeGarden(userToken, gardenSerial, dispatch) {
 
     try {
         if(result === "success") {
+            // refresh token
+            await auth().currentUser.getIdToken(true);
+
             dispatch(firebaseAuth.removeGarden(gardenSerial));
         }
         else {
@@ -215,6 +224,6 @@ export async function removeGarden(userToken, gardenSerial, dispatch) {
         }
     }
     finally {
-        dispatch(firebaseAuth.refreshToken());
+        dispatch(firebaseAuth.reloadToken());
     }
 }

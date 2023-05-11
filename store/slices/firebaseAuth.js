@@ -150,8 +150,8 @@ export const logout = () => (dispatch, _) => {
 }
 
 // This is used by addGarden and removeGarden to refresh the ID token, which contains the user's collection of gardens
-export const refreshToken = () => (dispatch, state) => {
-    auth().currentUser.getIdToken(true)
+export const reloadToken = () => (dispatch, state) => {
+    auth().currentUser.getIdToken(false)
         .then(token => dispatch(firebaseAuth.actions.setUserToken(token)))
         .catch(error => Alert.alert("Failed to refresh ID token", error.message));
 }

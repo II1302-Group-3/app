@@ -130,7 +130,7 @@ async function readGardenFromFirebase(state, dispatch) {
 
 async function readUserFromFirebase(state, dispatch) {
     console.log("Reading user from Firebase...");
-    
+
     const refs = getUserRefs(state.firebaseAuth.user.uid);
     const displayName = (await database().ref(refs.displayNameRef).once("value")).val();
 
