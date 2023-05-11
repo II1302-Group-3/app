@@ -7,22 +7,22 @@ import { Alert } from 'react-native';
 export const DetailsTemp = ({route }) => {
     const dispatch = useDispatch();
 
-    
+
 
     const { templateData } = route.params;
     const light = templateData.lightLevel;
-    const moisture = templateData.moistureLevel    
+    const moisture = templateData.moistureLevel
     const [advancedInfo, setAdvancedInfo] = useState(false);
     const serial = useSelector(state => state.garden?.serial ?? "");
     const nickname = useSelector(state => state.garden?.nickname ?? "");
 
 
     const applyTemplate = () => {console.log('applyTemplate pressed');
-                                 dispatch(setLight(light))
-                                dispatch(setMoisture(moisture)); 
-                                Alert.alert('Template applied successfully!'); 
+                                dispatch(setLight(light))
+                                dispatch(setMoisture(moisture));
+                                Alert.alert('Template applied successfully!');
                                 }
-    
+
     const gardens = useSelector(state => {
         return [...state.firebaseAuth.user?.claimedGardens].map(serial => {
         const nickname = state.firebaseAuth.user.claimedGardenNames[serial] ?? serial;
