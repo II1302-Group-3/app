@@ -28,6 +28,7 @@ export const Home = ({ navigation }) => {
     }
 
     const addNewTemplate = () => navigation.navigate("AddTemplate")
+    const myTemplates = () => navigation.navigate("UserTemplate")
 
     if(isSyncing) {
         return <Spinner></Spinner>;
@@ -35,6 +36,7 @@ export const Home = ({ navigation }) => {
 
     return (
         <HomeView
+            myTemplates={myTemplates}
             signOut={signOut}
             gardens={gardens}
             addNewGarden={addNewGarden}

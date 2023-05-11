@@ -2,7 +2,8 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
     templatesData: [], 
-    templateDataArray: [],
+    userTemplate: [],
+    allTemplates:[], 
 
 }
 
@@ -12,15 +13,14 @@ export const templateName = createSlice({
     initialState,
     reducers: {
       setTemplateName: (state, { payload }) => {
-        console.log(payload)
         state.templatesData = payload;
       },
-      setTemplateData: (state, { payload }) => {
-        console.log("gello2")
-        state.templateDataArray = payload;
+      setUserTemplate: (state, { payload }) => {
+        state.userTemplate = payload.userTemplate;
+        state.allTemplates = payload.templateData; 
       }
     }
   });
   
 
-export const { setTemplateName, setTemplateData } = templateName.actions;
+export const { setTemplateName, setUserTemplate } = templateName.actions;

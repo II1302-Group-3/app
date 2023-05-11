@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { View, Text, Image, TouchableOpacity } from 'react-native';
 import { TextInput } from 'react-native-paper';
 
-export const userTemplateView = ({ plantName, tempDetailPress,  plantMoisture, plantLight, templatesData}) => {
+export const UserTemplateView = ({ tempDetailPress, templatesData}) => {
   const [searchText, setSearchText] = useState('');
 
   const filteredPlantNames = templatesData.filter(name =>
