@@ -11,10 +11,10 @@ const initialState = {
 
 export const saveTemplate = createAsyncThunk(
     'templateValue/saveTemplate',
-    async({tempLight, tempmoisture, tempName, uid}) => {
+    async({tempLight, tempmoisture, tempName, uid, date}) => {
         const templateRef = 'templates'
         const newChildRef = database().ref(templateRef).push();
-        newChildRef.set({plantName: tempName, lightLevel: tempLight, moistureLevel: tempmoisture });
+        newChildRef.set({plantName: tempName, lightLevel: tempLight, moistureLevel: tempmoisture, date});
         const templateKey = newChildRef.key;
         const userTemplateRef =  `users/${uid}/` + 'templates';
         database().ref(userTemplateRef).push().set({templateKey: templateKey});

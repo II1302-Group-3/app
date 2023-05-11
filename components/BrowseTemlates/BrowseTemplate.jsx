@@ -8,6 +8,14 @@ export const BrowseTemplate = ({ navigation }) => {
     //const templatesName = useSelector(state => state.templateName.templatesName);
     const dispatch = useDispatch();
 
+    const sortByRecent = templatesData => {
+        return Object.values(templatesData).sort((template1, template2) => template1?.date ?? 0 < template2?.date ?? 0);
+    }
+
+    const sortByLikes = templatesData => {
+        return Object.values(templatesData).sort((template1, template2) => (template2?.likedBy?.length ?? 0) - (template1?.likedBy?.length ?? 0));
+    }
+
     // useEffect(() => {
         
     // }, [])
@@ -32,7 +40,7 @@ export const BrowseTemplate = ({ navigation }) => {
 
 
     return (
-        <BrowseTemplateNameView tempDetailPress={tempDetailPress} />
+        <BrowseTemplateNameView sortByRecent={sortByRecent} sortByLikes={sortByLikes} tempDetailPress={tempDetailPress} />
     )
 
 }
