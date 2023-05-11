@@ -23,7 +23,7 @@ export const garden = createSlice({
 
         setNickname: (state, { payload }) => { state.nickname = payload },
         setMoisture: (state, { payload }) => { 
-            console.log(payload)
+            console.log(payload, 8)
             state.moisture = payload },
         setLight: (state, { payload }) => { state.light = payload },
 

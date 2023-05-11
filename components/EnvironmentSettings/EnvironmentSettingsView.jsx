@@ -14,7 +14,7 @@ export const EnvironmentSettingsView = ({
 	advancedInfo,
 	light,
 	moisture,
-	
+	browseTemplate,
 	canDeleteGarden,
 	deleteGarden
 }) => {
@@ -49,7 +49,10 @@ export const EnvironmentSettingsView = ({
 					onToggle={ setAdvancedInfo }
 					active={ advancedInfo }
 				/>
-				<Button mode="contained" style={{marginTop: 25}} onPress={deleteGarden} disabled={!canDeleteGarden}>Delete garden from collection</Button>
+
+				<Button mode="contained" style={{marginTop: 20}} onPress={() => browseTemplate()}>Browse Templates</Button>
+
+				<Button mode="contained" style={{marginTop: 20}} onPress={deleteGarden} disabled={!canDeleteGarden}>Delete garden from collection</Button>
 			</View>
 		</View>
     )

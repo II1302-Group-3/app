@@ -15,13 +15,13 @@ export const DetailsTemp = ({route }) => {
     const [advancedInfo, setAdvancedInfo] = useState(false);
     const serial = useSelector(state => state.garden?.serial ?? "");
     const nickname = useSelector(state => state.garden?.nickname ?? "");
+    console.log(serial, nickname, '2')
 
-    useEffect(() => {
-        return () => dispatch(resetGarden());
-    }, [])
 
     const applyTemplate = () => {console.log('applyTemplate pressed');
-                                dispatch(selectGarden({serial: serial, nickname: nickname}));
+    
+                                console.log(num, name)
+
                                  console.log(moisture, light)
                                  dispatch(setLight(light))
                                 dispatch(setMoisture(moisture)); 
@@ -38,6 +38,8 @@ export const DetailsTemp = ({route }) => {
 
     return(
         <BrowseTemplateView
+            serial={serial}
+            nickname={nickname}
             setAdvancedInfo={ setAdvancedInfo }
             advancedInfo={ advancedInfo }
             light={light  }

@@ -88,6 +88,7 @@ export function enablePersistence(store) {
 
 function getGardenRefs(serial) {
     const garden = `garden/${serial}/`;
+    console.log(garden)
 
     const nicknameRef = garden + 'nickname';
     const moistureRef = garden + 'target_moisture';
