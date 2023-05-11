@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { setMoisture, setLight, removeGarden, resetWaterLevelLow } from '../../../store/slices/garden';
+import { setMoisture, setLight, removeGarden } from '../../../store/slices/garden';
 import { EnvironmentSettingsView } from './EnvironmentSettingsView';
 import { Alert } from 'react-native';
 import { Spinner } from '../../Spinner';
@@ -26,8 +26,6 @@ export const EnvironmentSettings = ({ navigation }) => {
                 `Warning for ${nickname}`,
                 "The water level in the tank is low. Refill the tank as soon as possible."
             );
-
-            dispatch(resetWaterLevelLow());
         }
     }, [waterLevelLow, nickname]);
 

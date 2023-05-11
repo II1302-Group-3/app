@@ -14,7 +14,9 @@ export const Home = ({ navigation }) => {
         return [...state.firebaseAuth.user?.claimedGardens]
             .map(serial => {
                 const nickname = state.firebaseAuth.user.claimedGardenNames[serial] ?? serial;
-                return {serial, nickname};
+                const online = state.firebaseAuth.user.claimedGardensOnline[serial] ?? false;
+                const waterLevelLow = state.firebaseAuth.user.claimedGardensWaterLevelLow[serial] ?? false;
+                return {serial, nickname, online, waterLevelLow};
             })
             .sort((a, b) => a.nickname.localeCompare(b.nickname));
     });
@@ -23,7 +25,7 @@ export const Home = ({ navigation }) => {
 
     const addNewGarden = () => navigation.navigate("AddGarden");
     const openGarden = garden => {
-        dispatch(selectGarden({serial: garden.serial, nickname: garden.nickname}));
+        dispatch(selectGarden({serial: garden.serial, nickname: garden.nickname, waterLevelLow: garden.waterLevelLow}));
         navigation.navigate("Garden");
     }
 

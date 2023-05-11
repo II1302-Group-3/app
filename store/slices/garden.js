@@ -12,6 +12,7 @@ const initialActiveState = {
     moisture: 50,
 
     waterLevelLow: false,
+
     statistics: {
         light: {
             error: null,
@@ -43,18 +44,15 @@ export const garden = createSlice({
     name: 'garden',
     initialState: null,
     reducers: {
-        selectGarden: (_, { payload }) => { return {...initialActiveState, serial: payload.serial, nickname: payload.nickname} },
+        selectGarden: (_, { payload }) => { return {...initialActiveState, serial: payload.serial, nickname: payload.nickname, waterLevelLow: payload.waterLevelLow} },
         resetGarden: () => null,
         setGardenSyncing: (state, { payload }) => { state.syncing = payload },
 
-        setNickname: (state, { payload }) => { state.nickname = payload },
         setMoisture: (state, { payload }) => { 
             console.log(payload, 8)
             state.moisture = payload },
         setLight: (state, { payload }) => { state.light = payload },
 
-        setWaterLevelLow: state => { state.waterLevelLow = true },
-        resetWaterLevelLow: state => { state.waterLevelLow = false },
         resetError: state => {
             state.statistics.light.error = null;
             state.statistics.moisture.error = null;
@@ -117,11 +115,8 @@ export const {
     resetGarden,
     resetError, 
     setGardenSyncing, 
-    setNickname, 
     setMoisture, 
-    setLight,
-    setWaterLevelLow, 
-    resetWaterLevelLow } = garden.actions;
+    setLight } = garden.actions;
 
 export async function addGarden(userToken, gardenSerial, gardenNickname, dispatch) {
     const params = new URLSearchParams({
@@ -134,7 +129,10 @@ export async function addGarden(userToken, gardenSerial, gardenNickname, dispatc
 
     try {
         if(result === "success") {
-            dispatch(firebaseAuth.addGarden({serial: gardenSerial, nickname: gardenNickname}));
+            const online = ((Date.now() / 1000) - await database.ref(`garden/${serial}/last_sync_time`).get() ?? 0) < 5 * 60;
+            const waterLevelLow = await database.ref(`garden/${serial}/water_level_low`).get() ?? false;
+
+            dispatch(firebaseAuth.addGarden({serial: gardenSerial, nickname: gardenNickname, online, waterLevelLow}));
         }
         else {
             const errorCodeToMessage = {

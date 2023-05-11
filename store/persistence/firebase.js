@@ -3,16 +3,16 @@ import { Alert } from "react-native";
 
 import {
     setGardenSyncing,
-    setNickname,
     setMoisture,
     setLight,
-    setWaterLevelLow
 } from "../slices/garden";
 
 import {
     setDisplayName,
     setUserSyncing,
-    addGardenNameMapping
+    addGardenNameMapping,
+    addGardenOnlineStatus,
+    addGardenWaterLevelLow
 } from '../slices/firebaseAuth';
 
 import {
@@ -96,8 +96,9 @@ function getGardenRefs(serial) {
     const moistureRef = garden + 'target_moisture';
     const lightRef = garden + 'target_light_level';
     const waterLevelRef = garden + 'water_level_low';
+    const syncTimeRef = garden + 'last_sync_time';
 
-    return { nicknameRef, moistureRef, lightRef, waterLevelRef };
+    return { nicknameRef, moistureRef, lightRef, waterLevelRef, syncTimeRef };
 }
 
 function getUserRefs(uid) {
@@ -114,7 +115,6 @@ async function readGardenFromFirebase(state, dispatch) {
 
     const moisture = (await database().ref(refs.moistureRef).once("value")).val();
     const light = (await database().ref(refs.lightRef).once("value")).val();
-    const waterLevelLow = (await database().ref(refs.waterLevelRef).once("value")).val();
 
     if(moisture) {
         console.log(`Dispatched moisture for garden ${state.garden.serial}: ${moisture}`);
@@ -125,15 +125,12 @@ async function readGardenFromFirebase(state, dispatch) {
         dispatch(setLight(light));
     }
 
-    if(waterLevelLow) {
-        console.log(`Dispatched notification (water level low) for garden ${state.garden.serial}`);
-        dispatch(setWaterLevelLow());
-    }
-
     dispatch(setGardenSyncing(false));
 }
 
 async function readUserFromFirebase(state, dispatch) {
+    console.log("Reading user from Firebase...");
+    
     const refs = getUserRefs(state.firebaseAuth.user.uid);
     const displayName = (await database().ref(refs.displayNameRef).once("value")).val();
 
@@ -144,12 +141,20 @@ async function readUserFromFirebase(state, dispatch) {
 
     for(const serial of state.firebaseAuth.user.claimedGardens) {
         const refs = getGardenRefs(serial);
-        const nickname = (await database().ref(refs.nicknameRef).once("value")).val();
+        const nickname = (await database().ref(refs.nicknameRef).once("value")).val() ?? "";
 
-        if(nickname) {
-            console.log(`Dispatched name mapping for user${state.firebaseAuth.user.uid} garden ${serial}: ${nickname}`);
-            dispatch(addGardenNameMapping({serial, nickname}));
-        }
+        console.log(`Dispatched name mapping for user ${state.firebaseAuth.user.uid} garden ${serial}: ${nickname}`);
+        dispatch(addGardenNameMapping({serial, nickname}));
+
+        const lastSyncTime = (await database().ref(refs.syncTimeRef).once("value")).val() ?? 0;
+        const online = (Date.now() / 1000) - lastSyncTime < 5 * 60;
+
+        console.log(`Dispatched online status for user ${state.firebaseAuth.user.uid} garden ${serial}: ${online}`);
+        dispatch(addGardenOnlineStatus({serial, online}));
+
+        const waterLevelLow = (await database().ref(refs.waterLevelRef).once("value")).val() ?? false;
+        console.log(`Dispatched water tank status for user ${state.firebaseAuth.user.uid} garden ${serial}: low = ${waterLevelLow}`);
+        dispatch(addGardenWaterLevelLow({serial, waterLevelLow}));
     }
 
     dispatch(setUserSyncing(false));
