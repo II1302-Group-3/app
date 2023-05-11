@@ -15,17 +15,11 @@ export const DetailsTemp = ({route }) => {
     const [advancedInfo, setAdvancedInfo] = useState(false);
     const serial = useSelector(state => state.garden?.serial ?? "");
     const nickname = useSelector(state => state.garden?.nickname ?? "");
-    console.log(serial, nickname, '2')
 
 
     const applyTemplate = () => {console.log('applyTemplate pressed');
-    
-                                console.log(num, name)
-
-                                 console.log(moisture, light)
                                  dispatch(setLight(light))
                                 dispatch(setMoisture(moisture)); 
-                                console.log(moisture, light)
                                 Alert.alert('Template applied successfully!'); 
                                 }
     

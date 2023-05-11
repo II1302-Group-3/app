@@ -21,7 +21,6 @@ export const Home = ({ navigation }) => {
     const signOut = () => dispatch(logout());
 
     const addNewGarden = () => navigation.navigate("AddGarden");
-    const browseTemplate = () => navigation.navigate("BrowseTemplate")
     const openGarden = garden => {
         dispatch(selectGarden({serial: garden.serial, nickname: garden.nickname}));
         navigation.navigate("EnvironmentSettings");
