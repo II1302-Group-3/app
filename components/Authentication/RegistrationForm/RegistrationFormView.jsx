@@ -9,6 +9,9 @@ export const RegistrationFormView = ({
     email,
     password,
     confirmPassword,
+    signUpEnabled,
+    backEnabled,
+    loading,
     setDisplayName,
     setEmail,
     setPassword,
@@ -53,10 +56,10 @@ export const RegistrationFormView = ({
                     autoComplete="new-password"
                 />
                 <View style={{marginTop: 25}}>
-                    <Button mode="contained" style={{marginBottom: 10}} onPress={() => signUp(displayName, email, password, confirmPassword)}>
+                    <Button mode="contained" style={{marginBottom: 10}} disabled={!signUpEnabled} loading={loading} onPress={signUp}>
                         Sign Up
                     </Button>
-                    <Button mode="contained-tonal" onPress={() => navigation.goBack()}>
+                    <Button mode="contained-tonal" disabled={!backEnabled} onPress={() => navigation.goBack()}>
                         Go Back
                     </Button>
                 </View>
