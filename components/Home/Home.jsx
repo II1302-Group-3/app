@@ -2,13 +2,14 @@ import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { HomeView } from './HomeView';
 import { logout } from '../../store/slices/firebaseAuth';
-import { displayNameRef } from '../../store/persistence/firebase';
 import { selectGarden } from '../../store/slices/garden';
+import { Spinner } from '../Spinner';
 
 export const Home = ({ navigation }) => {
     const dispatch = useDispatch();
 
-    const displayName = useSelector(state => state.firebaseAuth.user.displayName);
+    const isSyncing = useSelector(state => state.firebaseAuth.user?.syncing ?? true);
+    const displayName = useSelector(state => state.firebaseAuth.user?.displayName ?? "");
     const gardens = useSelector(state => {
         return [...state.firebaseAuth.user?.claimedGardens]
             .map(serial => {
@@ -21,16 +22,28 @@ export const Home = ({ navigation }) => {
     const signOut = () => dispatch(logout());
 
     const addNewGarden = () => navigation.navigate("AddGarden");
-    const browseTemplate = () => navigation.navigate("BrowseTemplate")
     const openGarden = garden => {
         dispatch(selectGarden({serial: garden.serial, nickname: garden.nickname}));
         navigation.navigate("Garden");
     }
 
     const addNewTemplate = () => navigation.navigate("AddTemplate")
+    const myTemplates = () => navigation.navigate("UserTemplate")
+
+    if(isSyncing) {
+        return <Spinner></Spinner>;
+    }
 
     return (
-        displayNameRef,
-        <HomeView signOut={signOut} gardens={gardens} addNewGarden={addNewGarden} openGarden={openGarden} addNewTemplate={addNewTemplate} displayName={displayName} navigation={navigation}/>
+        <HomeView
+            myTemplates={myTemplates}
+            signOut={signOut}
+            gardens={gardens}
+            addNewGarden={addNewGarden}
+            openGarden={openGarden}
+            addNewTemplate={addNewTemplate}
+            displayName={displayName}
+            navigation={navigation}
+        />
     );
 }

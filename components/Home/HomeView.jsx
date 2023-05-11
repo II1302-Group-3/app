@@ -52,7 +52,7 @@ const NoGardens = () => {
     );
 }
 
-export const HomeView = ({signOut, displayName, gardens, addNewGarden, openGarden, addNewTemplate, browseTemplate}) => {
+export const HomeView = ({signOut, displayName, gardens, addNewGarden, openGarden, addNewTemplate, myTemplates}) => {
     const headerHeight = useHeaderHeight();
 
     return(
@@ -64,6 +64,7 @@ export const HomeView = ({signOut, displayName, gardens, addNewGarden, openGarde
             </View>
             <View style={{flexGrow: 0}}>
                 <Button mode="contained" style={{marginBottom: 10}} onPress={() => addNewGarden()}>Add a new Green Garden</Button>
+                <Button mode="contained" style={{marginBottom: 10}} onPress={() => myTemplates()}>View my templates</Button>
                 <Button mode="contained" style={{marginBottom: 10}} onPress={() => addNewTemplate()}>Create a plant template</Button>
                 <Button mode="contained-tonal" style={{}} onPress={() => signOut()}>Sign out</Button>
             </View>

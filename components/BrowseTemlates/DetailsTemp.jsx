@@ -28,8 +28,7 @@ export const DetailsTemp = () => {
     }
 
     const applyTemplate = () => {console.log('applyTemplate pressed');
-
-                                 dispatch(setLight(light))
+                                dispatch(setLight(light))
                                 dispatch(setMoisture(moisture));
                                 Alert.alert('Template applied successfully!');
                                 }

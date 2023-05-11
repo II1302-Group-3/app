@@ -13,7 +13,7 @@ import { AddGarden } from './components/AddGarden/AddGarden';
 import { AddTemplate } from './components/Template/AddTemplate';
 import { BrowseTemplate } from './components/BrowseTemlates/BrowseTemplate';
 import { DetailsTemp } from './components/BrowseTemlates/DetailsTemp';
-
+import { UserTemplate } from './components/UserTemplate/UserTemplate';
 
 import {
 	DarkTheme as NavigationDarkTheme,
@@ -21,8 +21,7 @@ import {
   } from '@react-navigation/native';
 import { GardenView } from './components/Garden/GardenView';
 import { Statistics } from './components/Garden/Statistics/Statistics';
-import { StatisticsView } from './components/Garden/Statistics/StatisticsView';
-// import { QrScanner } from './components/AddGarden/QrScanner';
+import { QrScanner } from './components/AddGarden/QrScanner';
 import { lightGreenTheme, darkGreenTheme } from './theme';
 
 function App() {
@@ -52,10 +51,11 @@ function App() {
 						<Stack.Screen name="Statistics" component={ Statistics } />
 						<Stack.Screen name="EnvironmentSettings" options={{title: ""}} component={ EnvironmentSettings } />
 						<Stack.Screen name="AddGarden" options={{ title: "Add Garden" }} component={ AddGarden } />
+						<Stack.Screen name="UserTemplate" options={{ title: "My Templates" }} component={ UserTemplate } />
 						<Stack.Screen name="BrowseTemplate" options={{ title: "Browse Template" }} component={ BrowseTemplate } />
 						<Stack.Screen name="DetailsTemp" options={{ title: "Browse Template View" }} component={ DetailsTemp } />
 						<Stack.Screen name="AddTemplate" options={{ title: "Add Template" }} component={ AddTemplate } />
-						{/* <Stack.Screen name="QrScanner" options={qrOptions} component={ QrScanner } /> */}
+						<Stack.Screen name="QrScanner" options={qrOptions} component={ QrScanner } />
 						</>
 					) : (
 						<>

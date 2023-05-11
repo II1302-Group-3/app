@@ -16,34 +16,28 @@ import {
 } from '../slices/firebaseAuth';
 
 import {
-    setTemplateName
+    setTemplateName,
+    setUserTemplate
 } from "../slices/templateName";
 
 
 async function readTemplates(state, dispatch) {
-    // const refs = getUserRefs(state.firebaseAuth.user.uid);
-    // console.log("read template")
-    // const templateData = (await database().ref(refs.templateRef).once('value')).val()
-    // const plantNames = Object.values(templateData).map(item => item);
+    const  refs = getUserRefs(state.firebaseAuth.user.uid);
+    console.log("read template")
+    const templateData = (await database().ref(refs.templateRef).once('value')).val() ?? {};
+    const plantNames = Object.values(templateData).map(item => item);
+    if (templateData) {
+        dispatch(setTemplateName(plantNames))
+    }
 
-    // if (templateData) {
-    //     console.log(plantNames)
-    //     console.log("whaat")
-    //     console.log(templateData)
-    //     dispatch(setTemplateName(templateData))
-    // }
-    
-/*
-    const {userTemplateRef} = getUserRefs(state.firebaseAuth.user.uid);
+    const userTemplates = (await database().ref(refs.userTemplateRef).once('value')).val() ?? {};
+    const userTemplate = Object.values(userTemplates).map(item => item.templateKey);
 
-    database().ref(userTemplateRef).on('value', (snapshot) => {
-        console.log("1" + userTemplateRef)
-        snapshot.forEach((childSnapshot) => {
-            const templateKey2 = childSnapshot.key;
-            const templateData2 = childSnapshot.val();
-            console.log(templateKey2, templateData2);
-        });
-    }) */
+    if (userTemplate) {
+        dispatch(setUserTemplate({userTemplate, templateData} ))
+    }
+
+
 }
 
 export function enablePersistence(store) {
@@ -56,6 +50,7 @@ export function enablePersistence(store) {
         const state = store.getState();
         let promises = [];
 
+        // User selected new garden
         if(state.garden?.syncing) {
             if(!prevState.garden) {
                 promises = [...promises, readGardenFromFirebase(state, dispatch)];
@@ -65,10 +60,15 @@ export function enablePersistence(store) {
             syncGardenToFirebase(state, prevState);
         }
 
+        // User just logged in
+        if(state.firebaseAuth.user && !prevState.firebaseAuth.user) {
+            promises = [...promises, readTemplates(state, dispatch)];
+        }
+
+        // User just logged in and needs to download data from Firebase
         if(state.firebaseAuth.user?.syncing) {
             if(!prevState.firebaseAuth.user) {
                 promises = [...promises, readUserFromFirebase(state, dispatch)];
-                promises = [...promises, readTemplates(state, dispatch)];
 
                 //readTemplates(state, dispatch);
             }

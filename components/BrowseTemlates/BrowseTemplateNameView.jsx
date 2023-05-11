@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, Image, TouchableOpacity, ScrollView } from 'react-native';
+import { ScrollView, View, Text, Image, TouchableOpacity } from 'react-native';
 import { TextInput, SegmentedButtons } from 'react-native-paper';
 import { useIsFocused } from "@react-navigation/native";
 import { useDispatch, useSelector } from 'react-redux';
@@ -10,11 +10,10 @@ export const BrowseTemplateNameView = ({ plantName, tempDetailPress, plantMoistu
   const dispatch = useDispatch();
 	const isFocused = useIsFocused();
 
-	useEffect(() => {
-		console.log("called")
+  useEffect(() => {
+		console.log("called getTemplates")
     dispatch(getTemplates());
 	}, [isFocused])
-
 
   const templatesData = useSelector(state => state.templateName.templatesData);
 
