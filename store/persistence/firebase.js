@@ -16,31 +16,28 @@ import {
 } from '../slices/firebaseAuth';
 
 import {
-    setTemplateName
+    setTemplateName,
+    setUserTemplate
 } from "../slices/templateName";
 
 
 async function readTemplates(state, dispatch) {
     const  refs = getUserRefs(state.firebaseAuth.user.uid);
     console.log("read template")
-    const templateData = (await database().ref(refs.templateRef).once('value')).val()
+    const templateData = (await database().ref(refs.templateRef).once('value')).val() ?? {};
     const plantNames = Object.values(templateData).map(item => item);
-
     if (templateData) {
         dispatch(setTemplateName(plantNames))
     }
-    
-/*
-    const {userTemplateRef} = getUserRefs(state.firebaseAuth.user.uid);
 
-    database().ref(userTemplateRef).on('value', (snapshot) => {
-        console.log("1" + userTemplateRef)
-        snapshot.forEach((childSnapshot) => {
-            const templateKey2 = childSnapshot.key;
-            const templateData2 = childSnapshot.val();
-            console.log(templateKey2, templateData2);
-        });
-    }) */
+    const userTemplates = (await database().ref(refs.userTemplateRef).once('value')).val() ?? {};
+    const userTemplate = Object.values(userTemplates).map(item => item.templateKey);
+
+    if (userTemplate) {
+        dispatch(setUserTemplate({userTemplate, templateData} ))
+    }
+
+
 }
 
 export function enablePersistence(store) {
