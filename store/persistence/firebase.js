@@ -24,7 +24,7 @@ async function readTemplates(state, dispatch) {
     const  refs = getUserRefs(state.firebaseAuth.user.uid);
     console.log("read template")
     const templateData = (await database().ref(refs.templateRef).once('value')).val()
-    const plantNames = Object.values(templateData).map(item => item.plantName);
+    const plantNames = Object.values(templateData).map(item => item);
 
     if (templateData) {
         console.log(plantNames)
@@ -88,6 +88,7 @@ export function enablePersistence(store) {
 
 function getGardenRefs(serial) {
     const garden = `garden/${serial}/`;
+    console.log(garden)
 
     const nicknameRef = garden + 'nickname';
     const moistureRef = garden + 'target_moisture';
