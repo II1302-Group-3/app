@@ -19,7 +19,7 @@ export const RegistrationFormView = ({
     const headerHeight = useHeaderHeight();
 
     return(
-        <View style={{paddingHorizontal: 25, paddingTop: 30, paddingBottom: 30 + headerHeight, justifyContent: "center", flexDirection: "column", height: "100%"}}>
+        <View style={{paddingHorizontal: 25, paddingTop: 0, paddingBottom: 30 + headerHeight, justifyContent: "center", flexDirection: "column", height: "100%"}}>
             <View>
                 <Header />
                 <TextInput
