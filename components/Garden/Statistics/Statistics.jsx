@@ -15,13 +15,23 @@ export const Statistics = () => {
     const [date, setDate] = useState(new Date());
     const [day, setDay] = useState(DAYS[date.getDay()]);
     const [lightXAxis, setLightXAxis] = useState();
-    const [lightData, setLightData] = useState([]);
-    const [moistureData, setMoistureData] = useState([]);
+    const [lightData, setLightData] = useState([0]);
+    const [moistureData, setMoistureData] = useState([0]);
     const [moistureXAxis, setMoistureXAxis] = useState([0]);
+    const [humidityData, setHumidityData] = useState([0]);
+    const [humidityXAxis, setHumidityXAxis] = useState([0]);
+    const [temperatureData, setTemperatureData] = useState([0]);
+    const [temperatureXAxis, setTemperatureXAxis] = useState([0]);
+
     const lightIsLoading = useSelector(state => state.garden.statistics.light.isLoading);
     const moistureIsLoading = useSelector(state => state.garden.statistics.moisture.isLoading);
+    const humidityIsLoading = useSelector(state => state.garden.statistics.humidity.isLoading);
+    const temperatureIsLoading = useSelector(state => state.garden.statistics.temperature.isLoading);
     const lightError = useSelector(state => state.garden.statistics.light.error);
     const moistureError = useSelector(state => state.garden.statistics.moisture.error);
+    const humidityError = useSelector(state => state.garden.statistics.humidity.error);
+    const temperatureError = useSelector(state => state.garden.statistics.temperature.error);
+    
 
     const setNextDay = () => {
         if (day !== 'Sunday') {
@@ -43,16 +53,21 @@ export const Statistics = () => {
         const NUTRITIENT = {
             LIGHT: 10764,
             MOISTURE: 100,
-            HUMIDITY: 0,
-            TEMPERATURE: 0
+            HUMIDITY: 100,
+            TEMPERATURE: 100
         }
 
         // updateAllStatistics()
         updateStatistics(NUTRITIENT.LIGHT, NUTRITIENT_PATHS.LIGHT)
+        updateStatistics(NUTRITIENT.MOISTURE, NUTRITIENT_PATHS.MOISTURE)
+        updateStatistics(NUTRITIENT.HUMIDITY, NUTRITIENT_PATHS.HUMIDITY)
+        updateStatistics(NUTRITIENT.TEMPERATURE, NUTRITIENT_PATHS.TEMPERATURE)
 
-        function updateAllStatistics() {
-            Object.keys(NUTRITIENT).forEach((_, index) => updateStatistics(NUTRITIENT[index]), NUTRITIENT_PATHS[index])
-        }
+        console.log("these are the keys")
+        console.log(Object.keys(NUTRITIENT))
+        // function updateAllStatistics() {
+        //     Object.keys(NUTRITIENT).forEach((_, index) => updateStatistics(NUTRITIENT[index]), NUTRITIENT_PATHS[index])
+        // }
 
         function updateStatistics(nutritient, nutritientPath) {
             dispatch(getStatistics({ nutritientPath, date })).unwrap().then(data => setStatistics(data));
@@ -61,14 +76,22 @@ export const Statistics = () => {
                 let dataSetter;
                 let xAxisSetter;
     
-                switch(nutritient) {
-                    case NUTRITIENT.LIGHT:
+                switch(nutritientPath) {
+                    case NUTRITIENT_PATHS.LIGHT:
                         dataSetter = setLightData;
                         xAxisSetter = setLightXAxis;
                         break;
-                    case NUTRITIENT.MOISTURE:
+                    case NUTRITIENT_PATHS.MOISTURE:
                         dataSetter = setMoistureData;
                         xAxisSetter = setMoistureXAxis;
+                        break;
+                    case NUTRITIENT_PATHS.HUMIDITY:
+                        dataSetter = setHumidityData;
+                        xAxisSetter = setHumidityXAxis;
+                        break;
+                    case NUTRITIENT_PATHS.TEMPERATURE:
+                        dataSetter = setTemperatureData;
+                        xAxisSetter = setTemperatureXAxis;
                         break;
                 }
     
@@ -94,13 +117,23 @@ export const Statistics = () => {
             <StatisticsView
                 lightData={lightData}
                 lightXAxis={lightXAxis}
+                moistureData={moistureData}
+                moistureXAxis={moistureXAxis}
+                humidityData={humidityData}
+                humidityXAxis={humidityXAxis}
+                temperatureData={temperatureData}
+                temperatureXAxis={temperatureXAxis}
                 day={day}
                 setNextDay={setNextDay}
                 setPrevDay={setPrevDay}
                 lightIsLoading={lightIsLoading}
                 moistureIsLoading={moistureIsLoading}
+                humidityIsLoading={humidityIsLoading}
+                temperatureIsLoading={temperatureIsLoading}
                 lightError={lightError}
-                moistureError={moistureError} />
+                moistureError={moistureError}
+                humidityError={humidityError}
+                temperatureError={temperatureError} />
         </View>
     )
 }

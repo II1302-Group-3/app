@@ -20,7 +20,15 @@ const initialActiveState = {
         moisture: {
             error: null,
             isLoading: false
-        }
+        },
+        humidity: {
+            error: null,
+            isLoading: false
+        },
+        temperature: {
+            error: null,
+            isLoading: false
+        },
     }
 };
 
@@ -54,19 +62,52 @@ export const garden = createSlice({
     },
     extraReducers: builder => {
         builder.addCase(getStatistics.fulfilled, (state, { meta }) => {
-            meta.arg.nutritientPath === NUTRITIENT_PATHS.LIGHT ?
-             state.statistics.light.isLoading = false :
-             state.statistics.moisture.isLoading = false;
+            switch(meta.arg.nutritientPath) {
+                case NUTRITIENT_PATHS.LIGHT:
+                    state.statistics.light.isLoading = false;
+                    break;
+                case NUTRITIENT_PATHS.MOISTURE:
+                    state.statistics.moisture.isLoading = false;
+                    break;
+                case NUTRITIENT_PATHS.HUMIDITY:
+                    state.statistics.humidity.isLoading = false;
+                    break;
+                case NUTRITIENT_PATHS.TEMPERATURE:
+                    state.statistics.temperature.isLoading = false;
+                    break;
+            }
         }),
         builder.addCase(getStatistics.pending, (state, { meta }) => {
-            meta.arg.nutritientPath === NUTRITIENT_PATHS.LIGHT ?
-             state.statistics.light.isLoading = true :
-             state.statistics.moisture.isLoading = true;
+            switch(meta.arg.nutritientPath) {
+                case NUTRITIENT_PATHS.LIGHT:
+                    state.statistics.light.isLoading = true;
+                    break;
+                case NUTRITIENT_PATHS.MOISTURE:
+                    state.statistics.moisture.isLoading = true;
+                    break;
+                case NUTRITIENT_PATHS.HUMIDITY:
+                    state.statistics.humidity.isLoading = true;
+                    break;
+                case NUTRITIENT_PATHS.TEMPERATURE:
+                    state.statistics.temperature.isLoading = true;
+                    break;
+            }
         }),
         builder.addCase(getStatistics.rejected, (state, { meta, error }) => {
-            meta.arg.nutritientPath === NUTRITIENT_PATHS.LIGHT ?
-             state.statistics.light.error = error.message :
-             state.statistics.moisture.error = error.message;
+            switch(meta.arg.nutritientPath) {
+                case NUTRITIENT_PATHS.LIGHT:
+                    state.statistics.light.error = error.message;
+                    break;
+                case NUTRITIENT_PATHS.MOISTURE:
+                    state.statistics.moisture.error = error.message;
+                    break;
+                case NUTRITIENT_PATHS.HUMIDITY:
+                    state.statistics.humidity.error = error.message;
+                    break;
+                case NUTRITIENT_PATHS.TEMPERATURE:
+                    state.statistics.temperature.error = error.message;
+                    break;
+            }
         })
     }
 });

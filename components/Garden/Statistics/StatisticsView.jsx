@@ -1,5 +1,5 @@
 import React, { useRef, useEffect } from "react";
-import { View, Dimensions, StyleSheet, Animated } from "react-native";
+import { View, Dimensions, StyleSheet, Animated, ScrollView } from "react-native";
 import { 
     Text,
     Button,
@@ -13,12 +13,20 @@ export const StatisticsView = ({
     lightData,
     moistureXAxis,
     moistureData,
+    humidityXAxis,
+    humidityData,
+    temperatureData,
+    temperatureXAxis,
     setNextDay,
     setPrevDay,
     lightIsLoading,
     moistureIsLoading,
+    humidityIsLoading,
+    temperatureIsLoading,
     lightError,
-    moistureError
+    moistureError,
+    humidityError,
+    temperatureError
 }) => {
     const width = Dimensions.get("window").width;
     const height = 220;
@@ -93,14 +101,24 @@ export const StatisticsView = ({
 
             {legend: 'Moisture', 
             color: chartStyles.moisture.color, 
-            data: [
-                Math.random() * 100,
-                Math.random() * 100,
-                Math.random() * 100
-            ],
+            data: moistureData,
             xAxis: moistureXAxis,
             loading: moistureIsLoading,
-            error: moistureError}
+            error: moistureError},
+
+            {legend: 'Humidity', 
+            color: chartStyles.moisture.color, 
+            data: humidityData,
+            xAxis: humidityXAxis,
+            loading: humidityIsLoading,
+            error: humidityError},
+
+            {legend: 'Temperature', 
+            color: chartStyles.moisture.color, 
+            data: temperatureData,
+            xAxis: temperatureXAxis,
+            loading: temperatureIsLoading,
+            error: temperatureError}
         ];
 
         const Transition = props => {
@@ -138,7 +156,7 @@ export const StatisticsView = ({
                     labels: chart.xAxis,
                     datasets: [
                         {
-                        data: chart.data[0] ? chart.data : [0]
+                        data: chart.data ? chart.data : [0]
                         }
                     ],
                     legend: [chart.legend]
@@ -175,9 +193,9 @@ export const StatisticsView = ({
     }
 
     return(
-        <View>
+        <ScrollView>
             { renderDay() }
             { renderCharts() }
-        </View>
+        </ScrollView>
     )
 }
