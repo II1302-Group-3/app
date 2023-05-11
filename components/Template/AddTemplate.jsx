@@ -1,7 +1,7 @@
 import { TemplateFormView } from './TemplateFormView';
 import React, { useReducer, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import {saveTemplate} from '../../store/slices/templateValue'
+import {saveTemplate} from '../../store/slices/templateName'
 
 export const AddTemplate = () => {
     const uid = useSelector(state => state.firebaseAuth.user.uid)
