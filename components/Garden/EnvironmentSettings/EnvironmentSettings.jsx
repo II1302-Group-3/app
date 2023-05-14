@@ -16,7 +16,7 @@ export const EnvironmentSettings = ({ navigation }) => {
 
     const browseTemplate = () => navigation.navigate("BrowseTemplate")
 
-    useEffect(() => navigation.setOptions({title: nickname}), [nickname])
+    useEffect(() => navigation.setOptions({title: `Settings for ${nickname}`}), [nickname])
 
     const waterLevelLow = useSelector(state => state.user?.claimedGardensWaterLevelLow[state.garden?.serial ?? ""] ?? false);
     const plantDetected = useSelector(state => state.user?.claimedGardensPlantDetected[state.garden?.serial ?? ""] ?? false);
