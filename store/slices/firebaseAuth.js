@@ -10,8 +10,9 @@ const initialUserState = {
     displayName: "",
 
     claimedGardens: [],
-    claimedGardenNames: {},
 
+    // TODO: Convert this into an object
+    claimedGardenNames: {},
     claimedGardensOnline: {},
     claimedGardensWaterLevelLow: {},
     claimedGardensPlantDetected: {},

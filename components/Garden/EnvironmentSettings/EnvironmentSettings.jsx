@@ -18,8 +18,9 @@ export const EnvironmentSettings = ({ navigation }) => {
 
     useEffect(() => navigation.setOptions({title: `Settings for ${nickname}`}), [nickname])
 
-    const waterLevelLow = useSelector(state => state.user?.claimedGardensWaterLevelLow[state.garden?.serial ?? ""] ?? false);
-    const plantDetected = useSelector(state => state.user?.claimedGardensPlantDetected[state.garden?.serial ?? ""] ?? false);
+    const waterLevelLow = useSelector(state => state.firebaseAuth.user?.claimedGardensWaterLevelLow[state.garden?.serial ?? ""] ?? false);
+    const online = useSelector(state => state.firebaseAuth.user?.claimedGardensOnline[state.garden?.serial ?? ""] ?? false);
+    const plantDetected = useSelector(state => state.firebaseAuth.user?.claimedGardensPlantDetected[state.garden?.serial ?? ""] ?? false);
 
     useEffect(() => {
         if(waterLevelLow && nickname !== "") {
@@ -68,6 +69,17 @@ export const EnvironmentSettings = ({ navigation }) => {
     if(isSyncing) {
         return <Spinner></Spinner>;
     }
+    
+    let warning = "";
+
+    if(online) {
+        if(!plantDetected) {
+            warning = "No plant detected in garden";
+        }
+    }
+    else {
+        warning = "This garden is not connected to the internet";
+    }
 
     return(
         <EnvironmentSettingsView
@@ -77,9 +89,10 @@ export const EnvironmentSettings = ({ navigation }) => {
             advancedInfo={ advancedInfo }
             light={ light }
             moisture={ moisture }
-            browseTemplate={browseTemplate}
+            browseTemplate={ browseTemplate }
             canDeleteGarden={ !isDeleting }
             deleteGarden={ deleteGarden }
+            warning={ warning }
         />
     )
 }
