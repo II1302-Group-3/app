@@ -16,7 +16,8 @@ const initialUserState = {
     claimedGardensWaterLevelLow: {},
     claimedGardensPlantDetected: {},
 
-    syncing: true
+    syncing: true,
+    refreshTimeoutId: -1
 };
 
 const initialState = {
@@ -104,13 +105,17 @@ export const firebaseAuth = createSlice({
         setUser: (state, { payload }) => { state.user = payload },
         setDisplayName: (state, { payload }) => { state.user.displayName = payload },
         setUserSyncing: (state, { payload }) => { state.user.syncing = payload },
+        setUserRefreshTimeoutId: (state, { payload }) => { 
+            if(state.user) {
+                state.user.refreshTimeoutId = payload;
+            }
+            else {
+                console.log("Tried to set refreshTimeoutId of null user");
+            }
+        },
         setUserToken: (state, { payload }) => { state.user.token = payload },
         addGarden: (state, { payload }) => {
-            state.user.claimedGardens = [...state.user.claimedGardens, payload.serial];
-            state.user.claimedGardenNames[payload.serial] = payload.nickname;
-            state.user.claimedGardensOnline[payload.serial] = payload.online;
-            state.user.claimedGardensWaterLevelLow[payload.serial] = payload.waterLevelLow;
-            state.user.claimedGardensPlantDetected[payload.serial] = payload.plantDetected;
+            state.user.claimedGardens = [...state.user.claimedGardens, payload];
         },
         removeGarden: (state, { payload }) => {
             state.user.claimedGardens = [...state.user.claimedGardens].filter(s => s !== payload);
@@ -150,6 +155,7 @@ export const firebaseAuth = createSlice({
 export const { 
     setDisplayName, 
     setUserSyncing, 
+    setUserRefreshTimeoutId, 
     addGarden, 
     removeGarden, 
     addGardenNameMapping, 

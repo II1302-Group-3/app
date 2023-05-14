@@ -130,15 +130,7 @@ export async function addGarden(userToken, gardenSerial, gardenNickname, dispatc
         if(result === "success") {
             // refresh token
             await auth().currentUser.getIdToken(true);
-
-            let online = false; 
-            await database().ref(`garden/${gardenSerial}/last_sync_time`).once("value", r => { online = (Date.now() / 1000) - r.val() < 5 * 60 });
-            let waterLevelLow = false;
-            await database().ref(`garden/${gardenSerial}/water_level_low`).once("value", r => { waterLevelLow = r.val() });
-            let plantDetected = false;
-            await database().ref(`garden/${gardenSerial}/plant_detected`).once("value", r => { plantDetected = r.val() });
-
-            dispatch(firebaseAuth.addGarden({serial: gardenSerial, nickname: gardenNickname, online, waterLevelLow, plantDetected}));
+            dispatch(firebaseAuth.addGarden(gardenSerial));
         }
         else {
             const errorCodeToMessage = {
