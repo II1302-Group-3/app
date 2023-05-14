@@ -11,8 +11,10 @@ const initialUserState = {
 
     claimedGardens: [],
     claimedGardenNames: {},
+
     claimedGardensOnline: {},
     claimedGardensWaterLevelLow: {},
+    claimedGardensPlantDetected: {},
 
     syncing: true
 };
@@ -108,16 +110,19 @@ export const firebaseAuth = createSlice({
             state.user.claimedGardenNames[payload.serial] = payload.nickname;
             state.user.claimedGardensOnline[payload.serial] = payload.online;
             state.user.claimedGardensWaterLevelLow[payload.serial] = payload.waterLevelLow;
+            state.user.claimedGardensPlantDetected[payload.serial] = payload.plantDetected;
         },
         removeGarden: (state, { payload }) => {
             state.user.claimedGardens = [...state.user.claimedGardens].filter(s => s !== payload);
             delete state.user.claimedGardenNames[payload];
             delete state.user.claimedGardensOnline[payload];
             delete state.user.claimedGardensWaterLevelLow[payload];
+            delete state.user.claimedGardensPlantDetected[payload];
         },
         addGardenNameMapping: (state, { payload }) => { state.user.claimedGardenNames[payload.serial] = payload.nickname },
         addGardenOnlineStatus: (state, { payload }) => { state.user.claimedGardensOnline[payload.serial] = payload.online },
         addGardenWaterLevelLow: (state, { payload }) => { state.user.claimedGardensWaterLevelLow[payload.serial] = payload.waterLevelLow },
+        addGardenPlantDetected: (state, { payload }) => { state.user.claimedGardensPlantDetected[payload.serial] = payload.plantDetected },
         reset: () => initialState,
         resetError: state => {
             state.signupError = null;
@@ -142,7 +147,17 @@ export const firebaseAuth = createSlice({
     }
 })
 
-export const { setDisplayName, setUserSyncing, addGarden, removeGarden, addGardenNameMapping, addGardenOnlineStatus, addGardenWaterLevelLow, resetError } = firebaseAuth.actions;
+export const { 
+    setDisplayName, 
+    setUserSyncing, 
+    addGarden, 
+    removeGarden, 
+    addGardenNameMapping, 
+    addGardenOnlineStatus, 
+    addGardenWaterLevelLow, 
+    addGardenPlantDetected, 
+    resetError 
+} = firebaseAuth.actions;
 
 export const logout = () => (dispatch, _) => {
     dispatch(firebaseAuth.actions.reset());

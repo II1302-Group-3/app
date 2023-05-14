@@ -12,8 +12,6 @@ const initialActiveState = {
     light: 50,
     moisture: 50,
 
-    waterLevelLow: false,
-
     statistics: {
         light: {
             error: null,
@@ -45,7 +43,7 @@ export const garden = createSlice({
     name: 'garden',
     initialState: null,
     reducers: {
-        selectGarden: (_, { payload }) => { return {...initialActiveState, serial: payload.serial, nickname: payload.nickname, waterLevelLow: payload.waterLevelLow} },
+        selectGarden: (_, { payload }) => { return {...initialActiveState, serial: payload.serial, nickname: payload.nickname } },
         resetGarden: () => null,
         setGardenSyncing: (state, { payload }) => { state.syncing = payload },
 
@@ -134,11 +132,13 @@ export async function addGarden(userToken, gardenSerial, gardenNickname, dispatc
             await auth().currentUser.getIdToken(true);
 
             let online = false; 
-            await database().ref(`garden/${gardenSerial}/last_sync_time`).once("value", val => { online = (Date.now() / 1000) - val.val() < 5 * 60 });
+            await database().ref(`garden/${gardenSerial}/last_sync_time`).once("value", r => { online = (Date.now() / 1000) - r.val() < 5 * 60 });
             let waterLevelLow = false;
-            await database().ref(`garden/${gardenSerial}/water_level_low`).once("value", val => { waterLevelLow = val.val() == true });
+            await database().ref(`garden/${gardenSerial}/water_level_low`).once("value", r => { waterLevelLow = r.val() });
+            let plantDetected = false;
+            await database().ref(`garden/${gardenSerial}/plant_detected`).once("value", r => { plantDetected = r.val() });
 
-            dispatch(firebaseAuth.addGarden({serial: gardenSerial, nickname: gardenNickname, online, waterLevelLow}));
+            dispatch(firebaseAuth.addGarden({serial: gardenSerial, nickname: gardenNickname, online, waterLevelLow, plantDetected}));
         }
         else {
             const errorCodeToMessage = {

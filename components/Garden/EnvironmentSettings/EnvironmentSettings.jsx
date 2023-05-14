@@ -13,12 +13,13 @@ export const EnvironmentSettings = ({ navigation }) => {
     const nickname = useSelector(state => state.garden?.nickname ?? "");
     const light = useSelector(state => state.garden?.light ?? 0);
     const moisture = useSelector(state => state.garden?.moisture ?? 0);
-    console.log(light, moisture)
+
     const browseTemplate = () => navigation.navigate("BrowseTemplate")
 
     useEffect(() => navigation.setOptions({title: nickname}), [nickname])
 
-    const waterLevelLow = useSelector(state => state.garden?.waterLevelLow ?? false);
+    const waterLevelLow = useSelector(state => state.user?.claimedGardensWaterLevelLow[state.garden?.serial ?? ""] ?? false);
+    const plantDetected = useSelector(state => state.user?.claimedGardensPlantDetected[state.garden?.serial ?? ""] ?? false);
 
     useEffect(() => {
         if(waterLevelLow && nickname !== "") {
