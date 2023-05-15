@@ -26,7 +26,7 @@ export const EnvironmentSettingsView = ({
 
 	const Warning = () => {
 		return (
-			<View style={{flexDirection: "row", margin: 16, width: "100%", justifyContent: "center"}}>
+			<View style={{flexDirection: "row", padding: 16, width: "100%", justifyContent: "center"}}>
 				<View style={{flexDirection: "row"}}>
 					<Icon name="warning" style={{marginRight: 12}} size={24} color="#fab005" />
 					<Text variant="labelLarge">{warning}</Text>
@@ -57,7 +57,7 @@ export const EnvironmentSettingsView = ({
 					advancedInfo={ advancedInfo }
 				/>
 			</View>
-			
+
 			<View>
 				<EnvironmentSettingsSwitch
 					title={ advancedInfoTitle }
