@@ -1,15 +1,9 @@
+import { lightGreenTheme, darkGreenTheme } from "./theme"
+
 export function useCardStyle(isDarkMode) {
     return {
-        backgroundColor: isDarkMode ? "#212121" : "white",
+        backgroundColor: isDarkMode ? darkGreenTheme.colors.surfaceVariant : lightGreenTheme.colors.surfaceVariant,
 		borderRadius: 10,
-		shadowColor: '#000',
-		shadowOpacity: 0.2,
-		elevation: 10, // Height of the shadow
-    }
-}
-
-export function useColors() {
-    return {
-        lightGray: "#DDDDDD"
+		elevation: 0, // Height of the shadow
     }
 }
