@@ -11,6 +11,9 @@ export const GardenView = ({ navigation }) => {
     const dispatch = useDispatch();
     const isSyncing = useSelector(state => state.garden?.syncing ?? true);
 
+    const nickname = useSelector(state => state.garden?.nickname ?? "");
+    useEffect(() => navigation.setOptions({title: nickname}), [nickname])
+
     const isDarkMode = useColorScheme() === 'dark';
     const cardStyle = useCardStyle(isDarkMode);
 

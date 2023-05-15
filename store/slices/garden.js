@@ -1,5 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import * as firebaseAuth from "./firebaseAuth";
+import auth from '@react-native-firebase/auth';
 import database from '@react-native-firebase/database';
 
 const initialActiveState = {
@@ -11,7 +12,6 @@ const initialActiveState = {
     light: 50,
     moisture: 50,
 
-    waterLevelLow: false,
     statistics: {
         light: {
             error: null,
@@ -43,18 +43,15 @@ export const garden = createSlice({
     name: 'garden',
     initialState: null,
     reducers: {
-        selectGarden: (_, { payload }) => { return {...initialActiveState, serial: payload.serial, nickname: payload.nickname} },
+        selectGarden: (_, { payload }) => { return {...initialActiveState, serial: payload.serial, nickname: payload.nickname } },
         resetGarden: () => null,
         setGardenSyncing: (state, { payload }) => { state.syncing = payload },
 
-        setNickname: (state, { payload }) => { state.nickname = payload },
         setMoisture: (state, { payload }) => { 
             console.log(payload, 8)
             state.moisture = payload },
         setLight: (state, { payload }) => { state.light = payload },
 
-        setWaterLevelLow: state => { state.waterLevelLow = true },
-        resetWaterLevelLow: state => { state.waterLevelLow = false },
         resetError: state => {
             state.statistics.light.error = null;
             state.statistics.moisture.error = null;
@@ -117,11 +114,8 @@ export const {
     resetGarden,
     resetError, 
     setGardenSyncing, 
-    setNickname, 
     setMoisture, 
-    setLight,
-    setWaterLevelLow, 
-    resetWaterLevelLow } = garden.actions;
+    setLight } = garden.actions;
 
 export async function addGarden(userToken, gardenSerial, gardenNickname, dispatch) {
     const params = new URLSearchParams({
@@ -134,7 +128,9 @@ export async function addGarden(userToken, gardenSerial, gardenNickname, dispatc
 
     try {
         if(result === "success") {
-            dispatch(firebaseAuth.addGarden({serial: gardenSerial, nickname: gardenNickname}));
+            // refresh token
+            await auth().currentUser.getIdToken(true);
+            dispatch(firebaseAuth.addGarden(gardenSerial));
         }
         else {
             const errorCodeToMessage = {
@@ -151,7 +147,7 @@ export async function addGarden(userToken, gardenSerial, gardenNickname, dispatc
         }
     }
     finally {
-        dispatch(firebaseAuth.refreshToken());
+        dispatch(firebaseAuth.reloadToken());
     }
 }
 
@@ -203,6 +199,9 @@ export async function removeGarden(userToken, gardenSerial, dispatch) {
 
     try {
         if(result === "success") {
+            // refresh token
+            await auth().currentUser.getIdToken(true);
+
             dispatch(firebaseAuth.removeGarden(gardenSerial));
         }
         else {
@@ -217,6 +216,6 @@ export async function removeGarden(userToken, gardenSerial, dispatch) {
         }
     }
     finally {
-        dispatch(firebaseAuth.refreshToken());
+        dispatch(firebaseAuth.reloadToken());
     }
 }

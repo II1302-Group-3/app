@@ -12,6 +12,9 @@ import { View } from "react-native";
 export const Statistics = () => {
     const dispatch = useDispatch();
 
+    const nickname = useSelector(state => state.garden?.nickname ?? "");
+    useEffect(() => navigation.setOptions({title: `Statistics for ${nickname}`}), [nickname])
+
     const [date, setDate] = useState(new Date());
     const [day, setDay] = useState(DAYS[date.getDay()]);
     const [lightXAxis, setLightXAxis] = useState();

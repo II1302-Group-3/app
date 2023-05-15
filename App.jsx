@@ -47,8 +47,8 @@ function App() {
 					{isLoggedIn ? (
 						<>
 						<Stack.Screen name="Home" component={ Home } />
-						<Stack.Screen name="Garden" component={ GardenView } />
-						<Stack.Screen name="Statistics" component={ Statistics } />
+						<Stack.Screen name="Garden" options={{title: ""}} component={ GardenView } />
+						<Stack.Screen name="Statistics" options={{title: ""}} component={ Statistics } />
 						<Stack.Screen name="EnvironmentSettings" options={{title: ""}} component={ EnvironmentSettings } />
 						<Stack.Screen name="AddGarden" options={{ title: "Add Garden" }} component={ AddGarden } />
 						<Stack.Screen name="UserTemplate" options={{ title: "My Templates" }} component={ UserTemplate } />

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { setMoisture, setLight, removeGarden, resetWaterLevelLow } from '../../../store/slices/garden';
+import { setMoisture, setLight, removeGarden } from '../../../store/slices/garden';
 import { EnvironmentSettingsView } from './EnvironmentSettingsView';
 import { Alert } from 'react-native';
 import { Spinner } from '../../Spinner';
@@ -13,12 +13,14 @@ export const EnvironmentSettings = ({ navigation }) => {
     const nickname = useSelector(state => state.garden?.nickname ?? "");
     const light = useSelector(state => state.garden?.light ?? 0);
     const moisture = useSelector(state => state.garden?.moisture ?? 0);
-    console.log(light, moisture)
+
     const browseTemplate = () => navigation.navigate("BrowseTemplate")
 
-    useEffect(() => navigation.setOptions({title: nickname}), [nickname])
+    useEffect(() => navigation.setOptions({title: `Settings for ${nickname}`}), [nickname])
 
-    const waterLevelLow = useSelector(state => state.garden?.waterLevelLow ?? false);
+    const waterLevelLow = useSelector(state => state.firebaseAuth.user?.claimedGardensWaterLevelLow[state.garden?.serial ?? ""] ?? false);
+    const online = useSelector(state => state.firebaseAuth.user?.claimedGardensOnline[state.garden?.serial ?? ""] ?? false);
+    const plantDetected = useSelector(state => state.firebaseAuth.user?.claimedGardensPlantDetected[state.garden?.serial ?? ""] ?? false);
 
     useEffect(() => {
         if(waterLevelLow && nickname !== "") {
@@ -26,8 +28,6 @@ export const EnvironmentSettings = ({ navigation }) => {
                 `Warning for ${nickname}`,
                 "The water level in the tank is low. Refill the tank as soon as possible."
             );
-
-            dispatch(resetWaterLevelLow());
         }
     }, [waterLevelLow, nickname]);
 
@@ -69,6 +69,17 @@ export const EnvironmentSettings = ({ navigation }) => {
     if(isSyncing) {
         return <Spinner></Spinner>;
     }
+    
+    let warning = "";
+
+    if(online) {
+        if(!plantDetected) {
+            warning = "No plant detected in garden";
+        }
+    }
+    else {
+        warning = "This garden is not connected to the internet";
+    }
 
     return(
         <EnvironmentSettingsView
@@ -78,9 +89,10 @@ export const EnvironmentSettings = ({ navigation }) => {
             advancedInfo={ advancedInfo }
             light={ light }
             moisture={ moisture }
-            browseTemplate={browseTemplate}
+            browseTemplate={ browseTemplate }
             canDeleteGarden={ !isDeleting }
             deleteGarden={ deleteGarden }
+            warning={ warning }
         />
     )
 }
