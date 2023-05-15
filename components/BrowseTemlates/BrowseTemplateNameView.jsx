@@ -41,11 +41,11 @@ export const BrowseTemplateNameView = ({ plantName, tempDetailPress, plantMoistu
         onValueChange={(val) => setTemplates(val)}
         buttons={[
           {
-            value: sortByRecent(templatesData),
+            value: sortByRecent(templates),
             label: 'Most Recent',
           },
           {
-            value: sortByLikes(templatesData),
+            value: sortByLikes(templates),
             label: 'Most Liked',
           }
         ]}
