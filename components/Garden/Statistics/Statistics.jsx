@@ -49,7 +49,7 @@ export const Statistics = () => {
         }
     }
 
-    useEffect(() => {
+    function updateAllStatistics() {
         const NUTRITIENT = {
             LIGHT: 10764,
             MOISTURE: 100,
@@ -57,17 +57,10 @@ export const Statistics = () => {
             TEMPERATURE: 100
         }
 
-        // updateAllStatistics()
         updateStatistics(NUTRITIENT.LIGHT, NUTRITIENT_PATHS.LIGHT)
         updateStatistics(NUTRITIENT.MOISTURE, NUTRITIENT_PATHS.MOISTURE)
         updateStatistics(NUTRITIENT.HUMIDITY, NUTRITIENT_PATHS.HUMIDITY)
         updateStatistics(NUTRITIENT.TEMPERATURE, NUTRITIENT_PATHS.TEMPERATURE)
-
-        console.log("these are the keys")
-        console.log(Object.keys(NUTRITIENT))
-        // function updateAllStatistics() {
-        //     Object.keys(NUTRITIENT).forEach((_, index) => updateStatistics(NUTRITIENT[index]), NUTRITIENT_PATHS[index])
-        // }
 
         function updateStatistics(nutritient, nutritientPath) {
             dispatch(getStatistics({ nutritientPath, date })).unwrap().then(data => setStatistics(data));
@@ -100,6 +93,7 @@ export const Statistics = () => {
                 xAxisSetter(hours);
 
                 function setPercentage(data, max, setData) {
+                    
                     const dataAsPercentage = data.map(hour => ((hour.val / max) * 100))
                     setData(dataAsPercentage)
                 }
@@ -109,7 +103,10 @@ export const Statistics = () => {
                 }
             }
         }
-        
+    }
+
+    useEffect(() => {
+        updateAllStatistics()
     }, [date]);
 
     return (
