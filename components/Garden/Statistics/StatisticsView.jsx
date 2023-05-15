@@ -88,7 +88,20 @@ export const StatisticsView = ({
                     from: "#0000ff",
                     to: "#00ff00"
                 }
+            },
+            humidity:{
+                color: {
+                    from: "#440147",
+                    to: "#8402ab"
+                }
+            },
+            temperature:{
+                color: {
+                    from: "#d40202",
+                    to: "#fa3ee1"
+                }
             }
+
         })
 
         const charts = [
@@ -109,7 +122,7 @@ export const StatisticsView = ({
             yAxisSuffix: "%"},
 
             {legend: 'Humidity',
-            color: chartStyles.moisture.color,
+            color: chartStyles.humidity.color,
             data: humidityData,
             xAxis: humidityXAxis,
             loading: humidityIsLoading,
@@ -117,7 +130,7 @@ export const StatisticsView = ({
             yAxisSuffix: "%"},
 
             {legend: 'Temperature',
-            color: chartStyles.moisture.color,
+            color: chartStyles.temperature.color,
             data: temperatureData,
             xAxis: temperatureXAxis,
             loading: temperatureIsLoading,
