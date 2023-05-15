@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import {saveTemplate} from '../../store/slices/templateName';
 import Toast from 'react-native-simple-toast';
 
-export const AddTemplate = () => {
+export const AddTemplate = ({navigation}) => {
     const uid = useSelector(state => state.firebaseAuth.user.uid)
 
     const dispatch = useDispatch();
@@ -12,14 +12,15 @@ export const AddTemplate = () => {
     const [changeLight, setLightLevel] = useState(0);
     const [moistureLevel, setMoisture] = useState(0);
     const [templateName, setTemplateName] = useState("");
-
-    const saveTemplateValue = () => dispatch(saveTemplate({
+    const saveTemplateValue = () => {dispatch(saveTemplate({
         tempLight: changeLight,
         tempmoisture: moistureLevel,
         tempName: templateName,
         uid,
         date: new Date().getTime()
         }));
+        navigation.navigate("Home");
+    }
 
     const garden = useSelector(state => state.garden?.nickname ?? "");
     const gardenLight = useSelector(state => state.garden?.light ?? 0);
