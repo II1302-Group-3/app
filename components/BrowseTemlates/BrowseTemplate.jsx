@@ -1,5 +1,6 @@
 import { BrowseTemplateNameView } from './BrowseTemplateNameView';
 import React from 'react';
+import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { setSelectedTemplate } from '../../store/slices/templateName';
 import { setCanLike } from '../../store/slices/templateName';
@@ -22,8 +23,7 @@ export const BrowseTemplate = ({ navigation }) => {
     }
 
     let templateData2 = {};
-    dispatch(setCanLike(true))
-
+    useEffect(() => { dispatch(setCanLike(true)) }, []);
 
     const tempDetailPress = (name, light, moisture, id) => {
         templateData2 = {
@@ -32,8 +32,6 @@ export const BrowseTemplate = ({ navigation }) => {
             moistureLevel: moisture,
             id
         }
-        console.log("template data 2");
-        console.log(templateData2);
         dispatch(setSelectedTemplate(templateData2))
         navigation.navigate("DetailsTemp")
     }
