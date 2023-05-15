@@ -9,7 +9,7 @@ import {
 import { DAYS } from "../../../constants";
 import { View } from "react-native";
 
-export const Statistics = () => {
+export const Statistics = ({navigation}) => {
     const dispatch = useDispatch();
 
     const nickname = useSelector(state => state.garden?.nickname ?? "");
@@ -34,7 +34,7 @@ export const Statistics = () => {
     const moistureError = useSelector(state => state.garden.statistics.moisture.error);
     const humidityError = useSelector(state => state.garden.statistics.humidity.error);
     const temperatureError = useSelector(state => state.garden.statistics.temperature.error);
-    
+
 
     const setNextDay = () => {
         if (day !== 'Sunday') {
@@ -78,7 +78,7 @@ export const Statistics = () => {
             function setStatistics(data) {
                 let dataSetter;
                 let xAxisSetter;
-    
+
                 switch(nutritientPath) {
                     case NUTRITIENT_PATHS.LIGHT:
                         dataSetter = setLightData;
@@ -97,7 +97,7 @@ export const Statistics = () => {
                         xAxisSetter = setTemperatureXAxis;
                         break;
                 }
-    
+
                 setPercentage(data, nutritient, dataSetter);
                 const hours = getArrayOfHours(data);
                 xAxisSetter(hours);
@@ -112,7 +112,7 @@ export const Statistics = () => {
                 }
             }
         }
-        
+
     }, [date]);
 
     return (
