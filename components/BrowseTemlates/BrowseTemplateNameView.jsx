@@ -28,7 +28,7 @@ export const BrowseTemplateNameView = ({ plantName, tempDetailPress, plantMoistu
   useEffect(() => {
     setTemplates(Object.keys(templatesData).map(a => templatesData[a]).filter(name =>
       name.plantName.toLowerCase().includes(searchText.toLowerCase())))
-  }, [searchText])
+  }, [searchText, templatesData])
 
   return (
     <View style={{paddingHorizontal: 30, paddingVertical: 30}}>
