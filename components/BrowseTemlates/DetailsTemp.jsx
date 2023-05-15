@@ -14,6 +14,7 @@ export const DetailsTemp = () => {
         dispatch(alreadyLiked())
     }, [])
 
+
     const templateData = useSelector(state => state.templateName.selectedTemplate)
     const light = templateData.light;
     const moisture = templateData.moisture;
@@ -21,6 +22,7 @@ export const DetailsTemp = () => {
     const [advancedInfo, setAdvancedInfo] = useState(false);
     const serial = useSelector(state => state.garden?.serial ?? "");
     const nickname = useSelector(state => state.garden?.nickname ?? "");
+    const canLike = useSelector(state => state.templateName.selectedTemplate.canLike);
 
     const onPress = (isFilled) => {
         dispatch(setHasLiked(isFilled))
@@ -53,6 +55,7 @@ export const DetailsTemp = () => {
             gardens={gardens}
             isFilled={hasLiked} 
             onPress={ onPress }
+            canLike={canLike}
         />
     )
 }

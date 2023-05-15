@@ -2,6 +2,8 @@ import { BrowseTemplateNameView } from './BrowseTemplateNameView';
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { setSelectedTemplate } from '../../store/slices/templateName';
+import { setCanLike } from '../../store/slices/templateName';
+
 
 export const BrowseTemplate = ({ navigation }) => {
     //const templatesName = useSelector(state => state.templateName.templatesName);
@@ -20,6 +22,8 @@ export const BrowseTemplate = ({ navigation }) => {
     }
 
     let templateData2 = {};
+    dispatch(setCanLike(false))
+
 
     const tempDetailPress = (name, light, moisture, id) => {
         templateData2 = {

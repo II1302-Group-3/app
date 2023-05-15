@@ -20,6 +20,7 @@ export const BrowseTemplateView = ({
 	onPress,
 	applyTemplate,
 	gardens,
+	canLike,
 
 }) => {
 	
@@ -34,8 +35,8 @@ export const BrowseTemplateView = ({
     return(
         <View style={{paddingHorizontal: 20, paddingTop: 30, paddingBottom: 30 + headerHeight, justifyContent: "center", flexDirection: "column", height: "100%" }}>
             <View style={{ justifyContent: 'space-between', flexDirection: 'row' }}>
-                <Text variant="headlineMedium" style={{fontWeight: "bold", marginBottom: 30}} >Template "{plantName}"</Text>
-				<TouchableOpacity onPress={() => onPress(!isFilled)}>
+                <Text variant="headlineMedium" style={{fontWeight: "bold", marginBottom: 30, fontSize: 20}}>Template for "{plantName}"</Text>
+				<TouchableOpacity onPress={() => onPress(!isFilled)}  disabled={canLike}>
 					<Image 
 						source={isFilled ? filledHeart : unfilledHeart}
 						style={{ width: 30, height: 30 }}
