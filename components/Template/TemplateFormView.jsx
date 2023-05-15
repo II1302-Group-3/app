@@ -22,47 +22,45 @@ export const TemplateFormView = ({
 	const moistureTitle = 'Moisture Level';
 	const lightTitle = 'Light Level';
 	const advancedInfoTitle = 'Advanced info';
-	
+
 	const headerHeight = useHeaderHeight();
 
     return(
         <View style={{paddingHorizontal: 20, paddingTop: 30, paddingBottom: 30 + headerHeight, justifyContent: "center", flexDirection: "column", height: "100%" }}>
+         	<View style={{ marginBottom: 48}}>
+				<TextInput
+					label="Name your plant"
+					mode="outlined"
+					value={name}
+					onChangeText={ value => setTemplateName(value)}
+				/>
+            </View>
 
-            
             <View style={{marginBottom: 20}}>
-				<EnvironmentSettingsSliderView 
-					title={ moistureTitle } 
-					sliderIcon={ waterDropIcon } 
-					onSlide={ setMoisture } 
+				<EnvironmentSettingsSliderView
+					title={ moistureTitle }
+					sliderIcon={ waterDropIcon }
+					onSlide={ setMoisture }
 					advancedInfo={ advancedInfo }
 				/>
 			</View>
-			<EnvironmentSettingsSliderView 
-				title={ lightTitle } 
-				sliderIcon={ bulbIcon } 
-				onSlide={ setLight } 
+			<EnvironmentSettingsSliderView
+				title={ lightTitle }
+				sliderIcon={ bulbIcon }
+				onSlide={ setLight }
 				advancedInfo={ advancedInfo }
 			/>
 
 			<View style={{ paddingVertical: 20 }}>
-				<EnvironmentSettingsSwitch 
+				<EnvironmentSettingsSwitch
 					title={ advancedInfoTitle }
 					onToggle={ setAdvancedInfo }
-					active={ advancedInfo } 
+					active={ advancedInfo }
 				/>
 			</View>
 
-            <View style={{ paddingBottom:40}}>
-				<TextInput 
-					label="Name your Plant" 
-					mode="outlined" 
-					value={name}
-					onChangeText={ value => setTemplateName(value)} 
-				/>
-            </View>
-
             <View>
-                <Button mode="contained" style={{marginBottom: 10}} onPress={() => saveTemplateValue()}>SaveTemplate</Button>
+                <Button mode="contained" style={{marginTop: 30}} onPress={() => saveTemplateValue()}>Save template</Button>
             </View>
 
 		</View>

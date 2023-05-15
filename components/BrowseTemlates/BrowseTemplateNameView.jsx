@@ -17,13 +17,13 @@ export const BrowseTemplateNameView = ({ plantName, tempDetailPress, plantMoistu
 
   const templatesData = useSelector(state => state.templateName.templatesData);
 
-  const filteredPlantNames = Object.keys(templatesData).map(a => templatesData[a]).filter(name => 
+  const filteredPlantNames = Object.keys(templatesData).map(a => templatesData[a]).filter(name =>
     name.plantName.toLowerCase().includes(searchText.toLowerCase())
   );
   const [templates, setTemplates] = useState(filteredPlantNames);
 
   useEffect(() => {
-    setTemplates(Object.keys(templatesData).map(a => templatesData[a]).filter(name => 
+    setTemplates(Object.keys(templatesData).map(a => templatesData[a]).filter(name =>
       name.plantName.toLowerCase().includes(searchText.toLowerCase())))
   }, [searchText])
 
@@ -32,15 +32,17 @@ export const BrowseTemplateNameView = ({ plantName, tempDetailPress, plantMoistu
 
 
   return (
-    <View>
-      <View style={{ margin: '5%', }}>
+    <View style={{paddingHorizontal: 30, paddingVertical: 30}}>
+      <View style={{ marginBottom: 10 }}>
         <TextInput
           label="Search"
+          mode="outlined"
           value={searchText}
           onChangeText={text => setSearchText(text)}
         />
       </View>
       <SegmentedButtons
+        style={{marginBottom: 30}}
         value={"value"}
         onValueChange={(val) => setTemplates(val)}
         buttons={[
@@ -56,7 +58,7 @@ export const BrowseTemplateNameView = ({ plantName, tempDetailPress, plantMoistu
       />
 
       <ScrollView>
-        <View style={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap' }}>
+        <View style={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'center' }}>
           {templates.map((name, index) => (
             <TouchableOpacity
 
@@ -64,9 +66,9 @@ export const BrowseTemplateNameView = ({ plantName, tempDetailPress, plantMoistu
               style={{
                 backgroundColor: '#90ee90',
                 borderRadius: 8,
-                padding: '3%',
-                margin: '2%',
-                elevation: 6,
+                padding: 10,
+                margin: 8,
+                elevation: 0,
                 width: '45%',
                 height: 80,
               }}
@@ -82,7 +84,7 @@ export const BrowseTemplateNameView = ({ plantName, tempDetailPress, plantMoistu
                 ></Image>
                 </View>
               </View>
-              
+
               <View style={{ flexDirection: 'row' }}>
                 <Image
                   source={require('../../assets/WaterDropIcon.png')}

@@ -10,16 +10,17 @@ export const UserTemplateView = ({ tempDetailPress, templatesData}) => {
   );
 
   return (
-    <ScrollView>
-        <View style={{margin:'5%',}}>
-        <TextInput
-        label="Search"
-        value={searchText}
-        onChangeText={text => setSearchText(text)}
-      />
-    </View>
+    <ScrollView style={{paddingHorizontal: 30, paddingVertical: 30}}>
+        <View style={{marginBottom: 30}}>
+          <TextInput
+            label="Search"
+            mode="outlined"
+            value={searchText}
+            onChangeText={text => setSearchText(text)}
+          />
+       </View>
 
-      <View style={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap' }}>
+      <View style={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'center' }}>
         {filteredPlantNames.map((name, index) => (
           <TouchableOpacity
 
@@ -27,9 +28,9 @@ export const UserTemplateView = ({ tempDetailPress, templatesData}) => {
             style={{
               backgroundColor: '#90ee90',
               borderRadius: 8,
-              padding: '3%',
-              margin: '2%',
-              elevation: 6,
+              padding: 10,
+              margin: 8,
+              elevation: 0,
               width: '45%',
               height: 80,
             }}

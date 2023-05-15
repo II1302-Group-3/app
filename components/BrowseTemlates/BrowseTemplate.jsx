@@ -22,7 +22,7 @@ export const BrowseTemplate = ({ navigation }) => {
     }
 
     let templateData2 = {};
-    dispatch(setCanLike(false))
+    dispatch(setCanLike(true))
 
 
     const tempDetailPress = (name, light, moisture, id) => {

@@ -7,7 +7,7 @@ import { useIsFocused } from "@react-navigation/native";
 
 import { Alert } from 'react-native';
 
-export const DetailsTemp = () => {
+export const DetailsTemp = ({navigation}) => {
     const dispatch = useDispatch();
 
     useEffect(() => {
@@ -23,6 +23,8 @@ export const DetailsTemp = () => {
     const serial = useSelector(state => state.garden?.serial ?? "");
     const nickname = useSelector(state => state.garden?.nickname ?? "");
     const canLike = useSelector(state => state.templateName.selectedTemplate.canLike);
+
+    useEffect(() => navigation.setOptions({title: `${templateData.name}`}), [templateData]);
 
     const onPress = (isFilled) => {
         dispatch(setHasLiked(isFilled))
@@ -53,7 +55,7 @@ export const DetailsTemp = () => {
             plantName={templateData.name}
             applyTemplate={applyTemplate}
             gardens={gardens}
-            isFilled={hasLiked} 
+            isFilled={hasLiked}
             onPress={ onPress }
             canLike={canLike}
         />
