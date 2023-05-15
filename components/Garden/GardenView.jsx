@@ -30,10 +30,13 @@ export const GardenView = ({ navigation }) => {
         textStyle: {color: tintColor}
     })
 
+    const settingsIcon = require('../../assets/Settings.png');
+    const statsIcon = require('../../assets/Stats.png');
+
     function renderCards() {
         const cards = [
-            {title: 'Environment Settings', img: require('../../assets/Settings.png'), nav: 'EnvironmentSettings'},
-            {title: 'Statistics', img: require('../../assets/Stats.png'), nav: 'Statistics'}
+            {title: 'Environment Settings', img: settingsIcon, nav: 'EnvironmentSettings'},
+            {title: 'Statistics', img: statsIcon, nav: 'Statistics'}
         ]
 
         return cards.map(card =>
@@ -50,11 +53,11 @@ export const GardenView = ({ navigation }) => {
         )
     }
 
+    const headerHeight = useHeaderHeight();
+
     if(isSyncing) {
         return <Spinner></Spinner>;
     }
-
-    const headerHeight = useHeaderHeight();
 
     return(
         <View style={{flexDirection: "column", height: "100%", justifyContent: "center", paddingTop: 30, paddingBottom: 30 + headerHeight}}>
