@@ -66,8 +66,6 @@ export const Statistics = ({navigation}) => {
         updateStatistics(NUTRITIENT.HUMIDITY, NUTRITIENT_PATHS.HUMIDITY)
         updateStatistics(NUTRITIENT.TEMPERATURE, NUTRITIENT_PATHS.TEMPERATURE)
 
-        console.log("these are the keys")
-        console.log(Object.keys(NUTRITIENT))
         // function updateAllStatistics() {
         //     Object.keys(NUTRITIENT).forEach((_, index) => updateStatistics(NUTRITIENT[index]), NUTRITIENT_PATHS[index])
         // }

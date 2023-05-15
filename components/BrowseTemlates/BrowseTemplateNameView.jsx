@@ -15,7 +15,6 @@ export const BrowseTemplateNameView = ({ plantName, tempDetailPress, plantMoistu
 	const isDarkMode = useColorScheme() === 'dark';
 
   useEffect(() => {
-		console.log("called getTemplates")
     dispatch(getTemplates());
 	}, [isFocused])
 
@@ -30,10 +29,6 @@ export const BrowseTemplateNameView = ({ plantName, tempDetailPress, plantMoistu
     setTemplates(Object.keys(templatesData).map(a => templatesData[a]).filter(name =>
       name.plantName.toLowerCase().includes(searchText.toLowerCase())))
   }, [searchText])
-
-  console.log(filteredPlantNames)
-
-
 
   return (
     <View style={{paddingHorizontal: 30, paddingVertical: 30}}>

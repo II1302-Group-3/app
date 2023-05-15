@@ -31,8 +31,7 @@ export const DetailsTemp = ({navigation}) => {
         dispatch(setLiked({isFilled}))
     }
 
-    const applyTemplate = () => {console.log('applyTemplate pressed');
-                                dispatch(setLight(light))
+    const applyTemplate = () => {dispatch(setLight(light))
                                 dispatch(setMoisture(moisture));
                                 Alert.alert('Template applied successfully!');
                                 }

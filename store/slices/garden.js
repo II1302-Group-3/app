@@ -47,9 +47,7 @@ export const garden = createSlice({
         resetGarden: () => null,
         setGardenSyncing: (state, { payload }) => { state.syncing = payload },
 
-        setMoisture: (state, { payload }) => { 
-            console.log(payload, 8)
-            state.moisture = payload },
+        setMoisture: (state, { payload }) => { state.moisture = payload },
         setLight: (state, { payload }) => { state.light = payload },
 
         resetError: state => {
@@ -109,12 +107,12 @@ export const garden = createSlice({
     }
 });
 
-export const { 
-    selectGarden, 
+export const {
+    selectGarden,
     resetGarden,
-    resetError, 
-    setGardenSyncing, 
-    setMoisture, 
+    resetError,
+    setGardenSyncing,
+    setMoisture,
     setLight } = garden.actions;
 
 export async function addGarden(userToken, gardenSerial, gardenNickname, dispatch) {
@@ -157,8 +155,6 @@ export const getStatistics = createAsyncThunk('garden/getStatistics', async({
 }, {getState}) => {
     const processedDate = date.toISOString().split('T')[0];
     const state = getState();
-    console.log("test");
-    console.log(state.garden.serial)
     const ref = `garden/${state.garden.serial}/${nutritientPath}/${processedDate}`;
     const snapshot = await database().ref(ref).once("value")
     const data = snapshot.val();

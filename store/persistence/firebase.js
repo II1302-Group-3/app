@@ -26,7 +26,7 @@ import { log } from 'react-native-reanimated';
 
 async function readTemplates(state, dispatch) {
     const  refs = getUserRefs(state.firebaseAuth.user.uid);
-    console.log("read template")
+    console.log("Reading templates...");
     const templateData = (await database().ref(refs.templateRef).once('value')).val() ?? {};
     const plantNames = Object.values(templateData).map(item => item);
     if (templateData) {
@@ -67,8 +67,8 @@ export function enablePersistence(store) {
         }
 
         const loggedIn = state.firebaseAuth.user?.syncing && !prevState.firebaseAuth.user?.syncing;
-        const refreshExpired = 
-            (state.firebaseAuth.user?.uid && prevState.firebaseAuth.user?.uid) && 
+        const refreshExpired =
+            (state.firebaseAuth.user?.uid && prevState.firebaseAuth.user?.uid) &&
             (state.firebaseAuth.user.refreshTimeoutId === -1 && prevState.firebaseAuth.user.refreshTimeoutId !== -1);
         const shouldRefresh = loggedIn || refreshExpired;
 
@@ -129,11 +129,9 @@ async function readGardenFromFirebase(state, dispatch) {
     const light = (await database().ref(refs.lightRef).once("value")).val();
 
     if(moisture) {
-        console.log(`Dispatched moisture for garden ${state.garden.serial}: ${moisture}`);
         dispatch(setMoisture(moisture));
     }
     if(light) {
-        console.log(`Dispatched light for garden ${state.garden.serial}: ${light}`);
         dispatch(setLight(light));
     }
 
@@ -148,7 +146,6 @@ async function readUserFromFirebase(state, dispatch) {
         const displayName = (await database().ref(refs.displayNameRef).once("value")).val();
 
         if(displayName) {
-            console.log(`Dispatched display name for user ${state.firebaseAuth.user.uid}: ${displayName}`);
             dispatch(setDisplayName(displayName));
         }
 
@@ -156,21 +153,18 @@ async function readUserFromFirebase(state, dispatch) {
             const refs = getGardenRefs(serial);
             const nickname = (await database().ref(refs.nicknameRef).once("value")).val() ?? "";
 
-            console.log(`Dispatched name mapping for user ${state.firebaseAuth.user.uid} garden ${serial}: ${nickname}`);
+            console.log(`New garden ${serial} for user ${state.firebaseAuth.user.uid}: ${nickname}`);
             dispatch(addGardenNameMapping({serial, nickname}));
 
             const lastSyncTime = (await database().ref(refs.syncTimeRef).once("value")).val() ?? 0;
             const online = (Date.now() / 1000) - lastSyncTime < 5 * 60;
 
-            console.log(`Dispatched online status for user ${state.firebaseAuth.user.uid} garden ${serial}: ${online}`);
             dispatch(addGardenOnlineStatus({serial, online}));
 
             const waterLevelLow = (await database().ref(refs.waterLevelRef).once("value")).val() ?? false;
-            console.log(`Dispatched water tank status for user ${state.firebaseAuth.user.uid} garden ${serial}: low = ${waterLevelLow}`);
             dispatch(addGardenWaterLevelLow({serial, waterLevelLow}));
 
             const plantDetected = (await database().ref(refs.plantDetectedRef).once("value")).val() ?? false;
-            console.log(`Dispatched plant detector status for user ${state.firebaseAuth.user.uid} garden ${serial}: ${plantDetected}`);
             dispatch(addGardenPlantDetected({serial, plantDetected}));
         }
 

@@ -10,12 +10,6 @@ export const UserTemplate = ( {navigation} ) => {
     const userTemplate = useSelector(state => state.templateName.userTemplate);
     let allTemplate = useSelector(state => state.templateName.allTemplates);
     let templatesData = userTemplate.map(value => allTemplate[value])
-
-
-
-
-    console.log('pre', templatesData, 'presenter')
-    //console.log('pre', dataTemp, 'presenter')
     let templateData2 = [];
 
     const tempDetailPress = (name, light, moisture) => {
@@ -27,8 +21,6 @@ export const UserTemplate = ( {navigation} ) => {
         dispatch(setSelectedTemplate(templateData2))
         dispatch(setCanLike(false))
         navigation.navigate("DetailsTemp", { templateData: templateData2 })}
-
-
     return(
           <UserTemplateView  tempDetailPress={tempDetailPress}  templatesData={templatesData} />
     )
