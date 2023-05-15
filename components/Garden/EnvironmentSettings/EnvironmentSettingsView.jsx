@@ -44,18 +44,22 @@ export const EnvironmentSettingsView = ({
 				<View style={{marginBottom: 20}}>
 					<EnvironmentSettingsSliderView
 						title={ moistureTitle }
+						unit={ "%" }
 						sliderIcon={ waterDropIcon }
 						nutrition={ moisture }
 						onSlide={ setMoisture }
 						advancedInfo={ advancedInfo }
+						highRange={false}
 					/>
 				</View>
 				<EnvironmentSettingsSliderView
 					title={ lightTitle }
+					unit={ "lux" }
 					sliderIcon={ bulbIcon }
 					nutrition={ light }
 					onSlide={ setLight }
 					advancedInfo={ advancedInfo }
+					highRange={true}
 				/>
 			</View>
 

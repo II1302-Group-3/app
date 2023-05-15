@@ -48,18 +48,22 @@ export const BrowseTemplateView = ({
             <View style={{marginBottom: 20}}>
 				<EnvironmentSettingsSliderView
 					title={ moistureTitle }
+					unit={ "%" }
 					isDisabled ={true}
 					sliderIcon={ waterDropIcon }
                     nutrition={ moisture}
 					advancedInfo={ advancedInfo }
+					highRange={false}
 				/>
 			</View>
 			<EnvironmentSettingsSliderView
 				title={ lightTitle }
+				unit={ "lux" }
 				isDisabled ={true}
 				sliderIcon={ bulbIcon }
                 nutrition={ light }
 				advancedInfo={ advancedInfo }
+				highRange={true}
 			/>
 
 			<View style={{ paddingVertical: 20 }}>

@@ -41,18 +41,22 @@ export const TemplateFormView = ({
             <View style={{marginBottom: 20}}>
 				<EnvironmentSettingsSliderView
 					title={ moistureTitle }
+					unit={ "%" }
 					sliderIcon={ waterDropIcon }
 					onSlide={ setMoisture }
 					advancedInfo={ advancedInfo }
 					nutrition={moisture}
+					highRange={false}
 				/>
 			</View>
 			<EnvironmentSettingsSliderView
 				title={ lightTitle }
+				unit={ "lux" }
 				sliderIcon={ bulbIcon }
 				onSlide={ setLight }
 				advancedInfo={ advancedInfo }
 				nutrition={light}
+				highRange={true}
 			/>
 
 			<View style={{ paddingVertical: 20 }}>
