@@ -32,8 +32,6 @@ export const BrowseTemplate = ({ navigation }) => {
             moistureLevel: moisture,
             id
         }
-        console.log("template data 2");
-        console.log(templateData2);
         dispatch(setSelectedTemplate(templateData2))
         navigation.navigate("DetailsTemp")
     }

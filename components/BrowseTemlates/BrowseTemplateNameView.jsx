@@ -27,10 +27,6 @@ export const BrowseTemplateNameView = ({ plantName, tempDetailPress, plantMoistu
       name.plantName.toLowerCase().includes(searchText.toLowerCase())))
   }, [searchText])
 
-  console.log(filteredPlantNames)
-
-
-
   return (
     <View>
       <View style={{ margin: '5%', }}>

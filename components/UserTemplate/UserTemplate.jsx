@@ -14,8 +14,7 @@ export const UserTemplate = ( {navigation} ) => {
 
 
 
-    console.log('pre', templatesData, 'presenter')
-    //console.log('pre', dataTemp, 'presenter')
+    console.log('USERTEMPLATE PRESENTER TEMPLATE DATA', templatesData)
     let templateData2 = []; 
 
     const tempDetailPress = (name, light, moisture) => {
