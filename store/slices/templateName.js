@@ -12,7 +12,8 @@ const initialState = {
       light: 0,
       moisture: 0,
       id: "",
-      hasLiked: null
+      hasLiked: null,
+      canLike: null, 
     }
 }
 
@@ -71,6 +72,9 @@ export const templateName = createSlice({
       setHasLiked: (state, { payload }) => {
         state.selectedTemplate.hasLiked = payload;
       },
+      setCanLike: (state, { payload }) => {
+        state.selectedTemplate.canLike = payload;
+      },
       setSelectedTemplate: (state, { payload }) => {
         console.log(payload)
         state.selectedTemplate.name = payload.plantName;
@@ -119,4 +123,4 @@ export const saveTemplate = createAsyncThunk(
     }
 )
 
-export const { setTemplateName, setUserTemplate, setLikes, setHasLiked, setSelectedTemplate } = templateName.actions;
+export const { setTemplateName, setUserTemplate, setLikes, setHasLiked, setSelectedTemplate, setCanLike } = templateName.actions;
