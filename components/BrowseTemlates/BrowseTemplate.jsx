@@ -15,7 +15,7 @@ export const BrowseTemplate = ({ navigation }) => {
     const plantMoisture = Object.values(templatesData).map(item => item.moistureLevel);
 
     const sortByRecent = templatesData => {
-        return Object.values(templatesData).sort((template1, template2) => template1?.date ?? 0 < template2?.date ?? 0);
+        return Object.values(templatesData).sort((template1, template2) => (template2?.date ?? 0) - (template1?.date ?? 0));
     }
 
     const sortByLikes = templatesData => {
