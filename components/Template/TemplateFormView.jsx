@@ -11,6 +11,8 @@ const waterDropIcon = require('../../assets/WaterDropIcon.png'); // Link to wate
 const bulbIcon = require('../../assets/BulpIcon.png'); // Link to bulbIcon for the slider
 
 export const TemplateFormView = ({
+	light,
+	moisture,
 	setLight,
 	setMoisture,
 	setAdvancedInfo,
@@ -42,6 +44,7 @@ export const TemplateFormView = ({
 					sliderIcon={ waterDropIcon }
 					onSlide={ setMoisture }
 					advancedInfo={ advancedInfo }
+					nutrition={moisture}
 				/>
 			</View>
 			<EnvironmentSettingsSliderView
@@ -49,6 +52,7 @@ export const TemplateFormView = ({
 				sliderIcon={ bulbIcon }
 				onSlide={ setLight }
 				advancedInfo={ advancedInfo }
+				nutrition={light}
 			/>
 
 			<View style={{ paddingVertical: 20 }}>
@@ -60,7 +64,7 @@ export const TemplateFormView = ({
 			</View>
 
             <View>
-                <Button mode="contained" style={{marginTop: 30}} onPress={() => saveTemplateValue()}>Save template</Button>
+                <Button mode="contained" style={{marginTop: 30}} onPress={() => saveTemplateValue()} disabled={name.trim().length < 3}>Save template</Button>
             </View>
 
 		</View>
