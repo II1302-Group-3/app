@@ -157,7 +157,7 @@ async function readUserFromFirebase(state, dispatch) {
             dispatch(addGardenNameMapping({serial, nickname}));
 
             const lastSyncTime = (await database().ref(refs.syncTimeRef).once("value")).val() ?? 0;
-            const online = (Date.now() / 1000) - lastSyncTime < 5 * 60;
+            const online = (Date.now() / 1000) - lastSyncTime < 25;
 
             dispatch(addGardenOnlineStatus({serial, online}));
 
