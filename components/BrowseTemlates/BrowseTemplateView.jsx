@@ -36,7 +36,7 @@ export const BrowseTemplateView = ({
         <View style={{paddingHorizontal: 20, paddingTop: 30, paddingBottom: 30 + headerHeight, justifyContent: "center", flexDirection: "column", height: "100%" }}>
             <View style={{ justifyContent: 'space-between', flexDirection: 'row' }}>
                 <Text variant="headlineMedium" style={{fontWeight: "bold", marginBottom: 30, fontSize: 20}}>Template for "{plantName}"</Text>
-				{canLike && <TouchableOpacity onPress={() => onPress(!isFilled)}>
+				{canLike && <TouchableOpacity activeOpacity={0.6} onPress={() => onPress(!isFilled)}>
 					<Image
 						source={isFilled ? filledHeart : unfilledHeart}
 						style={{ width: 30, height: 30 }}

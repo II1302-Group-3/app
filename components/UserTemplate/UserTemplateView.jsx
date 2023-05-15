@@ -1,9 +1,13 @@
 import React, { useState } from 'react';
 import { ScrollView, View, Text, Image, TouchableOpacity } from 'react-native';
 import { TextInput } from 'react-native-paper';
+import { useColorScheme } from 'react-native';
+import { lightGreenTheme, darkGreenTheme } from '../../theme';
 
 export const UserTemplateView = ({ tempDetailPress, templatesData}) => {
   const [searchText, setSearchText] = useState('');
+
+  const isDarkMode = useColorScheme() === 'dark';
 
   const filteredPlantNames = templatesData.filter(name =>
     name.plantName.toLowerCase().includes(searchText.toLowerCase())
@@ -23,20 +27,22 @@ export const UserTemplateView = ({ tempDetailPress, templatesData}) => {
       <View style={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'center' }}>
         {filteredPlantNames.map((name, index) => (
           <TouchableOpacity
-
+            activeOpacity={0.6}
             key={index}
             style={{
-              backgroundColor: '#90ee90',
+              backgroundColor: isDarkMode ? darkGreenTheme.colors.surfaceVariant : lightGreenTheme.colors.surfaceVariant,
               borderRadius: 8,
-              padding: 10,
+              padding: 12,
               margin: 8,
               elevation: 0,
               width: '45%',
               height: 80,
+              flexDirection: "column",
+              justifyContent: "space-between"
             }}
             onPress={() => tempDetailPress(name.plantName, name.lightLevel, name.moistureLevel)}
           >
-            <Text style={{ fontWeight: 'bold', fontSize: 25 }}>{name.plantName}</Text>
+            <Text style={{ fontWeight: 'bold', fontSize: 20 }}>{name.plantName}</Text>
             <View style={{ flexDirection: 'row' }}>
               <Image
                 source={require('../../assets/WaterDropIcon.png')}
