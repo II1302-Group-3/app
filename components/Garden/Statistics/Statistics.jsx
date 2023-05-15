@@ -52,7 +52,7 @@ export const Statistics = ({navigation}) => {
         }
     }
 
-    useEffect(() => {
+    function updateAllStatistics() {
         const NUTRITIENT = {
             LIGHT: 10764,
             MOISTURE: 100,
@@ -60,15 +60,10 @@ export const Statistics = ({navigation}) => {
             TEMPERATURE: 100
         }
 
-        // updateAllStatistics()
         updateStatistics(NUTRITIENT.LIGHT, NUTRITIENT_PATHS.LIGHT)
         updateStatistics(NUTRITIENT.MOISTURE, NUTRITIENT_PATHS.MOISTURE)
         updateStatistics(NUTRITIENT.HUMIDITY, NUTRITIENT_PATHS.HUMIDITY)
         updateStatistics(NUTRITIENT.TEMPERATURE, NUTRITIENT_PATHS.TEMPERATURE)
-
-        // function updateAllStatistics() {
-        //     Object.keys(NUTRITIENT).forEach((_, index) => updateStatistics(NUTRITIENT[index]), NUTRITIENT_PATHS[index])
-        // }
 
         function updateStatistics(nutritient, nutritientPath) {
             dispatch(getStatistics({ nutritientPath, date })).unwrap().then(data => setStatistics(data));
@@ -107,6 +102,7 @@ export const Statistics = ({navigation}) => {
                 xAxisSetter(hours);
 
                 function setPercentage(data, max, setData) {
+
                     const dataAsPercentage = data.map(hour => ((hour.val / max) * 100))
                     setData(dataAsPercentage)
                 }
@@ -120,7 +116,10 @@ export const Statistics = ({navigation}) => {
                 }
             }
         }
+    }
 
+    useEffect(() => {
+        updateAllStatistics()
     }, [date]);
 
     return (

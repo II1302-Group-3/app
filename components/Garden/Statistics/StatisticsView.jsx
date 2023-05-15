@@ -1,5 +1,5 @@
-import React, { useRef, useEffect } from "react";
-import { View, Dimensions, StyleSheet, Animated, ScrollView } from "react-native";
+import React, { useRef, useEffect, useState, useCallback } from "react";
+import { View, Dimensions, StyleSheet, Animated, ScrollView, RefreshControl } from "react-native";
 import {
     Text,
     Button,
@@ -30,6 +30,14 @@ export const StatisticsView = ({
 }) => {
     const width = Dimensions.get("window").width;
     const height = 220;
+
+    const [refreshing, setRefreshing] = useState(false);
+    const onRefresh = useCallback(() => {
+        setRefreshing(true);
+        setTimeout(() => {
+            setRefreshing(false);
+        }, 2000)
+    }, [])
 
     function renderDay() {
         const BUTTON = {
@@ -197,7 +205,7 @@ export const StatisticsView = ({
     }
 
     return(
-        <ScrollView>
+        <ScrollView refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}>
             { renderDay() }
             { renderCharts() }
         </ScrollView>
