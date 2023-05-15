@@ -10,9 +10,15 @@ const initialUserState = {
     displayName: "",
 
     claimedGardens: [],
-    claimedGardenNames: {},
 
-    syncing: true
+    // TODO: Convert this into an object
+    claimedGardenNames: {},
+    claimedGardensOnline: {},
+    claimedGardensWaterLevelLow: {},
+    claimedGardensPlantDetected: {},
+
+    syncing: true,
+    refreshTimeoutId: -1
 };
 
 const initialState = {
@@ -100,16 +106,29 @@ export const firebaseAuth = createSlice({
         setUser: (state, { payload }) => { state.user = payload },
         setDisplayName: (state, { payload }) => { state.user.displayName = payload },
         setUserSyncing: (state, { payload }) => { state.user.syncing = payload },
+        setUserRefreshTimeoutId: (state, { payload }) => { 
+            if(state.user) {
+                state.user.refreshTimeoutId = payload;
+            }
+            else {
+                console.log("Tried to set refreshTimeoutId of null user");
+            }
+        },
         setUserToken: (state, { payload }) => { state.user.token = payload },
         addGarden: (state, { payload }) => {
-            state.user.claimedGardens = [...state.user.claimedGardens, payload.serial];
-            state.user.claimedGardenNames[payload.serial] = payload.nickname;
+            state.user.claimedGardens = [...state.user.claimedGardens, payload];
         },
         removeGarden: (state, { payload }) => {
             state.user.claimedGardens = [...state.user.claimedGardens].filter(s => s !== payload);
             delete state.user.claimedGardenNames[payload];
+            delete state.user.claimedGardensOnline[payload];
+            delete state.user.claimedGardensWaterLevelLow[payload];
+            delete state.user.claimedGardensPlantDetected[payload];
         },
         addGardenNameMapping: (state, { payload }) => { state.user.claimedGardenNames[payload.serial] = payload.nickname },
+        addGardenOnlineStatus: (state, { payload }) => { state.user.claimedGardensOnline[payload.serial] = payload.online },
+        addGardenWaterLevelLow: (state, { payload }) => { state.user.claimedGardensWaterLevelLow[payload.serial] = payload.waterLevelLow },
+        addGardenPlantDetected: (state, { payload }) => { state.user.claimedGardensPlantDetected[payload.serial] = payload.plantDetected },
         reset: () => initialState,
         resetError: state => {
             state.signupError = null;
@@ -134,7 +153,18 @@ export const firebaseAuth = createSlice({
     }
 })
 
-export const { setDisplayName, setUserSyncing, addGarden, removeGarden, addGardenNameMapping, resetError } = firebaseAuth.actions;
+export const { 
+    setDisplayName, 
+    setUserSyncing, 
+    setUserRefreshTimeoutId, 
+    addGarden, 
+    removeGarden, 
+    addGardenNameMapping, 
+    addGardenOnlineStatus, 
+    addGardenWaterLevelLow, 
+    addGardenPlantDetected, 
+    resetError 
+} = firebaseAuth.actions;
 
 export const logout = () => (dispatch, _) => {
     dispatch(firebaseAuth.actions.reset());
@@ -142,8 +172,8 @@ export const logout = () => (dispatch, _) => {
 }
 
 // This is used by addGarden and removeGarden to refresh the ID token, which contains the user's collection of gardens
-export const refreshToken = () => (dispatch, state) => {
-    auth().currentUser.getIdToken(true)
+export const reloadToken = () => (dispatch, state) => {
+    auth().currentUser.getIdToken(false)
         .then(token => dispatch(firebaseAuth.actions.setUserToken(token)))
         .catch(error => Alert.alert("Failed to refresh ID token", error.message));
 }

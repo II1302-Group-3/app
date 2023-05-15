@@ -13,24 +13,24 @@ const backgroundStyle = {
     margin: 15,
 };
 
-const waterDropIcon = require('../../assets/WaterDropIcon.png'); // Link to waterDropIcon for the slider
-const bulbIcon = require('../../assets/BulpIcon.png'); // Link to bulbIcon for the slider
 
 const GardenEntry = (garden, onPress) => {
-    console.log(garden)
+    const onlineIcon = require('../../assets/globe.png');
+    const waterDropIcon = require('../../assets/WaterDropIcon.png');
+
     return (
         <TouchableOpacity onPress={() => onPress(garden)} activeOpacity={0.6} style={{marginBottom: 16}} key={garden.serial}>
             <Card mode="contained">
-                <Card.Title titleVariant="titleMedium" title={garden.nickname}></Card.Title>
+                <Card.Title titleVariant="titleMedium" title={garden.nickname} subtitleStyle="titleSmall" subtitle={garden.serial}></Card.Title>
                 <Card.Content>
                     <View style={{flexDirection: 'row'}}>
-                        <Image source={require('../../assets/WaterDropIcon.png')} style={{width: 20, height: 20, marginRight: 6}} />
+                        <Image source={onlineIcon} style={{width: 20, height: 20, marginRight: 6}} />
                         <Text style={{marginRight: 10}}>
-                            Looks Good
+                            {garden.online ? "Online" : "Offline"}
                         </Text>
-                        <Image source={require('../../assets/BulpIcon.png')} style={{width: 20, height: 20, marginRight: 6}} />
+                        <Image source={waterDropIcon} style={{width: 20, height: 20, marginRight: 6}} />
                         <Text>
-                            Looks Good
+                            {garden.waterLevelLow ? "Water tank empty" : "Water tank full"}
                         </Text>
                     </View>
                 </Card.Content>
@@ -52,7 +52,7 @@ const NoGardens = () => {
     );
 }
 
-export const HomeView = ({signOut, displayName, gardens, addNewGarden, openGarden, addNewTemplate, browseTemplate}) => {
+export const HomeView = ({signOut, displayName, gardens, addNewGarden, openGarden, addNewTemplate, myTemplates}) => {
     const headerHeight = useHeaderHeight();
 
     return(
@@ -65,6 +65,7 @@ export const HomeView = ({signOut, displayName, gardens, addNewGarden, openGarde
             <View style={{flexGrow: 0}}>
                 <Button mode="contained" style={{marginBottom: 10}} onPress={() => addNewGarden()}>Add a new Green Garden</Button>
                 <Button mode="contained" style={{marginBottom: 10}} onPress={() => addNewTemplate()}>Create a plant template</Button>
+                <Button mode="contained" style={{marginBottom: 10}} onPress={() => myTemplates()}>View my templates</Button>
                 <Button mode="contained-tonal" style={{}} onPress={() => signOut()}>Sign out</Button>
             </View>
         </View>

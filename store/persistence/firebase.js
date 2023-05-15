@@ -3,47 +3,42 @@ import { Alert } from "react-native";
 
 import {
     setGardenSyncing,
-    setNickname,
     setMoisture,
     setLight,
-    setWaterLevelLow
 } from "../slices/garden";
 
 import {
     setDisplayName,
     setUserSyncing,
-    addGardenNameMapping
+    addGardenNameMapping,
+    addGardenOnlineStatus,
+    addGardenWaterLevelLow,
+    addGardenPlantDetected,
+    setUserRefreshTimeoutId
 } from '../slices/firebaseAuth';
 
 import {
-    setTemplateName
+    setTemplateName,
+    setUserTemplate
 } from "../slices/templateName";
+import { log } from 'react-native-reanimated';
 
 
 async function readTemplates(state, dispatch) {
-    // const refs = getUserRefs(state.firebaseAuth.user.uid);
-    // console.log("read template")
-    // const templateData = (await database().ref(refs.templateRef).once('value')).val()
-    // const plantNames = Object.values(templateData).map(item => item);
+    const  refs = getUserRefs(state.firebaseAuth.user.uid);
+    console.log("Reading templates...");
+    const templateData = (await database().ref(refs.templateRef).once('value')).val() ?? {};
+    const plantNames = Object.values(templateData).map(item => item);
+    if (templateData) {
+        dispatch(setTemplateName(plantNames))
+    }
 
-    // if (templateData) {
-    //     console.log(plantNames)
-    //     console.log("whaat")
-    //     console.log(templateData)
-    //     dispatch(setTemplateName(templateData))
-    // }
-    
-/*
-    const {userTemplateRef} = getUserRefs(state.firebaseAuth.user.uid);
+    const userTemplates = (await database().ref(refs.userTemplateRef).once('value')).val() ?? {};
+    const userTemplate = Object.values(userTemplates).map(item => item.templateKey);
 
-    database().ref(userTemplateRef).on('value', (snapshot) => {
-        console.log("1" + userTemplateRef)
-        snapshot.forEach((childSnapshot) => {
-            const templateKey2 = childSnapshot.key;
-            const templateData2 = childSnapshot.val();
-            console.log(templateKey2, templateData2);
-        });
-    }) */
+    if (userTemplate) {
+        dispatch(setUserTemplate({userTemplate, templateData} ))
+    }
 }
 
 export function enablePersistence(store) {
@@ -56,6 +51,7 @@ export function enablePersistence(store) {
         const state = store.getState();
         let promises = [];
 
+        // User selected new garden
         if(state.garden?.syncing) {
             if(!prevState.garden) {
                 promises = [...promises, readGardenFromFirebase(state, dispatch)];
@@ -65,17 +61,35 @@ export function enablePersistence(store) {
             syncGardenToFirebase(state, prevState);
         }
 
-        if(state.firebaseAuth.user?.syncing) {
-            if(!prevState.firebaseAuth.user) {
-                promises = [...promises, readUserFromFirebase(state, dispatch)];
-                promises = [...promises, readTemplates(state, dispatch)];
-
-                //readTemplates(state, dispatch);
-            }
+        // User just logged in
+        if(state.firebaseAuth.user && !prevState.firebaseAuth.user) {
+            promises = [...promises, readTemplates(state, dispatch)];
         }
-        else {
+
+        const loggedIn = state.firebaseAuth.user?.syncing && !prevState.firebaseAuth.user?.syncing;
+        const refreshExpired =
+            (state.firebaseAuth.user?.uid && prevState.firebaseAuth.user?.uid) &&
+            (state.firebaseAuth.user.refreshTimeoutId === -1 && prevState.firebaseAuth.user.refreshTimeoutId !== -1);
+        const shouldRefresh = loggedIn || refreshExpired;
+
+        // User needs to download data from Firebase
+        if(shouldRefresh) {
+            console.log(`Refreshing user due to ${refreshExpired ? "refresh timeout" : "new login"}`);
+
+            // Start a timer to refresh user in 10 seconds
+            const promise = readUserFromFirebase(state, dispatch).then(() => {
+                const timeout = setTimeout(() => dispatch(setUserRefreshTimeoutId(-1)), 10000);
+                dispatch(setUserRefreshTimeoutId(timeout));
+            });
+
+            promises = [...promises, promise];
+        }
+
+        if(state.firebaseAuth.user && !state.firebaseAuth.user?.syncing) {
             syncUserToFirebase(state, prevState);
         }
+
+        prevState = store.getState();
 
         if(promises.length > 0) {
             const errorFn = e => Alert.alert("Failed to read from Firebase", "Error: " + e);
@@ -83,21 +97,20 @@ export function enablePersistence(store) {
 
             Promise.all(promises).catch(errorFn).finally(finallyFn);
         }
-
-        prevState = store.getState();
     })
 }
 
 function getGardenRefs(serial) {
     const garden = `garden/${serial}/`;
-    console.log(garden)
 
     const nicknameRef = garden + 'nickname';
     const moistureRef = garden + 'target_moisture';
     const lightRef = garden + 'target_light_level';
     const waterLevelRef = garden + 'water_level_low';
+    const plantDetectedRef = garden + 'plant_detected';
+    const syncTimeRef = garden + 'last_sync_time';
 
-    return { nicknameRef, moistureRef, lightRef, waterLevelRef };
+    return { nicknameRef, moistureRef, lightRef, waterLevelRef, plantDetectedRef, syncTimeRef };
 }
 
 function getUserRefs(uid) {
@@ -114,48 +127,53 @@ async function readGardenFromFirebase(state, dispatch) {
 
     const moisture = (await database().ref(refs.moistureRef).once("value")).val();
     const light = (await database().ref(refs.lightRef).once("value")).val();
-    const waterLevelLow = (await database().ref(refs.waterLevelRef).once("value")).val();
 
     if(moisture) {
-        console.log(`Dispatched moisture for garden ${state.garden.serial}: ${moisture}`);
         dispatch(setMoisture(moisture));
     }
     if(light) {
-        console.log(`Dispatched light for garden ${state.garden.serial}: ${light}`);
         dispatch(setLight(light));
-    }
-
-    if(waterLevelLow) {
-        console.log(`Dispatched notification (water level low) for garden ${state.garden.serial}`);
-        dispatch(setWaterLevelLow());
-
-        // Now that the notification has been seen, it should be reset in the database
-        await database().ref(refs.waterLevelRef).remove();
     }
 
     dispatch(setGardenSyncing(false));
 }
 
 async function readUserFromFirebase(state, dispatch) {
-    const refs = getUserRefs(state.firebaseAuth.user.uid);
-    const displayName = (await database().ref(refs.displayNameRef).once("value")).val();
+    try {
+        console.log("Reading user from Firebase...");
 
-    if(displayName) {
-        console.log(`Dispatched display name for user ${state.firebaseAuth.user.uid}: ${displayName}`);
-        dispatch(setDisplayName(displayName));
-    }
+        const refs = getUserRefs(state.firebaseAuth.user.uid);
+        const displayName = (await database().ref(refs.displayNameRef).once("value")).val();
 
-    for(const serial of state.firebaseAuth.user.claimedGardens) {
-        const refs = getGardenRefs(serial);
-        const nickname = (await database().ref(refs.nicknameRef).once("value")).val();
-
-        if(nickname) {
-            console.log(`Dispatched name mapping for user${state.firebaseAuth.user.uid} garden ${serial}: ${nickname}`);
-            dispatch(addGardenNameMapping({serial, nickname}));
+        if(displayName) {
+            dispatch(setDisplayName(displayName));
         }
-    }
 
-    dispatch(setUserSyncing(false));
+        for(const serial of state.firebaseAuth.user.claimedGardens) {
+            const refs = getGardenRefs(serial);
+            const nickname = (await database().ref(refs.nicknameRef).once("value")).val() ?? "";
+
+            console.log(`New garden ${serial} for user ${state.firebaseAuth.user.uid}: ${nickname}`);
+            dispatch(addGardenNameMapping({serial, nickname}));
+
+            const lastSyncTime = (await database().ref(refs.syncTimeRef).once("value")).val() ?? 0;
+            const online = (Date.now() / 1000) - lastSyncTime < 25;
+
+            dispatch(addGardenOnlineStatus({serial, online}));
+
+            const waterLevelLow = (await database().ref(refs.waterLevelRef).once("value")).val() ?? false;
+            dispatch(addGardenWaterLevelLow({serial, waterLevelLow}));
+
+            const plantDetected = (await database().ref(refs.plantDetectedRef).once("value")).val() ?? false;
+            dispatch(addGardenPlantDetected({serial, plantDetected}));
+        }
+
+        dispatch(setUserSyncing(false));
+    }
+    catch(error) {
+        console.log("Couldn't read user - probably signed out");
+        console.log(`Error is ${error}`);
+    }
 }
 
 async function syncGardenToFirebase(state, prevState) {

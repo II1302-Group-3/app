@@ -1,6 +1,6 @@
 import React, { useRef, useEffect, useState, useCallback } from "react";
 import { View, Dimensions, StyleSheet, Animated, ScrollView, RefreshControl } from "react-native";
-import { 
+import {
     Text,
     Button,
     ActivityIndicator,
@@ -100,33 +100,37 @@ export const StatisticsView = ({
         })
 
         const charts = [
-            {legend: 'Light', 
-            color: chartStyles.light.color, 
+            {legend: 'Light',
+            color: chartStyles.light.color,
             data: lightData,
             xAxis: lightXAxis,
             loading: lightIsLoading,
-            error: lightError}, 
+            error: lightError,
+            yAxisSuffix: "%"},
 
-            {legend: 'Moisture', 
-            color: chartStyles.moisture.color, 
+            {legend: 'Moisture',
+            color: chartStyles.moisture.color,
             data: moistureData,
             xAxis: moistureXAxis,
             loading: moistureIsLoading,
-            error: moistureError},
+            error: moistureError,
+            yAxisSuffix: "%"},
 
-            {legend: 'Humidity', 
-            color: chartStyles.moisture.color, 
+            {legend: 'Humidity',
+            color: chartStyles.moisture.color,
             data: humidityData,
             xAxis: humidityXAxis,
             loading: humidityIsLoading,
-            error: humidityError},
+            error: humidityError,
+            yAxisSuffix: "%"},
 
-            {legend: 'Temperature', 
-            color: chartStyles.moisture.color, 
+            {legend: 'Temperature',
+            color: chartStyles.moisture.color,
             data: temperatureData,
             xAxis: temperatureXAxis,
             loading: temperatureIsLoading,
-            error: temperatureError}
+            error: temperatureError,
+            yAxisSuffix: " °C"}
         ];
 
         const Transition = props => {
@@ -149,7 +153,7 @@ export const StatisticsView = ({
               );
         }
 
-        return charts.map(chart => 
+        return charts.map(chart =>
             <View key={chart.legend}>
                 <Transition style={loadingIconStyles.wrapper} loading={chart.loading}>
                     { chart.error ? (
@@ -157,7 +161,7 @@ export const StatisticsView = ({
                     ) : (
                         <ActivityIndicator size={loadingIconStyles.size} animating={true} color={loadingIconStyles.color} />
                     )}
-                    
+
                 </Transition>
                 <LineChart
                     data={{
@@ -172,7 +176,7 @@ export const StatisticsView = ({
                     width={width} // from react-native
                     height={height}
                     yAxisLabel=""
-                    yAxisSuffix="%"
+                    yAxisSuffix={chart.yAxisSuffix}
                     yAxisInterval={1} // optional, defaults to 1
                     chartConfig={{
                         strokeWidth: "5",

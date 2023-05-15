@@ -7,6 +7,9 @@ import { useHeaderHeight } from '@react-navigation/elements';
 export const LoginFormView = ({
     email,
     password,
+    canPressLogin,
+    canPressSignUp,
+    loading,
     setEmail,
     setPassword,
     login,
@@ -24,6 +27,7 @@ export const LoginFormView = ({
                     mode={'outlined'}
                     onChangeText={text => setEmail(text)}
                     autoComplete="email"
+                    error={email.trim() == ""}
                 />
                 <TextInput
                     label="Password"
@@ -32,11 +36,12 @@ export const LoginFormView = ({
                     onChangeText={text => setPassword(text)}
                     secureTextEntry={true}
                     autoComplete="current-password"
+                    error={password.length < 6}
                 />
-                <Button mode="contained" style={{marginVertical: 25}} onPress={() => login(email, password)}>
+                <Button mode="contained" disabled={!canPressLogin} loading={loading} style={{marginVertical: 25}} onPress={login}>
                     Log In
                 </Button>
-                <Button mode="text" onPress={() => navigation.navigate('Signup')}>
+                <Button mode="text" disabled={!canPressSignUp} onPress={() => navigation.navigate('Signup')}>
                     Don't have an account? Sign up
                 </Button>
             </View>

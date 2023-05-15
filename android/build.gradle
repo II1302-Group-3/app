@@ -20,4 +20,10 @@ buildscript {
         classpath("com.facebook.react:react-native-gradle-plugin")
         classpath("com.google.gms:google-services:4.3.15")
     }
+    // https://github.com/rodgomesc/vision-camera-code-scanner/issues/112
+    ext {
+        VisionCameraCodeScanner_compileSdkVersion = 33
+        VisionCameraCodeScanner_minSdkVersion = 21
+        VisionCameraCodeScanner_targetSdkVersion = 33
+    }
 }

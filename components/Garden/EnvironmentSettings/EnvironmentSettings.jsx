@@ -1,35 +1,34 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { setMoisture, setLight, resetGarden, removeGarden, resetWaterLevelLow } from '../../../store/slices/garden';
+import { setMoisture, setLight, removeGarden } from '../../../store/slices/garden';
 import { EnvironmentSettingsView } from './EnvironmentSettingsView';
 import { Alert } from 'react-native';
+import { Spinner } from '../../Spinner';
 
 export const EnvironmentSettings = ({ navigation }) => {
     const dispatch = useDispatch();
+    const isSyncing = useSelector(state => state.garden?.syncing ?? true);
 
     const serial = useSelector(state => state.garden?.serial ?? "");
     const nickname = useSelector(state => state.garden?.nickname ?? "");
     const light = useSelector(state => state.garden?.light ?? 0);
     const moisture = useSelector(state => state.garden?.moisture ?? 0);
-    console.log(light, moisture)
+
+    const copyToTemplate = () => navigation.navigate("AddTemplate");
     const browseTemplate = () => navigation.navigate("BrowseTemplate")
 
-    useEffect(() => {
-        return () => dispatch(resetGarden());
-    }, [])
+    useEffect(() => navigation.setOptions({title: `Settings for ${nickname}`}), [nickname])
 
-    useEffect(() => navigation.setOptions({title: nickname}), [nickname])
-
-    const waterLevelLow = useSelector(state => state.garden?.waterLevelLow ?? false);
+    const waterLevelLow = useSelector(state => state.firebaseAuth.user?.claimedGardensWaterLevelLow[state.garden?.serial ?? ""] ?? false);
+    const online = useSelector(state => state.firebaseAuth.user?.claimedGardensOnline[state.garden?.serial ?? ""] ?? false);
+    const plantDetected = useSelector(state => state.firebaseAuth.user?.claimedGardensPlantDetected[state.garden?.serial ?? ""] ?? false);
 
     useEffect(() => {
         if(waterLevelLow && nickname !== "") {
             Alert.alert(
-                `Warning for ${nickname}`, 
+                `Warning for ${nickname}`,
                 "The water level in the tank is low. Refill the tank as soon as possible."
             );
-
-            dispatch(resetWaterLevelLow());
         }
     }, [waterLevelLow, nickname]);
 
@@ -39,7 +38,7 @@ export const EnvironmentSettings = ({ navigation }) => {
 
 	const userToken = useSelector(state => state.firebaseAuth.user.token);
 	const [isDeleting, setIsDeleting] = useState(false);
-	
+
 	const deleteGarden = () => {
         setIsDeleting(true);
 
@@ -53,8 +52,8 @@ export const EnvironmentSettings = ({ navigation }) => {
         }
 
         Alert.alert(
-            "Are you sure?", 
-            "Anyone will be able to claim this garden after you delete it from your collection.", 
+            "Are you sure?",
+            "Anyone will be able to claim this garden after you delete it from your collection.",
             [{
                 text: "Cancel",
                 onPress: () => setIsDeleting(false),
@@ -68,6 +67,21 @@ export const EnvironmentSettings = ({ navigation }) => {
         )
 	}
 
+    if(isSyncing) {
+        return <Spinner></Spinner>;
+    }
+
+    let warning = "";
+
+    if(online) {
+        if(!plantDetected) {
+            warning = "No plant detected in garden";
+        }
+    }
+    else {
+        warning = "This garden is not connected to the internet";
+    }
+
     return(
         <EnvironmentSettingsView
             setLight={ changeLight }
@@ -76,9 +90,11 @@ export const EnvironmentSettings = ({ navigation }) => {
             advancedInfo={ advancedInfo }
             light={ light }
             moisture={ moisture }
-            browseTemplate={browseTemplate}
+            copyToTemplate={ copyToTemplate }
+            browseTemplate={ browseTemplate }
             canDeleteGarden={ !isDeleting }
             deleteGarden={ deleteGarden }
+            warning={ warning }
         />
     )
 }

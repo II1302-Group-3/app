@@ -9,6 +9,9 @@ export const RegistrationFormView = ({
     email,
     password,
     confirmPassword,
+    signUpEnabled,
+    backEnabled,
+    loading,
     setDisplayName,
     setEmail,
     setPassword,
@@ -28,6 +31,7 @@ export const RegistrationFormView = ({
                     mode={'outlined'}
                     onChangeText={text => setDisplayName(text)}
                     autoComplete="name"
+                    error={displayName.trim() == ""}
                 />
                 <TextInput
                     label="Email"
@@ -35,6 +39,7 @@ export const RegistrationFormView = ({
                     mode={'outlined'}
                     onChangeText={text => setEmail(text)}
                     autoComplete="email"
+                    error={email.trim() == ""}
                 />
                 <TextInput
                     label="Password"
@@ -43,6 +48,7 @@ export const RegistrationFormView = ({
                     onChangeText={text => setPassword(text)}
                     secureTextEntry={true}
                     autoComplete="new-password"
+                    error={password.length < 6}
                 />
                 <TextInput
                     label="Confirm Password"
@@ -51,12 +57,13 @@ export const RegistrationFormView = ({
                     onChangeText={text => setConfirmPassword(text)}
                     secureTextEntry={true}
                     autoComplete="new-password"
+                    error={confirmPassword.length < 6}
                 />
                 <View style={{marginTop: 25}}>
-                    <Button mode="contained" style={{marginBottom: 10}} onPress={() => signUp(displayName, email, password, confirmPassword)}>
+                    <Button mode="contained" style={{marginBottom: 10}} disabled={!signUpEnabled} loading={loading} onPress={signUp}>
                         Sign Up
                     </Button>
-                    <Button mode="contained-tonal" onPress={() => navigation.goBack()}>
+                    <Button mode="contained-tonal" disabled={!backEnabled} onPress={() => navigation.goBack()}>
                         Go Back
                     </Button>
                 </View>

@@ -9,8 +9,11 @@ import {
 import { DAYS } from "../../../constants";
 import { View } from "react-native";
 
-export const Statistics = () => {
+export const Statistics = ({navigation}) => {
     const dispatch = useDispatch();
+
+    const nickname = useSelector(state => state.garden?.nickname ?? "");
+    useEffect(() => navigation.setOptions({title: `Statistics for ${nickname}`}), [nickname])
 
     const [date, setDate] = useState(new Date());
     const [day, setDay] = useState(DAYS[date.getDay()]);
@@ -31,7 +34,7 @@ export const Statistics = () => {
     const moistureError = useSelector(state => state.garden.statistics.moisture.error);
     const humidityError = useSelector(state => state.garden.statistics.humidity.error);
     const temperatureError = useSelector(state => state.garden.statistics.temperature.error);
-    
+
 
     const setNextDay = () => {
         if (day !== 'Sunday') {
@@ -68,34 +71,44 @@ export const Statistics = () => {
             function setStatistics(data) {
                 let dataSetter;
                 let xAxisSetter;
-    
+                let converter;
+
                 switch(nutritientPath) {
                     case NUTRITIENT_PATHS.LIGHT:
                         dataSetter = setLightData;
                         xAxisSetter = setLightXAxis;
+                        converter = setPercentage;
                         break;
                     case NUTRITIENT_PATHS.MOISTURE:
                         dataSetter = setMoistureData;
                         xAxisSetter = setMoistureXAxis;
+                        converter = setPercentage;
                         break;
                     case NUTRITIENT_PATHS.HUMIDITY:
                         dataSetter = setHumidityData;
                         xAxisSetter = setHumidityXAxis;
+                        converter = setPercentage;
                         break;
                     case NUTRITIENT_PATHS.TEMPERATURE:
                         dataSetter = setTemperatureData;
                         xAxisSetter = setTemperatureXAxis;
+                        converter = setTemperature;
                         break;
                 }
-    
-                setPercentage(data, nutritient, dataSetter);
+
+                converter(data, nutritient, dataSetter);
+
                 const hours = getArrayOfHours(data);
                 xAxisSetter(hours);
 
                 function setPercentage(data, max, setData) {
-                    
+
                     const dataAsPercentage = data.map(hour => ((hour.val / max) * 100))
                     setData(dataAsPercentage)
+                }
+
+                function setTemperature(data, max, setData) {
+                    setData(data.map(data => data.val));
                 }
 
                 function getArrayOfHours(data) {
