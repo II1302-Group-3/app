@@ -31,7 +31,7 @@ export const AddGardenView = props => {
 				</View>
 			</View>
 			<View style={{flexGrow: 0}}>
-				<Card>
+				<Card mode="contained">
 					<Card.Content>
 						<Text>
 							You can find the serial number and a QR code under your Green Garden.

@@ -53,7 +53,7 @@ function App() {
 						<Stack.Screen name="AddGarden" options={{ title: "Add Garden" }} component={ AddGarden } />
 						<Stack.Screen name="UserTemplate" options={{ title: "My Templates" }} component={ UserTemplate } />
 						<Stack.Screen name="BrowseTemplate" options={{ title: "Browse Template" }} component={ BrowseTemplate } />
-						<Stack.Screen name="DetailsTemp" options={{ title: "Browse Template View" }} component={ DetailsTemp } />
+						<Stack.Screen name="DetailsTemp" options={{ title: "" }} component={ DetailsTemp } />
 						<Stack.Screen name="AddTemplate" options={{ title: "Add Template" }} component={ AddTemplate } />
 						<Stack.Screen name="QrScanner" options={qrOptions} component={ QrScanner } />
 						</>

@@ -23,12 +23,12 @@ export const BrowseTemplateView = ({
 	canLike,
 
 }) => {
-	
+
 	const moistureTitle = 'Moisture Level';
 	const lightTitle = 'Light Level';
 	const advancedInfoTitle = 'Advanced info';
 	const headerHeight = useHeaderHeight();
-	
+
 	const filledHeart = require('../../assets/filled_heart.png')
 	const unfilledHeart = require('../../assets/heart.png')
 
@@ -36,42 +36,42 @@ export const BrowseTemplateView = ({
         <View style={{paddingHorizontal: 20, paddingTop: 30, paddingBottom: 30 + headerHeight, justifyContent: "center", flexDirection: "column", height: "100%" }}>
             <View style={{ justifyContent: 'space-between', flexDirection: 'row' }}>
                 <Text variant="headlineMedium" style={{fontWeight: "bold", marginBottom: 30, fontSize: 20}}>Template for "{plantName}"</Text>
-				<TouchableOpacity onPress={() => onPress(!isFilled)}  disabled={canLike}>
-					<Image 
+				{canLike && <TouchableOpacity activeOpacity={0.6} onPress={() => onPress(!isFilled)}>
+					<Image
 						source={isFilled ? filledHeart : unfilledHeart}
 						style={{ width: 30, height: 30 }}
 					/>
-				</TouchableOpacity>
-				
+				</TouchableOpacity>}
+
             </View>
-           
+
             <View style={{marginBottom: 20}}>
-				<EnvironmentSettingsSliderView 
-					title={ moistureTitle } 
+				<EnvironmentSettingsSliderView
+					title={ moistureTitle }
 					isDisabled ={true}
-					sliderIcon={ waterDropIcon } 
+					sliderIcon={ waterDropIcon }
                     nutrition={ moisture}
 					advancedInfo={ advancedInfo }
 				/>
 			</View>
-			<EnvironmentSettingsSliderView 
-				title={ lightTitle } 
+			<EnvironmentSettingsSliderView
+				title={ lightTitle }
 				isDisabled ={true}
-				sliderIcon={ bulbIcon } 
+				sliderIcon={ bulbIcon }
                 nutrition={ light }
 				advancedInfo={ advancedInfo }
 			/>
 
 			<View style={{ paddingVertical: 20 }}>
-				<EnvironmentSettingsSwitch 
+				<EnvironmentSettingsSwitch
 					title={ advancedInfoTitle }
 					onToggle={ setAdvancedInfo }
-					active={ advancedInfo } 
+					active={ advancedInfo }
 				/>
 			</View>
 
 
-			{gardens.length != 0 &&	<Button mode="contained" style={{marginBottom: 10}} onPress={() => applyTemplate( )}>Apply Templates</Button>}
+			{gardens.length != 0 &&	<Button mode="contained" style={{marginBottom: 10}} onPress={() => applyTemplate( )}>Apply template</Button>}
 
 
 

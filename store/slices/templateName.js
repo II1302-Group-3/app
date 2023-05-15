@@ -13,7 +13,7 @@ const initialState = {
       moisture: 0,
       id: "",
       hasLiked: null,
-      canLike: null, 
+      canLike: null,
     }
 }
 
@@ -51,7 +51,7 @@ export const setLiked = createAsyncThunk('templateName/setLiked', async({isFille
     await database().ref(ref).set(currentlyLikedBy.filter(likedBy => likedBy !== state.firebaseAuth.user.uid)).then(() => console.log("data removed"))
     dispatch(setLikes(currentlyLikedBy.length - 1))
   }
-  
+
 })
 
 export const templateName = createSlice({
@@ -67,7 +67,6 @@ export const templateName = createSlice({
       },
       setLikes: (state, { payload }) => {
         state.likes = payload;
-        console.log(state.likes)
       },
       setHasLiked: (state, { payload }) => {
         state.selectedTemplate.hasLiked = payload;
@@ -76,7 +75,6 @@ export const templateName = createSlice({
         state.selectedTemplate.canLike = payload;
       },
       setSelectedTemplate: (state, { payload }) => {
-        console.log(payload)
         state.selectedTemplate.name = payload.plantName;
         state.selectedTemplate.light = payload.lightLevel;
         state.selectedTemplate.moisture = payload.moistureLevel;
@@ -89,8 +87,6 @@ export const templateName = createSlice({
           state.allTemplates = {...state.allTemplates, ...payload.templateObject};
       });
       builder.addCase(alreadyLiked.fulfilled, (state, { payload }) => {
-        console.log("hasLiked?")
-        console.log(payload)
         state.selectedTemplate.hasLiked = payload;
       })
       builder.addCase(getTemplates.fulfilled, (state, { payload }) => {

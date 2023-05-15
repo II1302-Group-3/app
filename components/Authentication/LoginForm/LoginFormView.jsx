@@ -27,6 +27,7 @@ export const LoginFormView = ({
                     mode={'outlined'}
                     onChangeText={text => setEmail(text)}
                     autoComplete="email"
+                    error={email.trim() == ""}
                 />
                 <TextInput
                     label="Password"
@@ -35,6 +36,7 @@ export const LoginFormView = ({
                     onChangeText={text => setPassword(text)}
                     secureTextEntry={true}
                     autoComplete="current-password"
+                    error={password.length < 6}
                 />
                 <Button mode="contained" disabled={!canPressLogin} loading={loading} style={{marginVertical: 25}} onPress={login}>
                     Log In

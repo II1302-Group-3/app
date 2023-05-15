@@ -1,11 +1,12 @@
 import React, { useEffect } from 'react';
 import { useCardStyle } from '../../style';
 import { useColorScheme } from 'react-native';
-import { StyleSheet, View, Text, Image, TouchableHighlight } from 'react-native';
-import { useColors } from '../../style';
+import { StyleSheet, View, Image, TouchableOpacity } from 'react-native';
+import { Text } from "react-native-paper";
 import { resetGarden } from '../../store/slices/garden';
 import { Spinner } from '../Spinner';
 import { useSelector, useDispatch } from 'react-redux';
+import { useHeaderHeight } from '@react-navigation/elements';
 
 export const GardenView = ({ navigation }) => {
     const dispatch = useDispatch();
@@ -21,39 +22,45 @@ export const GardenView = ({ navigation }) => {
         return () => dispatch(resetGarden());
     }, [])
 
+    const tintColor = isDarkMode ? "#e1e1e1" : "#222222";
+
     const styles = StyleSheet.create({
-        cardStyle: Object.assign(cardStyle, {margin: 50, padding: 50}),
-        iconStyle: {width: 50, height: 50},
-        color: useColors()
+        cardStyle: Object.assign(cardStyle, {marginHorizontal: 50, marginVertical: 10, padding: 50}),
+        iconStyle: {width: 50, height: 50, marginBottom: 20, tintColor: tintColor },
+        textStyle: {color: tintColor}
     })
+
+    const settingsIcon = require('../../assets/Settings.png');
+    const statsIcon = require('../../assets/Stats.png');
 
     function renderCards() {
         const cards = [
-            {title: 'Environment Settings', img: require('../../assets/Settings.png'), nav: 'EnvironmentSettings'}, 
-            {title: 'Statistics', img: require('../../assets/Stats.png'), nav: 'Statistics'}
+            {title: 'Environment Settings', img: settingsIcon, nav: 'EnvironmentSettings'},
+            {title: 'Statistics', img: statsIcon, nav: 'Statistics'}
         ]
 
-        return cards.map(card => 
-            <TouchableHighlight 
+        return cards.map(card =>
+            <TouchableOpacity
                 key={card.nav}
-                style={styles.cardStyle} 
-                activeOpacity={0.1}
-                underlayColor={styles.color.lightGray}
+                style={styles.cardStyle}
+                activeOpacity={0.6}
                 onPress={() => navigation.navigate(card.nav)}>
                     <View style={{alignItems: 'center'}}>
                         <Image style={styles.iconStyle} source={card.img} />
-                        <Text>{card.title}</Text>
+                        <Text variant="titleSmall" style={styles.textStyle}>{card.title}</Text>
                     </View>
-            </TouchableHighlight>
+            </TouchableOpacity>
         )
     }
+
+    const headerHeight = useHeaderHeight();
 
     if(isSyncing) {
         return <Spinner></Spinner>;
     }
 
     return(
-        <View>
+        <View style={{flexDirection: "column", height: "100%", justifyContent: "center", paddingTop: 30, paddingBottom: 30 + headerHeight}}>
             {renderCards()}
         </View>
     )

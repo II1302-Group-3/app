@@ -14,6 +14,7 @@ export const EnvironmentSettings = ({ navigation }) => {
     const light = useSelector(state => state.garden?.light ?? 0);
     const moisture = useSelector(state => state.garden?.moisture ?? 0);
 
+    const copyToTemplate = () => navigation.navigate("AddTemplate");
     const browseTemplate = () => navigation.navigate("BrowseTemplate")
 
     useEffect(() => navigation.setOptions({title: `Settings for ${nickname}`}), [nickname])
@@ -69,7 +70,7 @@ export const EnvironmentSettings = ({ navigation }) => {
     if(isSyncing) {
         return <Spinner></Spinner>;
     }
-    
+
     let warning = "";
 
     if(online) {
@@ -89,6 +90,7 @@ export const EnvironmentSettings = ({ navigation }) => {
             advancedInfo={ advancedInfo }
             light={ light }
             moisture={ moisture }
+            copyToTemplate={ copyToTemplate }
             browseTemplate={ browseTemplate }
             canDeleteGarden={ !isDeleting }
             deleteGarden={ deleteGarden }

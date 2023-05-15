@@ -15,6 +15,7 @@ export const EnvironmentSettingsView = ({
 	advancedInfo,
 	light,
 	moisture,
+	copyToTemplate,
 	browseTemplate,
 	canDeleteGarden,
 	deleteGarden,
@@ -26,7 +27,7 @@ export const EnvironmentSettingsView = ({
 
 	const Warning = () => {
 		return (
-			<View style={{flexDirection: "row", margin: 16, width: "100%", justifyContent: "center"}}>
+			<View style={{flexDirection: "row", padding: 16, width: "100%", justifyContent: "center"}}>
 				<View style={{flexDirection: "row"}}>
 					<Icon name="warning" style={{marginRight: 12}} size={24} color="#fab005" />
 					<Text variant="labelLarge">{warning}</Text>
@@ -57,7 +58,7 @@ export const EnvironmentSettingsView = ({
 					advancedInfo={ advancedInfo }
 				/>
 			</View>
-			
+
 			<View>
 				<EnvironmentSettingsSwitch
 					title={ advancedInfoTitle }
@@ -65,9 +66,9 @@ export const EnvironmentSettingsView = ({
 					active={ advancedInfo }
 				/>
 
-				<Button mode="contained" style={{marginTop: 20}} onPress={() => browseTemplate()}>Browse Templates</Button>
-
-				<Button mode="contained" style={{marginTop: 20}} onPress={deleteGarden} disabled={!canDeleteGarden}>Delete garden from collection</Button>
+				<Button mode="contained" style={{marginTop: 30}} onPress={() => copyToTemplate()}>Copy settings to template</Button>
+				<Button mode="contained" style={{marginTop: 12}} onPress={() => browseTemplate()}>Browse templates</Button>
+				<Button mode="contained" style={{marginTop: 12}} onPress={deleteGarden} disabled={!canDeleteGarden}>Delete garden from collection</Button>
 			</View>
 		</View>
     )
