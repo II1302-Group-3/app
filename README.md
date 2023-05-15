@@ -13,3 +13,21 @@ Frontend app for the Green Garden project created with React Native
 If there are issues with starting the app try using `npx react-native start --reset-cache` or `npx react-native clean`.
 
 **Always run `npm install` (and `npx pod-install` on iOS) after fetching the latest commits from git!**
+
+## Making a release build of the app
+
+On Android:
+
+1. Add a key at `android/app/release.keystore`.
+2. Create a file called `signing.properties` in `android`.
+3. Run `cd android && ./gradlew assembleRelease`.
+4. APK will now be located in `android/app/build/outputs/apk/release/app-release.apk`.
+
+The file `signing.properties` should contain the following:
+
+```
+storeFile=release.keystore
+storePassword=**********
+keyPassword=**********
+keyAlias=green-garden-key
+```
