@@ -13,7 +13,7 @@ export const Home = ({ navigation }) => {
     const gardens = useSelector(state => {
         return [...state.firebaseAuth.user?.claimedGardens]
             .map(serial => {
-                const nickname = state.firebaseAuth.user.claimedGardenNames[serial] ?? serial;
+                const nickname = state.firebaseAuth.user.claimedGardenNames[serial] ?? "";
                 const online = state.firebaseAuth.user.claimedGardensOnline[serial] ?? false;
                 const waterLevelLow = state.firebaseAuth.user.claimedGardensWaterLevelLow[serial] ?? false;
                 return {serial, nickname, online, waterLevelLow};

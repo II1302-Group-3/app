@@ -72,6 +72,11 @@ export function enablePersistence(store) {
             (state.firebaseAuth.user.refreshTimeoutId === -1 && prevState.firebaseAuth.user.refreshTimeoutId !== -1);
         const shouldRefresh = loggedIn || refreshExpired;
 
+        // Clear stale timeouts
+        if(refreshExpired) {
+            clearTimeout(prevState.firebaseAuth.user.refreshTimeoutId);
+        }
+
         // User needs to download data from Firebase
         if(shouldRefresh) {
             console.log(`Refreshing user due to ${refreshExpired ? "refresh timeout" : "new login"}`);

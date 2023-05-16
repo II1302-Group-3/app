@@ -129,6 +129,8 @@ export async function addGarden(userToken, gardenSerial, gardenNickname, dispatc
             // refresh token
             await auth().currentUser.getIdToken(true);
             dispatch(firebaseAuth.addGarden(gardenSerial));
+            // Refresh immediately
+            dispatch(firebaseAuth.setUserRefreshTimeoutId(-1));
         }
         else {
             const errorCodeToMessage = {
