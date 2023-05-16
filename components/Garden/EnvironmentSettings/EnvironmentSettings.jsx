@@ -42,8 +42,8 @@ export const EnvironmentSettings = ({ navigation }) => {
 	const deleteGarden = () => {
         setIsDeleting(true);
 
-        const deleteFunction = () => {
-            removeGarden(userToken, serial, dispatch)
+        const deleteFunction = (clearStatistics) => {
+            removeGarden(userToken, serial, dispatch, clearStatistics)
                 .catch(error => Alert.alert("Failed to remove garden", error.message))
                 .finally(() => {
                     setIsDeleting(false);
@@ -60,8 +60,13 @@ export const EnvironmentSettings = ({ navigation }) => {
                 style: "cancel"
             },
             {
-                text: "Delete",
-                onPress: deleteFunction,
+                text: "Delete and clear old statistics",
+                onPress: () => deleteFunction(true),
+                style: "destructive"
+            },
+            {
+                text: "Delete and keep old statistics",
+                onPress: () => deleteFunction(false),
                 style: "destructive"
             }]
         )

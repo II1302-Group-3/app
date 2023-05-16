@@ -187,10 +187,11 @@ export const getStatistics = createAsyncThunk('garden/getStatistics', async({
     }
 })
 
-export async function removeGarden(userToken, gardenSerial, dispatch) {
+export async function removeGarden(userToken, gardenSerial, dispatch, clearStatistics) {
     const params = new URLSearchParams({
         token: userToken,
-        serial: gardenSerial
+        serial: gardenSerial,
+        clearStatistics
     });
 
     const result = await (await fetch("https://europe-west1-greengarden-iot.cloudfunctions.net/removeGarden?" + params)).text();
