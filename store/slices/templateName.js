@@ -97,11 +97,11 @@ export const templateName = createSlice({
 
 export const saveTemplate = createAsyncThunk(
     'templateName/saveTemplate',
-    async({tempLight, tempmoisture, tempName, uid}) => {
+    async({tempLight, tempmoisture, tempName, uid, date}) => {
       try {
         const templateRef = 'templates'
         const newChildRef = database().ref(templateRef).push();
-        const template = {plantName: tempName, lightLevel: tempLight, moistureLevel: tempmoisture };
+        const template = {plantName: tempName, lightLevel: tempLight, moistureLevel: tempmoisture, date: date};
         newChildRef.set(template);
         const templateKey = newChildRef.key;
         const userTemplateRef =  `users/${uid}/` + 'templates';
