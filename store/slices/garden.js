@@ -9,8 +9,8 @@ const initialActiveState = {
 
     nickname: "",
 
-    light: 50,
-    moisture: 50,
+    light: 0,
+    moisture: 0,
 
     statistics: {
         light: {
