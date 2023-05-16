@@ -10,16 +10,18 @@ export const BrowseTemplate = ({ navigation }) => {
     //const templatesName = useSelector(state => state.templateName.templatesName);
     const dispatch = useDispatch();
     const templatesData = useSelector(state => state.templateName.templatesData);
-    const plantNames = Object.values(templatesData).map(item => item.plantName);
-    const plantLight = Object.values(templatesData).map(item => item.lightLevel);
-    const plantMoisture = Object.values(templatesData).map(item => item.moistureLevel);
+
 
     const sortByRecent = templatesData => {
-        return Object.values(templatesData).sort((template1, template2) => template1?.date ?? 0 < template2?.date ?? 0);
+        if (templatesData) {
+            return Object.values(templatesData).sort((template1, template2) => template1?.date ?? 0 < template2?.date ?? 0);
+        }
     }
 
     const sortByLikes = templatesData => {
-        return Object.values(templatesData).sort((template1, template2) => (template2?.likedBy?.length ?? 0) - (template1?.likedBy?.length ?? 0));
+        if (templatesData) {
+            return Object.values(templatesData).sort((template1, template2) => (template2?.likedBy?.length ?? 0) - (template1?.likedBy?.length ?? 0));
+        }
     }
 
     let templateData2 = {};

@@ -19,15 +19,23 @@ export const BrowseTemplateNameView = ({ plantName, tempDetailPress, plantMoistu
 	}, [isFocused])
 
   const templatesData = useSelector(state => state.templateName.templatesData);
+  let filteredPlantNames = []; 
+  if (templatesData) {
+      filteredPlantNames = Object.keys(templatesData).map(a => templatesData[a]).filter(name =>
+      name.plantName.toLowerCase().includes(searchText.toLowerCase())
+    );
+  }
 
-  const filteredPlantNames = Object.keys(templatesData).map(a => templatesData[a]).filter(name =>
-    name.plantName.toLowerCase().includes(searchText.toLowerCase())
-  );
   const [templates, setTemplates] = useState(filteredPlantNames);
 
+
   useEffect(() => {
-    setTemplates(Object.keys(templatesData).map(a => templatesData[a]).filter(name =>
-      name.plantName.toLowerCase().includes(searchText.toLowerCase())))
+
+    if (templatesData) {
+      setTemplates(Object.keys(templatesData).map(a => templatesData[a]).filter(name =>
+        name.plantName.toLowerCase().includes(searchText.toLowerCase())))
+    }
+    
   }, [searchText, templatesData])
 
   return (
