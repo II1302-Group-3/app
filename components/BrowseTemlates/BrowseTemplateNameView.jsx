@@ -76,7 +76,7 @@ export const BrowseTemplateNameView = ({ plantName, tempDetailPress, plantMoistu
               onPress={() => tempDetailPress(name.plantName, name.lightLevel,name.moistureLevel, Object.keys(templatesData)[index])}
             >
               <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-                <Text style={{ fontWeight: 'bold', fontSize: 20 }}>{name.plantName}</Text>
+                <Text style={{ fontWeight: 'bold', fontSize: 20 }}>{name.plantName.length < 7 ? name.plantName: name.plantName.substr(0, 7) + '...'}</Text>
                 <View style={{ flexDirection: 'row' }}>
                   <Text style={{ marginRight: 5}}>{ name.likedBy?.length ?? 0 }</Text>
                   <Image
